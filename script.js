@@ -78,6 +78,44 @@ if (cartOverlay) {
     });
 }
 
+// Update cart badge count
+function updateCartBadge() {
+    const formData = new FormData();
+    formData.append('action', 'get');
+    
+    fetch('cart.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success && data.cart) {
+            let totalItems = 0;
+            data.cart.forEach(item => {
+                totalItems += item.quantity;
+            });
+            
+            let badge = document.getElementById('cartBadge');
+            if (totalItems > 0) {
+                if (!badge) {
+                    badge = document.createElement('span');
+                    badge.id = 'cartBadge';
+                    badge.className = 'cart-badge';
+                    cartIcon.style.position = 'relative';
+                    cartIcon.appendChild(badge);
+                }
+                badge.textContent = totalItems;
+                badge.style.display = 'flex';
+            } else if (badge) {
+                badge.style.display = 'none';
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Error updating badge:', error);
+    });
+}
+
 // Add to cart function
 function addToCart() {
     const name = document.getElementById('modalProductName').textContent;
@@ -107,6 +145,8 @@ function addToCart() {
             closeModal();
             // Reset quantity
             currentQuantity = 1;
+            // Update cart badge
+            updateCartBadge();
             // Show cart
             cartSidebar.classList.add('active');
             cartOverlay.classList.add('active');
@@ -146,6 +186,41 @@ function loadCart() {
     });
 }
 
+// Mix & Match pricing: 3 mochi (except Mochi Bites) = ₱100
+function calculateTotal(cart) {
+    let mochiItems = [];
+    let specialItems = [];
+    
+    // Separate mochi flavors from special items (Mochi Bites)
+    cart.forEach(item => {
+        if (item.name === 'Mochi Bites') {
+            specialItems.push(item);
+        } else {
+            // Add each quantity as individual items for mix & match
+            for (let i = 0; i < item.quantity; i++) {
+                mochiItems.push(item);
+            }
+        }
+    });
+    
+    // Calculate mix & match total
+    const sets = Math.floor(mochiItems.length / 3);
+    const remainder = mochiItems.length % 3;
+    
+    let total = sets * 100; // ₱100 per set of 3
+    
+    // Add remainder at regular price (₱35 each)
+    total += remainder * 35;
+    
+    // Add special items at their regular price
+    specialItems.forEach(item => {
+        const priceNum = parseFloat(item.price.replace('₱', '').replace(',', ''));
+        total += priceNum * item.quantity;
+    });
+    
+    return total;
+}
+
 function displayCart(cart) {
     const cartItems = document.getElementById('cartItems');
     const cartFooter = document.getElementById('cartFooter');
@@ -157,16 +232,12 @@ function displayCart(cart) {
         return;
     }
     
-    let total = 0;
     let html = '';
     
     cart.forEach((item, index) => {
-        const priceNum = parseFloat(item.price.replace('₱', '').replace(',', ''));
-        const subtotal = priceNum * item.quantity;
-        total += subtotal;
-        
         html += `
             <div class="cart-item">
+                <img src="${item.image}" alt="${item.name}" class="cart-item-img">
                 <div class="cart-item-info">
                     <div class="cart-item-name">${item.name}</div>
                     <div class="cart-item-price">${item.price}</div>
@@ -175,13 +246,17 @@ function displayCart(cart) {
                     <button class="cart-qty-btn" onclick="updateCartQuantity(${index}, ${item.quantity - 1})">−</button>
                     <span class="cart-qty">${item.quantity}</span>
                     <button class="cart-qty-btn" onclick="updateCartQuantity(${index}, ${item.quantity + 1})">+</button>
-                    <button class="cart-remove" onclick="removeFromCart(${index})">🗑</button>
+                    <button class="cart-remove" onclick="removeFromCart(${index})">×</button>
                 </div>
             </div>
         `;
     });
     
     cartItems.innerHTML = html;
+    
+    // Calculate total with mix & match pricing
+    const total = calculateTotal(cart);
+    
     cartTotal.textContent = '₱' + total.toFixed(2);
     cartFooter.style.display = 'block';
 }
@@ -205,6 +280,7 @@ function updateCartQuantity(index, quantity) {
     .then(data => {
         if (data.success) {
             displayCart(data.cart);
+            updateCartBadge();
         }
     })
     .catch(error => {
@@ -225,9 +301,15 @@ function removeFromCart(index) {
     .then(data => {
         if (data.success) {
             displayCart(data.cart);
+            updateCartBadge();
         }
     })
     .catch(error => {
         console.error('Error removing from cart:', error);
     });
 }
+
+// Load cart badge on page load
+document.addEventListener('DOMContentLoaded', function() {
+    updateCartBadge();
+});

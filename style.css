@@ -535,6 +535,7 @@ button:hover{
 	max-width: 300px;
 	height: 280px;
 	object-fit: cover;
+	object-position: bottom;
 	border-radius: 15px;
 	margin: 20px auto;
 	display: block;
@@ -753,6 +754,24 @@ button:hover{
 		}
 
 /*--------------CART----------------*/
+/* Cart Badge */
+.cart-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: #ff4444;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+    font-family: 'Montserrat', sans-serif;
+}
+
 /* Cart Sidebar Styles */
 .cart-sidebar {
     position: fixed;
@@ -778,6 +797,7 @@ button:hover{
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-bottom: 1px solid #e0e0e0;
 }
 
 .cart-header h2 {
@@ -790,15 +810,18 @@ button:hover{
 .cart-close {
     background: none;
     border: none;
-    font-size: 36px;
-    color: #8B4513;
+    font-size: 40px;
+    color: #6b4b50;
     cursor: pointer;
     padding: 0;
     line-height: 1;
+    width: auto;
+    height: auto;
 }
 
 .cart-close:hover {
-    opacity: 0.7;
+    color: #9aa559;
+    background: none;
 }
 
 .cart-items {
@@ -815,7 +838,15 @@ button:hover{
     display: flex;
     align-items: center;
     gap: 15px;
-	border: 1px solid gray;
+    border: 1px solid #e0e0e0;
+}
+
+.cart-item-img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 10px;
+    flex-shrink: 0;
 }
 
 .cart-item-info {
@@ -833,7 +864,7 @@ button:hover{
 .cart-item-price {
     font-family: 'Montserrat', sans-serif;
     color: gray;
-    font-weight: 600;
+    font-weight: 500;
     font-size: 14px;
 }
 
@@ -844,22 +875,23 @@ button:hover{
 }
 
 .cart-qty-btn {
-    width: 30px;
-    height: 30px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
-    border: 2px solid gray;
+    border: 1.5px solid #d0d0d0;
     background: white;
-    color: gray;
+    color: #6b4b50;
     font-size: 18px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.2s;
+    padding: 0;
 }
 
 .cart-qty-btn:hover {
-	border: 2px solid pink;
+    border-color: pink;
     background: pink;
     color: white;
 }
@@ -867,8 +899,8 @@ button:hover{
 .cart-qty {
     font-family: 'Montserrat', sans-serif;
     font-weight: 600;
-    color: gray;
-    min-width: 30px;
+    color: #6b4b50;
+    min-width: 25px;
     text-align: center;
     font-size: 16px;
 }
@@ -876,22 +908,26 @@ button:hover{
 .cart-remove {
     background: none;
     border: none;
-    color: #C6A969;
-    font-size: 24px;
+    color: #6b4b50;
+    font-size: 32px;
     cursor: pointer;
     padding: 0;
-    margin-left: 10px;
-    transition: opacity 0.2s;
+    margin-left: 5px;
+    transition: color 0.2s;
+    width: auto;
+    height: auto;
+    line-height: 1;
 }
 
 .cart-remove:hover {
-    opacity: 0.7;
+    color: #ff4444;
+    background: none;
 }
 
 .cart-footer {
     background: white;
     padding: 20px 30px;
-    border-top: 2px solid #9aa559;
+    border-top: 1px solid #e0e0e0;
 }
 
 .cart-total {
@@ -907,6 +943,7 @@ button:hover{
 .cart-total-amount {
     color: #6b4b50;
     font-size: 20px;
+    font-weight: 700;
 }
 
 .checkout-btn {
@@ -921,10 +958,12 @@ button:hover{
     font-size: 16px;
     cursor: pointer;
     transition: background 0.3s;
+    text-transform: uppercase;
 }
 
 .checkout-btn:hover {
     background: pink;
+    color: black;
 }
 
 .cart-empty {
@@ -959,5 +998,10 @@ button:hover{
     
     .cart-header h2 {
         font-size: 24px;
+    }
+    
+    .cart-item-img {
+        width: 50px;
+        height: 50px;
     }
 }
