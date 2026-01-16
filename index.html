@@ -12,6 +12,26 @@
 </head>
 
 <body>
+
+    <div class="cart-overlay" id="cartOverlay"></div>
+
+	<!-- Cart Sidebar -->
+	<div class="cart-sidebar" id="cartSidebar">
+		<div class="cart-header">
+			<h2>My Cart</h2>
+			<button class="cart-close" id="closeCart">&times;</button>
+		</div>
+		<div class="cart-items" id="cartItems">
+			<div class="cart-empty">Your cart is empty</div>
+		</div>
+		<div class="cart-footer" id="cartFooter" style="display: none;">
+			<div class="cart-total">
+				<span>Total</span>
+				<span class="cart-total-amount" id="cartTotal">₱0.00</span>
+			</div>
+			<button class="checkout-btn">CHECKOUT</button>
+		</div>
+	</div>
 	
 	 <nav class="navbar">
 
