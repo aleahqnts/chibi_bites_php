@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Sign Up - Chibi Bites</title>
+    <link rel="icon" href="images/logo.png" type="image/x-icon" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Coiny&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="brand">
+            <a href="index.html"><img src="images/logo.png" alt="Logo" class="logo-img"></a>
+            <a href="index.html"><img src="images/title.png" alt="Website Title" class="title-img"></a>
+        </div>
+
+        <div class="nav-right">
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shop.html">Shop</a></li>
+                <li><a href="faqs.html">FAQs</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            
+            <div class="nav-icons">
+                <a href="cart.html">
+                    <img src="images/cart.png" alt="Cart" class="icon">
+                </a>
+                <a href="account.html">
+                    <img src="images/acc.png" alt="Account" class="icon">
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="auth-page">
+        <div class="auth-container">
+            <h1>Sign Up</h1>
+            <form class="auth-form" id="signupForm">
+                <div class="form-group">
+                    <label for="fullname">Full Name</label>
+                    <input type="text" id="fullname" name="fullname" required placeholder="Juan Dela Cruz">
+                    <span class="form-error" id="nameError">Please enter your full name</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required placeholder="your@email.com">
+                    <span class="form-error" id="emailError">Please enter a valid email</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" required placeholder="09XX XXX XXXX">
+                    <span class="form-error" id="phoneError">Please enter a valid phone number</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="street">Street Address</label>
+                    <input type="text" id="street" name="street" required placeholder="House No., Street, Barangay">
+                    <span class="form-error" id="streetError">Please enter your street address</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="city">City</label>
+                    <select id="city" name="city" required>
+                        <option value="">Select City</option>
+                        <option value="Caloocan">Caloocan</option>
+                        <option value="Las Piñas">Las Piñas</option>
+                        <option value="Makati">Makati</option>
+                        <option value="Malabon">Malabon</option>
+                        <option value="Mandaluyong">Mandaluyong</option>
+                        <option value="Manila">Manila</option>
+                        <option value="Marikina">Marikina</option>
+                        <option value="Muntinlupa">Muntinlupa</option>
+                        <option value="Navotas">Navotas</option>
+                        <option value="Parañaque">Parañaque</option>
+                        <option value="Pasay">Pasay</option>
+                        <option value="Pasig">Pasig</option>
+                        <option value="Pateros">Pateros</option>
+                        <option value="Quezon City">Quezon City</option>
+                        <option value="San Juan">San Juan</option>
+                        <option value="Taguig">Taguig</option>
+                        <option value="Valenzuela">Valenzuela</option>
+                    </select>
+                    <span class="form-error" id="cityError">Please select a city</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="zipcode">Zip Code</label>
+                    <input type="text" id="zipcode" name="zipcode" required placeholder="1234" maxlength="4">
+                    <span class="form-error" id="zipcodeError">Please enter a valid zip code</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="password-toggle">
+                        <input type="password" id="password" name="password" required placeholder="At least 6 characters">
+                        <button type="button" class="password-toggle-btn" onclick="togglePassword('password')">Show</button>
+                    </div>
+                    <span class="form-error" id="passwordError">Password must be at least 6 characters</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <div class="password-toggle">
+                        <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Re-enter your password">
+                        <button type="button" class="password-toggle-btn" onclick="togglePassword('confirmPassword')">Show</button>
+                    </div>
+                    <span class="form-error" id="confirmError">Passwords do not match</span>
+                </div>
+
+                <button type="submit" class="submit-btn">CREATE ACCOUNT</button>
+            </form>
+
+            <div class="auth-divider">
+                <span>or</span>
+            </div>
+
+            <div class="auth-switch">
+                Already have an account? <a href="login.html">Login here</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword(fieldId) {
+            const passwordInput = document.getElementById(fieldId);
+            const toggleBtn = passwordInput.parentElement.querySelector('.password-toggle-btn');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleBtn.textContent = 'Hide';
+            } else {
+                passwordInput.type = 'password';
+                toggleBtn.textContent = 'Show';
+            }
+        }
+
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const fullname = document.getElementById('fullname').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const street = document.getElementById('street').value;
+            const city = document.getElementById('city').value;
+            const zipcode = document.getElementById('zipcode').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            // Reset all errors
+            document.querySelectorAll('.form-error').forEach(error => {
+                error.classList.remove('active');
+            });
+            
+            // Validation
+            let isValid = true;
+            
+            if (!fullname || fullname.trim().length < 2) {
+                document.getElementById('nameError').classList.add('active');
+                isValid = false;
+            }
+            
+            if (!email || !email.includes('@')) {
+                document.getElementById('emailError').classList.add('active');
+                isValid = false;
+            }
+            
+            if (!phone || phone.length < 10) {
+                document.getElementById('phoneError').classList.add('active');
+                isValid = false;
+            }
+            
+            if (!street || street.trim().length < 5) {
+                document.getElementById('streetError').classList.add('active');
+                isValid = false;
+            }
+            
+            if (!city) {
+                document.getElementById('cityError').classList.add('active');
+                isValid = false;
+            }
+            
+            if (!zipcode || zipcode.length !== 4) {
+                document.getElementById('zipcodeError').classList.add('active');
+                isValid = false;
+            }
+            
+            if (!password || password.length < 6) {
+                document.getElementById('passwordError').classList.add('active');
+                isValid = false;
+            }
+            
+            if (password !== confirmPassword) {
+                document.getElementById('confirmError').classList.add('active');
+                isValid = false;
+            }
+            
+            if (isValid) {
+                // Send to PHP for registration
+                const formData = new FormData();
+                formData.append('action', 'signup');
+                formData.append('fullname', fullname);
+                formData.append('email', email);
+                formData.append('phone', phone);
+                formData.append('street', street);
+                formData.append('city', city);
+                formData.append('zipcode', zipcode);
+                formData.append('password', password);
+                
+                fetch('auth.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Account created successfully!');
+                        window.location.href = 'login.html';
+                    } else {
+                        alert(data.message || 'Error creating account');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Signup error. Please try again.');
+                });
+            }
+        });
+    </script>
+
+    <script src="script.js"></script>
+</body>
+</html>

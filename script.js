@@ -1,50 +1,78 @@
+document.addEventListener('DOMContentLoaded', function() {
+    function reveal() {
+        const reveals = document.querySelectorAll('.reveal');
+        reveals.forEach(element => {
+            const windowHeight = window.innerHeight;
+            const elementTop = element.getBoundingClientRect().top;
+            const elementVisible = 150;
+
+            if (elementTop < windowHeight - elementVisible) {
+                element.classList.add('active');
+            }
+        });
+    }
+
+    window.addEventListener('scroll', reveal);
+    reveal();
+    
+    // Check login status on page load
+    checkLoginStatus();
+});
+
 let currentQuantity = 1;
 let currentProduct = {};
 
 function openModal(name, price, img, description) {
-	currentProduct = { name, price, img, description };
-	currentQuantity = 1;
-	
-	document.getElementById('modalProductName').textContent = name;
-	document.getElementById('modalProductPrice').textContent = price;
-	document.getElementById('modalProductImg').src = img;
-	document.getElementById('modalProductDescription').textContent = description;
-	document.getElementById('quantityDisplay').textContent = currentQuantity;
-	
-	document.getElementById('productModal').classList.add('active');
-	document.body.style.overflow = 'hidden';
+    currentProduct = { name, price, img, description };
+    currentQuantity = 1;
+    
+    document.getElementById('modalProductName').textContent = name;
+    document.getElementById('modalProductPrice').textContent = price;
+    document.getElementById('modalProductImg').src = img;
+    document.getElementById('modalProductDescription').textContent = description;
+    document.getElementById('quantityDisplay').textContent = currentQuantity;
+    
+    document.getElementById('productModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
 }
 
 function closeModal() {
-	document.getElementById('productModal').classList.remove('active');
-	document.body.style.overflow = 'auto';
+    document.getElementById('productModal').classList.remove('active');
+    document.body.style.overflow = 'auto';
 }
 
 function increaseQuantity() {
-	currentQuantity++;
-	document.getElementById('quantityDisplay').textContent = currentQuantity;
+    currentQuantity++;
+    document.getElementById('quantityDisplay').textContent = currentQuantity;
 }
 
 function decreaseQuantity() {
-	if (currentQuantity > 1) {
-		currentQuantity--;
-		document.getElementById('quantityDisplay').textContent = currentQuantity;
-	}
+    if (currentQuantity > 1) {
+        currentQuantity--;
+        document.getElementById('quantityDisplay').textContent = currentQuantity;
+    }
 }
 
 // Close modal when clicking outside
 window.onclick = function(event) {
-	const modal = document.getElementById('productModal');
-	if (event.target === modal) {
-		closeModal();
-	}
+    const modal = document.getElementById('productModal');
+    const authModal = document.getElementById('authModal');
+    
+    if (event.target === modal) {
+        closeModal();
+    }
+    
+    if (event.target === authModal) {
+        closeAuthModal();
+    }
 }
 
 // Close modal with Escape key
 document.addEventListener('keydown', function(event) {
-	if (event.key === 'Escape') {
-		closeModal();
-	}
+    if (event.key === 'Escape') {
+        closeModal();
+        closeAuthModal();
+    }
 });
 
 // Cart functionality
@@ -143,11 +171,8 @@ function addToCart() {
     .then(data => {
         if (data.success) {
             closeModal();
-            // Reset quantity
             currentQuantity = 1;
-            // Update cart badge
             updateCartBadge();
-            // Show cart
             cartSidebar.classList.add('active');
             cartOverlay.classList.add('active');
             loadCart();
@@ -191,28 +216,22 @@ function calculateTotal(cart) {
     let mochiItems = [];
     let specialItems = [];
     
-    // Separate mochi flavors from special items (Mochi Bites)
     cart.forEach(item => {
         if (item.name === 'Mochi Bites') {
             specialItems.push(item);
         } else {
-            // Add each quantity as individual items for mix & match
             for (let i = 0; i < item.quantity; i++) {
                 mochiItems.push(item);
             }
         }
     });
     
-    // Calculate mix & match total
     const sets = Math.floor(mochiItems.length / 3);
     const remainder = mochiItems.length % 3;
     
-    let total = sets * 100; // ₱100 per set of 3
-    
-    // Add remainder at regular price (₱35 each)
+    let total = sets * 100;
     total += remainder * 35;
     
-    // Add special items at their regular price
     specialItems.forEach(item => {
         const priceNum = parseFloat(item.price.replace('₱', '').replace(',', ''));
         total += priceNum * item.quantity;
@@ -254,7 +273,6 @@ function displayCart(cart) {
     
     cartItems.innerHTML = html;
     
-    // Calculate total with mix & match pricing
     const total = calculateTotal(cart);
     
     cartTotal.textContent = '₱' + total.toFixed(2);
@@ -309,7 +327,93 @@ function removeFromCart(index) {
     });
 }
 
+// AUTH MODAL FUNCTIONS
+function openAuthModal() {
+    const authModal = document.getElementById('authModal');
+    if (authModal) {
+        authModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeAuthModal() {
+    const authModal = document.getElementById('authModal');
+    if (authModal) {
+        authModal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+}
+
+// Check login status
+function checkLoginStatus() {
+    const formData = new FormData();
+    formData.append('action', 'check');
+    
+    fetch('auth.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success && data.logged_in) {
+            // User is logged in
+            updateUIForLoggedInUser(data.user);
+        } else {
+            // User is not logged in
+            updateUIForGuest();
+        }
+    })
+    .catch(error => {
+        console.error('Error checking login:', error);
+    });
+}
+
+function updateUIForLoggedInUser(user) {
+    // You can update the account icon or show user name
+    console.log('User logged in:', user.name);
+}
+
+function updateUIForGuest() {
+    // Set up checkout button to show auth modal
+    const checkoutBtn = document.querySelector('.checkout-btn');
+    if (checkoutBtn) {
+        checkoutBtn.onclick = function() {
+            checkAuthBeforeCheckout();
+        };
+    }
+}
+
+// Check authentication before checkout
+function checkAuthBeforeCheckout() {
+    const formData = new FormData();
+    formData.append('action', 'check');
+    
+    fetch('auth.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success && data.logged_in) {
+            // User is logged in, proceed to checkout
+            proceedToCheckout();
+        } else {
+            // User is not logged in, show auth modal
+            openAuthModal();
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        openAuthModal();
+    });
+}
+
+function proceedToCheckout() {
+    // Proceed with checkout process
+    alert('Proceeding to checkout...');
+    // You can redirect to a checkout page or show checkout form
+    // window.location.href = 'checkout.html';
+}
+
 // Load cart badge on page load
-document.addEventListener('DOMContentLoaded', function() {
-    updateCartBadge();
-});
+updateCartBadge();

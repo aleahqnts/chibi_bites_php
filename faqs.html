@@ -1,53 +1,294 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Chibi Bites</title>
-	<link rel="icon" href="images/logo.png" type="image/x-icon" />
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css2?family=Coiny&display=swap" rel="stylesheet">
-	<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chibi Bites - FAQs</title>
+    <link rel="icon" href="images/logo.png" type="image/x-icon">   
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Coiny&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        :root {
+            --text-brown: #5E4B43;
+            --header-bg: #f5f5dc; /* Cream color for Header */
+            --body-bg: #ffffff;
+            --footer-green: #9AA559; /* Olive Green for Footer */
+            --white: #ffffff;
+            --pink-accent: #F8A8C6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--body-bg);
+            color: var(--text-brown);
+        }
+
+        /* MAIN CONTENT */
+        main {
+            padding: 50px 5%;
+            min-height: 60vh;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            font-family: 'Coiny', cursive;
+            font-size: 42px;
+            color: var(--text-brown);
+            margin-bottom: 10px;
+            margin-top: 80px;
+             opacity: 0; 
+            animation: fadeIn 0.5s ease-in forwards;
+            animation-delay: 0.1s; 
+        }
+
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px); /* Optional: slide down effect */
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .faq-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .faq-item {
+            background-color: var(--white);
+            border: 1px solid var(--text-brown);
+            transition: transform 0.3s;
+            
+            }
+
+            .faq-item:hover {
+                transform: scale(1.05);
+            }
+        
+
+        .faq-question {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.3s;
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            padding: 0 20px;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 200px;
+            padding-bottom: 20px;
+        }
+
+        .arrow {
+            border: solid var(--pink-accent);
+            border-width: 0 3px 3px 0;
+            display: inline-block;
+            padding: 5px;
+            transform: rotate(45deg);
+            transition: transform 0.3s ease;
+            margin-bottom: 4px;
+        }
+
+        .faq-item.active .arrow {
+            transform: rotate(-135deg);
+            margin-bottom: -4px;
+        }
+
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            header, footer {
+                flex-direction: column;
+                gap: 30px;
+                text-align: center;
+            }
+            .header-right, .footer-center, .footer-right {
+                align-items: center;
+                width: 100%;
+            }
+            .footer-left {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
-
 <body>
-	<nav class="navbar">
-		<div class="brand">
-			<a href="index.html"><img src="images/logo.png" alt="Logo" class="logo-img"></a>
-			<a href="index.html"><img src="images/title.png" alt="Website Title" class="title-img"></a>
-		</div>
 
-		<div class="nav-right">
-			<ul class="nav-links">
-				<li><a href="index.html">Home</a></li>
-				<li><a href="shop.html">Shop</a></li>
-				<li><a href="faqs.html">FAQs</a></li>
-				<li><a href="contact.html">Contact</a></li>
-			</ul>
-			
-			<div class="nav-icons">
-				<a href="cart.html">
-					<img src="images/cart.png" alt="Cart" class="icon">
-				</a>
-				<a href="account.html">
-					<img src="images/acc.png" alt="Account" class="icon">
-				</a>
+    <div class="cart-overlay" id="cartOverlay"></div>
+
+	<!-- Cart Sidebar -->
+	<div class="cart-sidebar" id="cartSidebar">
+		<div class="cart-header">
+			<h2>My Cart</h2>
+			<button class="cart-close" id="closeCart">&times;</button>
+		</div>
+		<div class="cart-items" id="cartItems">
+			<div class="cart-empty">Your cart is empty</div>
+		</div>
+		<div class="cart-footer" id="cartFooter" style="display: none;">
+			<div class="cart-total">
+				<span>Total</span>
+				<span class="cart-total-amount" id="cartTotal">₱0.00</span>
 			</div>
+			<button class="checkout-btn">CHECKOUT</button>
 		</div>
-	</nav>
+	</div>
 
-		<section class="section section-1">
-		
-		<!-- start code d2-->
-		
-		</section>
-		
-	<footer class="site-footer">
+    <nav class="navbar">
+
+    <!-- LOGO + TITLE IMAGE -->
+    <div class="brand">
+        <a href="index.html"><img src="images/logo.png" alt="Logo" class="logo-img"></a>
+        <a href="index.html"><img src="images/title.png" alt="Website Title" class="title-img"></a>
+    </div>
+
+	<div class="nav-right">
+    <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="shop.html">Shop</a></li>
+        <li><a href="faqs.html">FAQs</a></li>
+        <li><a href="contact.html">Contact</a></li>
+    </ul>
+	
+	
+	<div class="nav-icons">
+        <a href="cart.html">
+            <img src="images/cart.png" alt="Cart" class="icon">
+        </a>
+        <a href="account.html">
+            <img src="images/acc.png" alt="Account" class="icon">
+        </a>
+    </div>
+	</div>
+
+</nav>
+ 
+
+    <main>
+        <h1>FAQs</h1>
+        <div class="mixmatch"><p>Frequently Asked Questions</p></div>
+
+        <div class="faq-container reveal">
+            <div class="faq-item">
+                <div class="faq-question">
+                    How should I store Chibi Bites?
+                    <span class="arrow"></span>
+                </div>
+                <div class="faq-answer">
+                    Chibi Bites can be stored at room temperature. For best freshness and quality, refrigeration is recommended.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    What is the shelf life?
+                    <span class="arrow"></span>
+                </div>
+                <div class="faq-answer">
+                    Chibi Bites have a shelf life of up to 3 days when refrigerated. If kept at room temperature, we recommend consuming them within the day.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    Can I place advance orders?
+                    <span class="arrow"></span>
+                </div>
+                <div class="faq-answer">
+                    Yes. Advance orders are highly recommended, particularly for bulk or event orders, to ensure availability.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    How does delivery work?
+                    <span class="arrow"></span>
+                </div>
+                <div class="faq-answer">
+                    All orders are freshly prepared. Some may be delivered chilled to help maintain quality during transit. Refrigeration after receiving is optional but advised.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    How should I consume Chibi Bites?
+                    <span class="arrow"></span>
+                </div>
+                <div class="faq-answer">
+                    Chibi Bites can be enjoyed at room temperature. If refrigerated, allow a few minutes for a softer texture.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    Allergen Information
+                    <span class="arrow"></span>
+                </div>
+                <div class="faq-answer">
+                    Chibi Bites are made with glutinous rice flour, which is naturally gluten-free. Some ingredients may contain dairy, soy, and wheat (gluten). Customers with food allergies are advised to exercise caution or contact us before ordering.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    Other inquiries?
+                    <span class="arrow"></span>
+                </div>
+                <div class="faq-answer">
+                    Please feel free to message us, we’re happy to assist.
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Authentication Modal -->
+<div id="authModal" class="auth-modal">
+    <div class="auth-modal-content">
+        <button class="auth-close-btn" onclick="closeAuthModal()">&times;</button>
+        <h2>Login Required</h2>
+        <p>Please login or create an account to proceed with checkout.</p>
+        <div class="auth-modal-buttons">
+            <a href="login.html" class="auth-btn auth-btn-primary">LOGIN</a>
+            <a href="signup.html" class="auth-btn auth-btn-secondary">SIGN UP</a>
+        </div>
+    </div>
+</div>
+
+
+    <footer class="site-footer">
     <div class="footer-container">
         <div class="footer-column">
             <h3>Contact us</h3>
-            <p>0994858383 | mochi@ss.com</p>
-            <p>Or come visit us at<br>sjsosksaokaokaokaokoa</p>
+            <p>09164087819</p>
+            <p><b>Or come visit us at:</b><br>15 Marikina-Infanta Hwy, Antipolo, 1870 Rizal</p>
         </div>
         
         <div class="footer-column">
@@ -83,6 +324,22 @@
     </div>
 </footer>
 
-	<script src="script.js"></script>
+
+    <script>
+        const faqItems = document.querySelectorAll('.faq-item');
+
+        faqItems.forEach(item => {
+            item.addEventListener('click', () => {
+                faqItems.forEach(otherItem => {
+                    if (otherItem !== item) {
+                        otherItem.classList.remove('active');
+                    }
+                });
+                item.classList.toggle('active');
+            });
+        });
+    </script>
+
+    <script src="script.js"></script>
 </body>
 </html>

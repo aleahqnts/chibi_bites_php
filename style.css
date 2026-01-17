@@ -12,6 +12,18 @@ main {
     flex: 1;
 }
 
+.reveal {
+	opacity: 0;
+	transform: translateY(50px);
+	transition: all 0.8s;
+}
+
+.reveal.active {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+
 .navbar {
     background-color:#f5f5dc;
     padding: 15px 30px;
@@ -214,7 +226,7 @@ main {
 
 .right-div {
     flex: 1;              
-    overflow: hidden;      
+    overflow: visible;      
     border-radius: 10px;  
 }
 
@@ -223,6 +235,12 @@ main {
     height: 100%;
     object-fit: cover;    
     display: block;
+	transition: transform 0.3s;
+	box-shadow: 0 10px 10px rgba(0,0,0,0.2);
+}
+
+.right-img:hover {
+			transform: scale(1.05);
 }
 
 
@@ -256,7 +274,7 @@ main {
     font-family: 'Montserrat';
 	margin-top:11px;
     font-size: 24px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     font-weight: bold;
 	text-align:center;
 }
@@ -264,7 +282,7 @@ main {
 .footer-column p {
     font-size: 16px;
     line-height: 1.6;
-    margin: 5px 0;
+    margin: 3px 0;
 	margin-left:107px;
 }
 
@@ -411,8 +429,15 @@ main {
   align-items: center;
   gap: 20px;                 
   font-size: 15px;
- 
+  transition: transform 0.3s;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.2);
 }
+
+.product-card:hover {
+	transform: scale(1.05);
+}
+ 
+
 
 .sectionshop{
 	width: 100%;
@@ -430,6 +455,9 @@ main {
 	color: #6b4b50;
 	text-align:center;
 	font-size:45px;
+    opacity: 0;
+    animation: fadeIn 0.5s ease-in forwards;
+    animation-delay: 0.1s; 
 	
 	
 }
@@ -439,6 +467,21 @@ main {
 	background-color:pink;
 	padding: 9px;
 	margin-bottom: 15px;
+    opacity: 0;
+    animation: fadeIn 0.5s ease-in forwards;
+    animation-delay: 0.1s; 
+}
+
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px); /* Optional: slide down effect */
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .mixmatch p{
@@ -759,7 +802,7 @@ button:hover{
     position: absolute;
     top: -8px;
     right: -8px;
-    background-color: #ff4444;
+    background-color: #9aa559;
     color: white;
     border-radius: 50%;
     width: 20px;
@@ -815,13 +858,13 @@ button:hover{
     cursor: pointer;
     padding: 0;
     line-height: 1;
-    width: auto;
-    height: auto;
+    width: 40px;
+    height: 40px;
 }
 
 .cart-close:hover {
-    color: #9aa559;
-    background: none;
+    color: white;
+    background-color: pink;
 }
 
 .cart-items {
@@ -914,8 +957,8 @@ button:hover{
     padding: 0;
     margin-left: 5px;
     transition: color 0.2s;
-    width: auto;
-    height: auto;
+    width: 32px;   
+    height: 32px;
     line-height: 1;
 }
 
@@ -1003,5 +1046,304 @@ button:hover{
     .cart-item-img {
         width: 50px;
         height: 50px;
+    }
+}
+
+
+/* Add this to your style.css */
+
+/* Auth Modal Styles */
+.auth-modal {
+    display: none;
+    position: fixed;
+    z-index: 10001;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    animation: fadeIn 0.3s ease;
+}
+
+.auth-modal.active {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.auth-modal-content {
+    background-color: white;
+    padding: 50px 40px;
+    border-radius: 20px;
+    max-width: 450px;
+    width: 90%;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    animation: slideUp 0.3s ease;
+    text-align: center;
+}
+
+.auth-modal-content h2 {
+    font-family: 'Coiny', cursive;
+    color: #6b4b50;
+    font-size: 36px;
+    margin-bottom: 15px;
+}
+
+.auth-modal-content p {
+    font-family: 'Montserrat', sans-serif;
+    color: #6b4b50;
+    font-size: 16px;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+.auth-modal-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.auth-btn {
+    width: 100%;
+    padding: 15px;
+    font-size: 16px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+    display: block;
+    text-align: center;
+}
+
+.auth-btn-primary {
+    background-color: #9aa559;
+    color: white;
+    border: 2px solid #9aa559;
+}
+
+.auth-btn-primary:hover {
+    background-color: pink;
+    border-color: pink;
+    color: black;
+}
+
+.auth-btn-secondary {
+    background-color: white;
+    color: #6b4b50;
+    border: 2px solid #6b4b50;
+}
+
+.auth-btn-secondary:hover {
+    background-color: #6b4b50;
+    color: white;
+}
+
+.auth-close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 35px;
+    font-weight: bold;
+    color: #6b4b50;
+    cursor: pointer;
+    background: none;
+    border: none;
+    width: auto;
+    padding: 0;
+    margin: 0;
+}
+
+.auth-close-btn:hover {
+    color: #9aa559;
+}
+
+/* Login/Signup Page Styles */
+.auth-page {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #f5f5dc 0%, rgb(255, 229, 234) 100%);
+    padding: 100px 20px 20px;
+}
+
+.auth-container {
+    background: white;
+    padding: 50px 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    max-width: 550px;
+    width: 100%;
+    border: 1px solid #e0e0e0;
+}
+
+.auth-container h1 {
+    font-family: 'Coiny', cursive;
+    color: #6b4b50;
+    font-size: 42px;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    color: #6b4b50;
+    font-size: 14px;
+}
+
+.form-group input,
+.form-group select {
+    padding: 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    transition: border-color 0.3s;
+    width: 100%;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #9aa559;
+}
+
+.form-group select {
+    background-color: white;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b4b50' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    padding-right: 40px;
+}
+
+.form-group select option {
+    padding: 10px;
+}
+
+.form-error {
+    color: #ff4444;
+    font-size: 13px;
+    font-family: 'Montserrat', sans-serif;
+    display: none;
+}
+
+.form-error.active {
+    display: block;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 15px;
+    background-color: #9aa559;
+    color: white;
+    border: 2px solid #9aa559;
+    border-radius: 25px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 10px;
+}
+
+.submit-btn:hover {
+    background-color: pink;
+    border-color: pink;
+    color: black;
+}
+
+.auth-divider {
+    text-align: center;
+    margin: 25px 0;
+    position: relative;
+}
+
+.auth-divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: #e0e0e0;
+}
+
+.auth-divider span {
+    background: white;
+    padding: 0 15px;
+    position: relative;
+    font-family: 'Montserrat', sans-serif;
+    color: #6b4b50;
+    font-size: 14px;
+}
+
+.auth-switch {
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+    color: #6b4b50;
+    font-size: 14px;
+}
+
+.auth-switch a {
+    color: #9aa559;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.auth-switch a:hover {
+    text-decoration: underline;
+}
+
+.password-toggle {
+    position: relative;
+}
+
+.password-toggle-btn {
+    width: auto;
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    margin-top: 0px;
+    border: none;
+    color: #6b4b50;
+    cursor: pointer;
+    font-size: 12px;
+    font-family: 'Montserrat', sans-serif;
+    padding: 5px;
+}
+
+.password-toggle-btn:hover {
+    color: #9aa559;
+    background: none;
+    border:1px solid white;
+}
+
+@media (max-width: 768px) {
+    .auth-container {
+        padding: 40px 30px;
+    }
+    
+    .auth-container h1 {
+        font-size: 36px;
     }
 }

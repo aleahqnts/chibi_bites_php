@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Login - Chibi Bites</title>
+    <link rel="icon" href="images/logo.png" type="image/x-icon" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Coiny&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="brand">
+            <a href="index.html"><img src="images/logo.png" alt="Logo" class="logo-img"></a>
+            <a href="index.html"><img src="images/title.png" alt="Website Title" class="title-img"></a>
+        </div>
+
+        <div class="nav-right">
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shop.html">Shop</a></li>
+                <li><a href="faqs.html">FAQs</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            
+            <div class="nav-icons">
+                <a href="cart.html">
+                    <img src="images/cart.png" alt="Cart" class="icon">
+                </a>
+                <a href="account.html">
+                    <img src="images/acc.png" alt="Account" class="icon">
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="auth-page">
+        <div class="auth-container">
+            <h1>Login</h1>
+            <form class="auth-form" id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required placeholder="your@email.com">
+                    <span class="form-error" id="emailError">Please enter a valid email</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="password-toggle">
+                        <input type="password" id="password" name="password" required placeholder="Enter your password">
+                        <button type="button" class="password-toggle-btn" onclick="togglePassword()">Show</button>
+                    </div>
+                    <span class="form-error" id="passwordError">Password is required</span>
+                </div>
+
+                <button type="submit" class="submit-btn">LOGIN</button>
+            </form>
+
+            <div class="auth-divider">
+                <span>or</span>
+            </div>
+
+            <div class="auth-switch">
+                Don't have an account? <a href="signup.html">Sign up here</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const toggleBtn = document.querySelector('.password-toggle-btn');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleBtn.textContent = 'Hide';
+            } else {
+                passwordInput.type = 'password';
+                toggleBtn.textContent = 'Show';
+            }
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            // Reset errors
+            document.getElementById('emailError').classList.remove('active');
+            document.getElementById('passwordError').classList.remove('active');
+            
+            // Basic validation
+            let isValid = true;
+            
+            if (!email || !email.includes('@')) {
+                document.getElementById('emailError').classList.add('active');
+                isValid = false;
+            }
+            
+            if (!password) {
+                document.getElementById('passwordError').classList.add('active');
+                isValid = false;
+            }
+            
+            if (isValid) {
+                // Send to PHP for authentication
+                const formData = new FormData();
+                formData.append('action', 'login');
+                formData.append('email', email);
+                formData.append('password', password);
+                
+                fetch('auth.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Redirect to shop or checkout
+                        window.location.href = 'shop.html';
+                    } else {
+                        alert(data.message || 'Invalid email or password');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Login error. Please try again.');
+                });
+            }
+        });
+    </script>
+
+    <script src="script.js"></script>
+</body>
+</html>
