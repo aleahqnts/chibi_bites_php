@@ -34,7 +34,7 @@ main {
 
 /* NAVBAR */
 .navbar {
-    background-color: var(--cream);
+    background-color: var(--light-pink);
     padding: 15px 30px;
     display: flex;
     justify-content: space-between;
@@ -236,7 +236,7 @@ main {
 
 /* FOOTER */
 .site-footer {
-    background-color: var(--primary-pink);
+    background-color: var(--light-pink);
     color: var(--primary-brown);
     padding: 40px 60px;
 }
