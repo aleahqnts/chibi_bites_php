@@ -5,7 +5,7 @@ header('Content-Type: application/json');
 // Database connection (update with your credentials)
 $servername = "localhost";
 $username = "root";
-$password = "";
+$password = "@Goblin213";
 $dbname = "chibi_bites";
 
 // Create connection

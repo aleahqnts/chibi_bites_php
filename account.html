@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>My Account - Chibi Bites</title>
+    <link rel="icon" href="images/logo.png" type="image/x-icon" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Coiny&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .account-page {
+            min-height: calc(100vh - 140px);
+            padding: 100px 20px 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .account-container {
+            background: white;
+            padding: 50px 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            max-width: 600px;
+            width: 100%;
+            border: 1px solid #e0e0e0;
+            text-align: center;
+        }
+
+        .account-container h1 {
+            font-family: 'Coiny', cursive;
+            color: var(--primary-brown);
+            font-size: 42px;
+            margin-bottom: 30px;
+        }
+
+        .profile-section {
+            display: none;
+        }
+
+        .login-section {
+            display: none;
+        }
+
+        .profile-info {
+            text-align: left;
+            background: var(--light-pink);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .info-group {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(124, 71, 74, 0.1);
+        }
+
+        .info-group:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .info-label {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            color: var(--primary-brown);
+            font-size: 14px;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--primary-brown);
+            font-size: 16px;
+        }
+
+        .account-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .account-btn {
+            padding: 15px;
+            font-size: 16px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+            width: 100%;
+            border: none;
+        }
+
+        .account-btn-primary {
+            background-color: var(--primary-pink);
+            color: var(--primary-brown);
+            border: 2px solid var(--primary-pink);
+        }
+
+        .account-btn-primary:hover {
+            background-color: white;
+            border-color: var(--primary-brown);
+            color: var(--primary-brown);
+        }
+
+        .account-btn-secondary {
+            background-color: white;
+            color: var(--primary-brown);
+            border: 2px solid var(--primary-brown);
+        }
+
+        .account-btn-secondary:hover {
+            background-color: var(--primary-brown);
+            color: white;
+        }
+
+        .account-btn-danger {
+            background-color: #ffebee;
+            color: #c62828;
+            border: 2px solid #ffcdd2;
+        }
+
+        .account-btn-danger:hover {
+            background-color: #ffcdd2;
+            border-color: #c62828;
+            color: #c62828;
+        }
+
+        .loading {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--primary-brown);
+            font-size: 16px;
+            text-align: center;
+            padding: 40px 0;
+        }
+
+        .user-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--primary-pink);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: var(--primary-brown);
+            font-size: 36px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="brand">
+            <a href="index.html"><img src="images/logo.png" alt="Logo" class="logo-img"></a>
+            <a href="index.html"><img src="images/title.png" alt="Website Title" class="title-img"></a>
+        </div>
+
+        <div class="nav-right">
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shop.html">Shop</a></li>
+                <li><a href="faqs.html">FAQs</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            
+            <div class="nav-icons">
+                <a href="cart.html">
+                    <img src="images/cart.png" alt="Cart" class="icon">
+                </a>
+                <a href="account.html">
+                    <img src="images/acc.png" alt="Account" class="icon">
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="account-page">
+        <div class="account-container">
+            <h1>My Account</h1>
+            
+            <!-- Loading State -->
+            <div class="loading" id="loadingState">
+                Loading account information...
+            </div>
+            
+            <!-- Profile Section (shown when logged in) -->
+            <div class="profile-section" id="profileSection">
+                <div class="user-icon" id="userInitials">?</div>
+                
+                <div class="profile-info">
+                    <div class="info-group">
+                        <span class="info-label">Full Name</span>
+                        <span class="info-value" id="profileName">Loading...</span>
+                    </div>
+                    
+                    <div class="info-group">
+                        <span class="info-label">Email Address</span>
+                        <span class="info-value" id="profileEmail">Loading...</span>
+                    </div>
+                    
+                    <div class="info-group">
+                        <span class="info-label">Phone Number</span>
+                        <span class="info-value" id="profilePhone">Loading...</span>
+                    </div>
+                    
+                    <div class="info-group">
+                        <span class="info-label">Address</span>
+                        <span class="info-value" id="profileAddress">Loading...</span>
+                    </div>
+                </div>
+                
+                <div class="account-buttons">
+                    <button class="account-btn account-btn-primary" onclick="window.location.href='shop.html'">
+                        CONTINUE SHOPPING
+                    </button>
+                    <button class="account-btn account-btn-secondary" onclick="window.location.href='cart.html'">
+                        VIEW MY CART
+                    </button>
+                    <button class="account-btn account-btn-danger" onclick="logout()">
+                        LOGOUT
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Login Section (shown when not logged in) -->
+            <div class="login-section" id="loginSection">
+                <p style="font-family: 'Montserrat', sans-serif; color: var(--primary-brown); margin-bottom: 30px; font-size: 16px;">
+                    Please login to view your account information and order history.
+                </p>
+                
+                <div class="account-buttons">
+                    <a href="login.html" class="account-btn account-btn-primary">
+                        LOGIN
+                    </a>
+                    <a href="signup.html" class="account-btn account-btn-secondary">
+                        CREATE ACCOUNT
+                    </a>
+                    <button class="account-btn account-btn-secondary" onclick="window.location.href='shop.html'">
+                        CONTINUE AS GUEST
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            checkLoginStatus();
+        });
+
+        function checkLoginStatus() {
+            const loadingState = document.getElementById('loadingState');
+            const profileSection = document.getElementById('profileSection');
+            const loginSection = document.getElementById('loginSection');
+            
+            const formData = new FormData();
+            formData.append('action', 'check');
+            
+            fetch('auth.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                loadingState.style.display = 'none';
+                
+                if (data.success && data.logged_in && data.user) {
+                    // User is logged in - show profile
+                    profileSection.style.display = 'block';
+                    loginSection.style.display = 'none';
+                    
+                    // Fill profile data
+                    document.getElementById('profileName').textContent = data.user.name;
+                    document.getElementById('profileEmail').textContent = data.user.email;
+                    document.getElementById('profilePhone').textContent = data.user.phone || 'Not provided';
+                    document.getElementById('profileAddress').textContent = data.user.address;
+                    
+                    // Set user initials icon
+                    const initials = getInitials(data.user.name);
+                    document.getElementById('userInitials').textContent = initials;
+                    
+                } else {
+                    // User is not logged in - show login options
+                    profileSection.style.display = 'none';
+                    loginSection.style.display = 'block';
+                }
+            })
+            .catch(error => {
+                console.error('Error checking login status:', error);
+                loadingState.innerHTML = 'Error loading account information. Please try again.';
+                
+                // Show login section as fallback
+                profileSection.style.display = 'none';
+                loginSection.style.display = 'block';
+            });
+        }
+
+        function getInitials(name) {
+            return name.split(' ')
+                .map(word => word.charAt(0))
+                .join('')
+                .toUpperCase()
+                .substring(0, 2);
+        }
+
+        function logout() {
+            const formData = new FormData();
+            formData.append('action', 'logout');
+            
+            fetch('auth.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Logged out successfully!');
+                    window.location.href = 'account.html';
+                } else {
+                    alert('Error logging out. Please try again.');
+                }
+            })
+            .catch(error => {
+                console.error('Error logging out:', error);
+                alert('Error logging out. Please try again.');
+            });
+        }
+
+        // Update cart badge on page load
+        if (typeof updateCartBadge === 'function') {
+            updateCartBadge();
+        }
+    </script>
+
+    <script src="script.js"></script>
+</body>
+</html>
