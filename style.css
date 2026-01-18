@@ -567,6 +567,7 @@ button:hover {
     color: var(--primary-pink);
     font-weight: 600;
     margin: 15px 0;
+    text-align: center;
 }
 
 .modal-description {

@@ -1,21 +1,10 @@
 <?php
 session_start();
+// This is still needed here because auth.php is mainly for AJAX/JSON responses
 header('Content-Type: application/json');
 
-// Database connection (update with your credentials)
-$servername = "localhost";
-$username = "root";
-$password = "@Goblin213";
-$dbname = "chibi_bites";
-
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check connection
-if ($conn->connect_error) {
-    echo json_encode(['success' => false, 'message' => 'Database connection failed']);
-    exit;
-}
+// Pull the connection in from our new file
+require_once 'db_connect.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = isset($_POST['action']) ? $_POST['action'] : '';
@@ -119,7 +108,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo json_encode(['success' => true, 'logged_in' => false]);
         }
     }
-}
 
-$conn->close();
+    // GET PRODUCTS
+        if ($action === 'get_products') {
+            $sql = "SELECT * FROM products WHERE is_active = 1";
+            $result = $conn->query($sql);
+            $products = [];
+            
+            while($row = $result->fetch_assoc()) {
+                $products[] = $row;
+            }
+            echo json_encode(['success' => true, 'products' => $products]);
+            exit;
+        }
+}
 ?>

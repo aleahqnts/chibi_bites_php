@@ -1,0 +1,12 @@
+# Ignore database configuration (contains passwords)
+db_connect.php
+
+# Ignore OS-generated files
+.DS_Store
+Thumbs.db
+
+# Ignore VS Code settings
+.vscode/
+
+# Ignore local environment files
+.env

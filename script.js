@@ -346,6 +346,12 @@ function closeAuthModal() {
 
 // Check login status
 function checkLoginStatus() {
+    const profileSection = document.getElementById('profileSection');
+    const loginSection = document.getElementById('loginSection');
+    
+    // Show login section by default while checking
+    loginSection.style.display = 'block';
+    
     const formData = new FormData();
     formData.append('action', 'check');
     
@@ -355,32 +361,33 @@ function checkLoginStatus() {
     })
     .then(response => response.json())
     .then(data => {
-        if (data.success && data.logged_in) {
-            // User is logged in
-            updateUIForLoggedInUser(data.user);
+        if (data.success && data.logged_in && data.user) {
+            // User is logged in - show profile
+            profileSection.style.display = 'block';
+            loginSection.style.display = 'none';
+            
+            // Fill profile data
+            document.getElementById('profileName').textContent = data.user.name;
+            document.getElementById('profileEmail').textContent = data.user.email;
+            document.getElementById('profilePhone').textContent = data.user.phone || 'Not provided';
+            document.getElementById('profileAddress').textContent = data.user.address;
+            
+            // Set user initials icon
+            const initials = getInitials(data.user.name);
+            document.getElementById('userInitials').textContent = initials;
+            
         } else {
-            // User is not logged in
-            updateUIForGuest();
+            // User is not logged in - keep login section visible
+            profileSection.style.display = 'none';
+            loginSection.style.display = 'block';
         }
     })
     .catch(error => {
-        console.error('Error checking login:', error);
+        console.error('Error checking login status:', error);
+        // Show login section on error
+        profileSection.style.display = 'none';
+        loginSection.style.display = 'block';
     });
-}
-
-function updateUIForLoggedInUser(user) {
-    // You can update the account icon or show user name
-    console.log('User logged in:', user.name);
-}
-
-function updateUIForGuest() {
-    // Set up checkout button to show auth modal
-    const checkoutBtn = document.querySelector('.checkout-btn');
-    if (checkoutBtn) {
-        checkoutBtn.onclick = function() {
-            checkAuthBeforeCheckout();
-        };
-    }
 }
 
 // Check authentication before checkout
@@ -417,3 +424,47 @@ function proceedToCheckout() {
 
 // Load cart badge on page load
 updateCartBadge();
+
+// Function to fetch products from auth.php and display them
+function loadProductsFromDB() {
+    const formData = new FormData();
+    formData.append('action', 'get_products');
+
+    fetch('auth.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const container = document.getElementById('product-grid');
+            let html = '';
+
+            data.products.forEach(product => {
+                // We use backticks (``) to create a template for each product card
+                html += `
+                    <div class="product-column">
+                        <div class="product-card">
+                            <img src="${product.image_path}" alt="${product.name}">
+                            <h1>${product.name}</h1>
+                            <p class="edu-school">₱${parseFloat(product.price).toFixed(2)}</p>
+                            <button onclick="openModal('${product.name}', '₱${product.price}', '${product.image_path}', '${product.description}')">
+                                <p>ORDER</p>
+                            </button>
+                        </div>
+                    </div>`;
+            });
+
+            container.innerHTML = html;
+            
+            // Re-trigger the reveal animation for the new elements
+            if (typeof reveal === 'function') reveal();
+        }
+    })
+    .catch(error => console.error('Error loading products:', error));
+}
+
+// Call this function when the page loads
+document.addEventListener('DOMContentLoaded', function() {
+    loadProductsFromDB();
+});
