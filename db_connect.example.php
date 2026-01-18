@@ -1,3 +1,5 @@
+<!-- rename db_connect.example.php to db_connect.php and fill in your database credentials -->
+
 <?php
 // db_connect.php
 $servername = "localhost";
