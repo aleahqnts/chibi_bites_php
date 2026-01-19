@@ -1,8 +1,6 @@
 <?php
-// 1. Get the connection
 require_once 'db_connect.php';
 
-// 2. Fetch the data
 $sql = "SELECT * FROM products";
 $result = $conn->query($sql);
 $products = [];

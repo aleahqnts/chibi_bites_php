@@ -344,14 +344,19 @@ function closeAuthModal() {
     }
 }
 
-// Check login status
+// --- ACCOUNT & AUTHENTICATION LOGIC ---
+
+/**
+ * Enhanced checkLoginStatus to handle profile UI updates if on account.html
+ */
 function checkLoginStatus() {
     const profileSection = document.getElementById('profileSection');
     const loginSection = document.getElementById('loginSection');
     
-    // Show login section by default while checking
-    loginSection.style.display = 'block';
-    
+    // If these elements don't exist, we aren't on the account page, 
+    // but we might still want to check status for other things
+    const isAccountPage = !!(profileSection && loginSection);
+
     const formData = new FormData();
     formData.append('action', 'check');
     
@@ -362,31 +367,79 @@ function checkLoginStatus() {
     .then(response => response.json())
     .then(data => {
         if (data.success && data.logged_in && data.user) {
-            profileSection.style.display = 'block';
-            loginSection.style.display = 'none';
-            
-            // Fill profile data
-            document.getElementById('profileName').textContent = data.user.fullname;
-            document.getElementById('profileEmail').textContent = data.user.email;
-            document.getElementById('profilePhone').textContent = data.user.phone;
-            
-            // Combine street and city for the address view
-            const fullAddress = `${data.user.street}, ${data.user.city}`;
-            document.getElementById('profileAddress').textContent = fullAddress;
-            
-            const initials = getInitials(data.user.fullname);
-            document.getElementById('userInitials').textContent = initials;
+            // Update UI if on Account Page
+            if (isAccountPage) {
+                profileSection.style.display = 'block';
+                loginSection.style.display = 'none';
+                
+                // Map database fields to UI
+                // Note: using data.user.fullname to match your SQL schema
+                document.getElementById('profileName').textContent = data.user.fullname || data.user.name;
+                document.getElementById('profileEmail').textContent = data.user.email;
+                document.getElementById('profilePhone').textContent = data.user.phone || 'Not provided';
+                
+                // Combine street and city for address display
+                const address = data.user.street ? `${data.user.street}, ${data.user.city}` : data.user.address;
+                document.getElementById('profileAddress').textContent = address;
+                
+                // Set initials icon
+                const initials = getInitials(data.user.fullname || data.user.name);
+                document.getElementById('userInitials').textContent = initials;
+            }
         } else {
-            profileSection.style.display = 'none';
-            loginSection.style.display = 'block';
+            if (isAccountPage) {
+                profileSection.style.display = 'none';
+                loginSection.style.display = 'block';
+            }
         }
     })
     .catch(error => {
         console.error('Error checking login status:', error);
-        // Show login section on error
-        profileSection.style.display = 'none';
-        loginSection.style.display = 'block';
+        if (isAccountPage) {
+            profileSection.style.display = 'none';
+            loginSection.style.display = 'block';
+        }
     });
+}
+
+function getInitials(name) {
+    if (!name) return "?";
+    return name.split(' ')
+        .map(word => word.charAt(0))
+        .join('')
+        .toUpperCase()
+        .substring(0, 2);
+}
+
+function logout() {
+    if (!confirm('Are you sure you want to logout?')) {
+        return;
+    }
+    
+    const formData = new FormData();
+    formData.append('action', 'logout');
+    
+    fetch('auth.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            window.location.href = 'account.html';
+        } else {
+            alert('Error logging out. Please try again.');
+        }
+    })
+    .catch(error => {
+        console.error('Error logging out:', error);
+        alert('Error logging out. Please try again.');
+    });
+}
+
+// Initial Cart Badge Update
+if (typeof updateCartBadge === 'function') {
+    updateCartBadge();
 }
 
 // Check authentication before checkout

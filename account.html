@@ -13,6 +13,7 @@
             min-height: 100vh;
             padding: 110px;
             padding-bottom: 70px;
+            padding-top: 90px;
             background: var(--white);
             display: flex;
             align-items: center;
@@ -24,7 +25,7 @@
             padding:  40px;
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            max-width: 700px;
+            max-width: 1000px;
             margin: 0 auto;
             border: 1px solid #e0e0e0;
             opacity: 0;
@@ -54,7 +55,7 @@
             font-family: 'Montserrat', sans-serif;
             color: var(--primary-brown);
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 15px;
             font-size: 16px;
             opacity: 0.8;
         }
@@ -68,16 +69,16 @@
         }
 
         .user-icon {
-            width: 100px;
-            height: 100px;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--primary-pink) 0%, #ffd4e0 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 25px;
+            margin: 0 auto 15px;
             color: var(--primary-brown);
-            font-size: 42px;
+            font-size: 40px;
             font-family: 'Coiny', cursive;
             font-weight: 600;
             box-shadow: 0 4px 15px rgba(254, 187, 204, 0.4);
@@ -88,7 +89,9 @@
             background: var(--light-pink);
             padding: 35px;
             border-radius: 15px;
-            margin-bottom: 30px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            padding-bottom: 15px;
         }
 
         .info-row {
@@ -97,11 +100,6 @@
             margin-bottom: 20px;
             padding-bottom: 20px;
             border-bottom: 1px solid rgba(124, 71, 74, 0.1);
-        }
-
-        .info-row:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
         }
 
         .info-icon {
@@ -238,12 +236,12 @@
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 15px;
-            margin-bottom: 30px;
+            margin-bottom: 15px;
         }
 
         .stat-card {
             background: white;
-            padding: 20px;
+            padding: 10px;
             border-radius: 12px;
             text-align: center;
             border: 2px solid var(--light-pink);
@@ -495,93 +493,6 @@
             </div>
         </div>
     </footer>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            checkLoginStatus();
-        });
-
-        function checkLoginStatus() {
-            const profileSection = document.getElementById('profileSection');
-            const loginSection = document.getElementById('loginSection');
-            
-            const formData = new FormData();
-            formData.append('action', 'check');
-            
-            fetch('auth.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success && data.logged_in && data.user) {
-                    // User is logged in - show profile
-                    profileSection.style.display = 'block';
-                    loginSection.style.display = 'none';
-                    
-                    // Fill profile data
-                    document.getElementById('profileName').textContent = data.user.name;
-                    document.getElementById('profileEmail').textContent = data.user.email;
-                    document.getElementById('profilePhone').textContent = data.user.phone || 'Not provided';
-                    document.getElementById('profileAddress').textContent = data.user.address;
-                    
-                    // Set user initials icon
-                    const initials = getInitials(data.user.name);
-                    document.getElementById('userInitials').textContent = initials;
-                    
-                } else {
-                    // User is not logged in - show login options
-                    profileSection.style.display = 'none';
-                    loginSection.style.display = 'block';
-                }
-            })
-            .catch(error => {
-                console.error('Error checking login status:', error);
-                // Show login section as fallback
-                profileSection.style.display = 'none';
-                loginSection.style.display = 'block';
-            });
-        }
-
-        function getInitials(name) {
-            return name.split(' ')
-                .map(word => word.charAt(0))
-                .join('')
-                .toUpperCase()
-                .substring(0, 2);
-        }
-
-        function logout() {
-            if (!confirm('Are you sure you want to logout?')) {
-                return;
-            }
-            
-            const formData = new FormData();
-            formData.append('action', 'logout');
-            
-            fetch('auth.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    window.location.href = 'account.html';
-                } else {
-                    alert('Error logging out. Please try again.');
-                }
-            })
-            .catch(error => {
-                console.error('Error logging out:', error);
-                alert('Error logging out. Please try again.');
-            });
-        }
-
-        // Update cart badge on page load
-        if (typeof updateCartBadge === 'function') {
-            updateCartBadge();
-        }
-    </script>
 
     <script src="script.js"></script>
 </body>
