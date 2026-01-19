@@ -381,6 +381,9 @@ function checkLoginStatus() {
                 // Combine street and city for address display
                 const address = data.user.street ? `${data.user.street}, ${data.user.city}` : data.user.address;
                 document.getElementById('profileAddress').textContent = address;
+
+                document.getElementById('orderCount').textContent = data.user.order_count;
+                document.getElementById('totalSpent').textContent = '₱' + parseFloat(data.user.total_spent).toLocaleString(undefined, {minimumFractionDigits: 2});
                 
                 // Set initials icon
                 const initials = getInitials(data.user.fullname || data.user.name);
@@ -520,3 +523,69 @@ function loadProductsFromDB() {
 document.addEventListener('DOMContentLoaded', function() {
     loadProductsFromDB();
 });
+
+// Function to open order history modal and fetch orders
+function openHistoryModal() {
+    const modal = document.getElementById('historyModal');
+    const list = document.getElementById('historyList');
+    const table = document.getElementById('historyTable');
+    const loading = document.getElementById('historyLoading');
+    const empty = document.getElementById('historyEmpty');
+
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+
+    // Fetch orders
+    const formData = new FormData();
+    formData.append('action', 'check'); // Using our check action which now returns history
+
+    fetch('auth.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        loading.style.display = 'none';
+        
+        if (data.success && data.user.history && data.user.history.length > 0) {
+            table.style.display = 'table';
+            empty.style.display = 'none';
+            
+            list.innerHTML = data.user.history.map(order => {
+                const dateObj = new Date(order.created_at);
+                
+                // Format Date: MM/DD/YYYY
+                const date = dateObj.toLocaleDateString();
+                
+                // Format Time: 12-hour format (e.g., 1:30 PM)
+                const time = dateObj.toLocaleTimeString([], { 
+                    hour: '2-digit', 
+                    minute: '2-digit', 
+                    hour12: true 
+                });
+
+                return `
+                    <tr>
+                        <td>#${order.id}</td>
+                        <td>${date}</td>
+                        <td>${time}</td>
+                        <td>₱${parseFloat(order.total_amount).toFixed(2)}</td>
+                        <td><span class="status-badge status-${order.status}">${order.status}</span></td>
+                    </tr>
+                `;
+            }).join('');
+        } else {
+            table.style.display = 'none';
+            empty.style.display = 'block';
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        loading.innerText = "Error loading history.";
+    });
+}
+
+function closeHistoryModal() {
+    document.getElementById('historyModal').classList.remove('active');
+    document.body.style.overflow = 'auto';
+}

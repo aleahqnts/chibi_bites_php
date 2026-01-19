@@ -521,7 +521,7 @@ button:hover {
     max-width: 600px;
     width: 90%;
     position: relative;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.463);
     animation: slideUp 0.3s ease;
 }
 
@@ -1313,4 +1313,102 @@ button:hover {
         width: 50px;
         height: 50px;
     }
+}
+
+/* History Modal Styling */
+.history-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 3000;
+    backdrop-filter: blur(4px);
+}
+
+.history-modal-overlay.active {
+    display: flex;
+}
+
+.history-modal-content {
+    background: white;
+    width: 90%;
+    max-width: 700px;
+    max-height: 80vh;
+    border-radius: 25px;
+    overflow: hidden;
+    animation: zoomIn 0.3s ease;
+}
+
+.history-header {
+    background: var(--primary-pink);
+    padding: 20px;
+    color: var(--primary-brown);
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    position: relative; 
+}
+
+.history-header h2 {
+    font-family: 'Coiny', cursive;
+    margin: 0;
+    font-size: 20px;
+    text-align: center;
+}
+
+.close-history {
+    position: absolute; 
+    right: 20px;      
+    top: 50%;
+    transform: translateY(-50%); 
+    background: none;
+    border: none;
+    font-size: 30px;
+    cursor: pointer;
+    color: var(--primary-brown);
+    line-height: 1;
+}
+
+.history-body {
+    padding: 20px;
+    overflow-y: auto;
+    max-height: calc(80vh - 80px);
+}
+
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.history-table th {
+    text-align: left;
+    padding: 12px;
+    border-bottom: 2px solid var(--light-pink);
+    color: var(--primary-brown);
+}
+
+.history-table td {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+}
+
+.status-badge {
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.status-pending { background: #fff3cd; color: #856404; }
+.status-completed { background: #d4edda; color: #155724; }
+
+@keyframes zoomIn {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
 }

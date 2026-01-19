@@ -362,11 +362,11 @@
                 <!-- Stats Grid -->
                 <div class="stats-grid">
                     <div class="stat-card">
-                        <span class="stat-number">0</span>
-                        <span class="stat-label">Orders</span>
+                        <span class="stat-number" id="orderCount">0</span>
+                        <span class="stat-label">Total Orders</span>
                     </div>
                     <div class="stat-card">
-                        <span class="stat-number">₱0</span>
+                        <span class="stat-number" id="totalSpent">₱0</span>
                         <span class="stat-label">Total Spent</span>
                     </div>
                 </div>
@@ -422,12 +422,37 @@
                 </div>
                 
                 <div class="account-buttons">
-                    <button class="account-btn account-btn-primary" onclick="window.location.href='shop.php'">
-                        SHOP NOW
-                    </button>
-                    <button class="account-btn account-btn-danger" onclick="logout()">
-                        LOGOUT
-                    </button>
+                    <button class="account-btn account-btn-primary" onclick="window.location.href='shop.php'">SHOP NOW</button>
+                    <button class="account-btn account-btn-outline" onclick="openHistoryModal()">VIEW HISTORY</button>
+                    <button class="account-btn account-btn-danger" onclick="logout()">LOGOUT</button>
+                </div>
+
+                <div id="historyModal" class="history-modal-overlay">
+                    <div class="history-modal-content">
+                        <div class="history-header">
+                            <h2><i class="fas fa-history"></i> Order History</h2>
+                            <button class="close-history" onclick="closeHistoryModal()">&times;</button>
+                        </div>
+                        <div class="history-body">
+                            <div id="historyLoading" class="loading-spinner">Loading your orders...</div>
+                            <div id="historyEmpty" style="display:none; text-align:center; padding: 40px;">
+                                <p>You haven't placed any orders yet!</p>
+                            </div>
+                            <table class="history-table" id="historyTable" style="display:none;">
+                                <thead>
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Date</th>
+                                        <th>Time</th> 
+                                        <th>Total</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="historyList">
+                                    </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
             
