@@ -92,41 +92,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (isset($_SESSION['user_id'])) {
             $user_id = $_SESSION['user_id'];
             
-            // 1. Get User Info
-            $stmt = $conn->prepare("SELECT fullname, email, phone, street, city FROM users WHERE id = ?");
-            $stmt->bind_param("i", $user_id);
-            $stmt->execute();
-            $user = $stmt->get_result()->fetch_assoc();
+            // CALL the Stored Procedure
+            if ($conn->multi_query("CALL GetUserDashboardData($user_id)")) {
+                
+                // 1. Fetch User Info
+                $result = $conn->store_result();
+                $user = $result->fetch_assoc();
+                $result->free();
+                $conn->next_result();
 
-            // 2. Get Stats (Count and Sum)
-            $stats_stmt = $conn->prepare("SELECT COUNT(id) as order_count, SUM(total_amount) as total_spent FROM orders WHERE user_id = ?");
-            $stats_stmt->bind_param("i", $user_id);
-            $stats_stmt->execute();
-            $stats = $stats_stmt->get_result()->fetch_assoc();
+                // 2. Fetch Stats
+                $result = $conn->store_result();
+                $stats = $result->fetch_assoc();
+                $result->free();
+                $conn->next_result();
 
-            // 3. Get Recent Orders (The History)
-            $orders_stmt = $conn->prepare("SELECT id, total_amount, status, created_at FROM orders WHERE user_id = ? ORDER BY created_at DESC LIMIT 5");
-            $orders_stmt->bind_param("i", $user_id);
-            $orders_stmt->execute();
-            $orders_result = $orders_stmt->get_result();
-            $orders = [];
-            while($row = $orders_result->fetch_assoc()) {
-                $orders[] = $row;
+                // 3. Fetch History
+                $result = $conn->store_result();
+                $history = [];
+                while($row = $result->fetch_assoc()) {
+                    $history[] = $row;
+                }
+                $result->free();
+
+                echo json_encode([
+                    'success' => true,
+                    'logged_in' => true,
+                    'user' => [
+                        'fullname' => $user['fullname'],
+                        'email' => $user['email'],
+                        'phone' => $user['phone'],
+                        'address' => $user['street'] . ', ' . $user['city'],
+                        'order_count' => $stats['order_count'],
+                        'total_spent' => $stats['total_spent'],
+                        'history' => $history
+                    ]
+                ]);
             }
-
-            echo json_encode([
-                'success' => true,
-                'logged_in' => true,
-                'user' => [
-                    'fullname' => $user['fullname'],
-                    'email' => $user['email'],
-                    'phone' => $user['phone'],
-                    'address' => $user['street'] . ', ' . $user['city'],
-                    'order_count' => $stats['order_count'] ?? 0,
-                    'total_spent' => $stats['total_spent'] ?? 0,
-                    'history' => $orders
-                ]
-            ]);
         } else {
             echo json_encode(['success' => true, 'logged_in' => false]);
         }
