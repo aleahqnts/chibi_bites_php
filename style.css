@@ -419,12 +419,14 @@ main {
 
 .sectionshop {
     width: 100%;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     color: black;
     text-align: center;
-    margin-top: 130px;
+    padding-top: 130px;
+    padding-bottom: 50px;
 }
 
 .sectionshop h1 {
@@ -1116,7 +1118,7 @@ button:hover {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(135deg, var(--cream) 0%, var(--light-pink) 100%);
+    background: var(--white);
     padding: 100px 20px 20px;
 }
 
@@ -1124,7 +1126,7 @@ button:hover {
     background: white;
     padding: 50px 40px;
     border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    box-shadow: 0 20px 30px rgba(0, 0, 0, 0.241);
     max-width: 550px;
     width: 100%;
     border: 1px solid #e0e0e0;

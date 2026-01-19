@@ -10,21 +10,22 @@
     <link rel="stylesheet" href="style.css">
     <style>
         .account-page {
-            min-height: calc(100vh - 70px); /* 70px is navbar height */
-            padding: 190px 20px 40px;
-            padding-bottom: 150px;
+            min-height: 100vh;
+            padding-top: 50px;
             background: var(--white);
             display: flex;
             align-items: center;
             justify-content: center;
+            padding-top: 50;
         }
 
         .account-container {
             background: white;
-            padding:  40px;
+            padding: 40px;
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            max-width: 700px;
+            max-width: 850px;
+            width: 90%;
             margin: 0 auto;
             border: 1px solid #e0e0e0;
             opacity: 0;
@@ -283,7 +284,7 @@
             }
 
             .account-buttons {
-                grid-template-columns: 1fr;
+                flex-direction: column;
             }
 
             .stats-grid {
@@ -351,15 +352,13 @@
         </div>
     </nav>
 
-    
-
     <div class="account-page">
         <div class="account-container">
             <h1>My Account</h1>
             
             <!-- Profile Section (shown when logged in) -->
             <div class="profile-section" id="profileSection">
-                <p class="welcome-text">Welcome back! 🍡</p>
+                <p class="welcome-text">Welcome back! 🏡</p>
                 
                 <div class="user-icon" id="userInitials">?</div>
                 

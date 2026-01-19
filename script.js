@@ -362,22 +362,21 @@ function checkLoginStatus() {
     .then(response => response.json())
     .then(data => {
         if (data.success && data.logged_in && data.user) {
-            // User is logged in - show profile
             profileSection.style.display = 'block';
             loginSection.style.display = 'none';
             
             // Fill profile data
-            document.getElementById('profileName').textContent = data.user.name;
+            document.getElementById('profileName').textContent = data.user.fullname;
             document.getElementById('profileEmail').textContent = data.user.email;
-            document.getElementById('profilePhone').textContent = data.user.phone || 'Not provided';
-            document.getElementById('profileAddress').textContent = data.user.address;
+            document.getElementById('profilePhone').textContent = data.user.phone;
             
-            // Set user initials icon
-            const initials = getInitials(data.user.name);
+            // Combine street and city for the address view
+            const fullAddress = `${data.user.street}, ${data.user.city}`;
+            document.getElementById('profileAddress').textContent = fullAddress;
+            
+            const initials = getInitials(data.user.fullname);
             document.getElementById('userInitials').textContent = initials;
-            
         } else {
-            // User is not logged in - keep login section visible
             profileSection.style.display = 'none';
             loginSection.style.display = 'block';
         }

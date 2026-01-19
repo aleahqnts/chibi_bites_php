@@ -89,24 +89,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     // CHECK LOGIN STATUS
     if ($action === 'check') {
-        if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
+        if (isset($_SESSION['user_id'])) {
+            $user_id = $_SESSION['user_id'];
+            $stmt = $conn->prepare("SELECT fullname, email, phone, street, city FROM users WHERE id = ?");
+            $stmt->bind_param("i", $user_id);
+            $stmt->execute();
+            $user = $stmt->get_result()->fetch_assoc();
+
             echo json_encode([
                 'success' => true,
                 'logged_in' => true,
                 'user' => [
-                    'id' => $_SESSION['user_id'],
-                    'name' => $_SESSION['user_name'],
-                    'email' => $_SESSION['user_email'],
-                    'phone' => $_SESSION['user_phone'],
-                    'street' => $_SESSION['user_street'],
-                    'city' => $_SESSION['user_city'],
-                    'zipcode' => $_SESSION['user_zipcode'],
-                    'address' => $_SESSION['user_street'] . ', ' . $_SESSION['user_city'] . ' ' . $_SESSION['user_zipcode']
+                    'fullname' => $user['fullname'],
+                    'email' => $user['email'],
+                    'phone' => $user['phone'],
+                    'street' => $user['street'],
+                    'city' => $user['city']
                 ]
             ]);
         } else {
             echo json_encode(['success' => true, 'logged_in' => false]);
         }
+        exit;
     }
 
     // GET PRODUCTS
