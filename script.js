@@ -1,4 +1,80 @@
-document.addEventListener('DOMContentLoaded', function() {
+// Section 1 Slider (Home page hero slider)
+function initHeroSlider() {
+    const slides = document.querySelectorAll('.section-1 .slider img');
+    const navDots = document.querySelectorAll('.section-1 .slider-nav a');
+    
+    if (slides.length === 0 || navDots.length === 0) return;
+    
+    let currentSlide = 0;
+    const slideInterval = 3000;
+
+    function showSlide(index) {
+        slides.forEach(slide => slide.classList.remove('active'));
+        navDots.forEach(dot => dot.classList.remove('active'));
+        
+        slides[index].classList.add('active');
+        navDots[index].classList.add('active');
+    }
+
+    function nextSlide() {
+        currentSlide = (currentSlide + 1) % slides.length;
+        showSlide(currentSlide);
+    }
+
+    let autoSlide = setInterval(nextSlide, slideInterval);
+
+    navDots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            currentSlide = index;
+            showSlide(currentSlide);
+            clearInterval(autoSlide);
+            autoSlide = setInterval(nextSlide, slideInterval);
+        });
+    });
+}
+
+// Section 3 Bestseller Slider
+function initBestsellerSlider() {
+    const slider = document.querySelector('.bestseller-slider');
+    const slides = document.querySelectorAll('.bestseller-slider img');
+    const navDots = document.querySelectorAll('.section-3 .slider-nav a');
+    const textElements = document.querySelectorAll('.bestseller-text');
+    
+    if (!slider || slides.length === 0 || navDots.length === 0 || textElements.length === 0) return;
+    
+    let currentSlide = 0;
+    const slideInterval = 15000;
+
+    function showSlide(index) {
+        textElements.forEach(text => text.classList.remove('active'));
+        slider.style.transform = `translateX(-${index * 100}%)`;
+        navDots.forEach(dot => dot.classList.remove('active'));
+        navDots[index].classList.add('active');
+        
+        setTimeout(() => {
+            textElements[index].classList.add('active');
+        }, 1000);
+    }
+
+    function nextSlide() {
+        currentSlide = (currentSlide + 1) % slides.length;
+        showSlide(currentSlide);
+    }
+
+    let autoSlide = setInterval(nextSlide, slideInterval);
+
+    navDots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            currentSlide = index;
+            showSlide(currentSlide);
+            clearInterval(autoSlide);
+            autoSlide = setInterval(nextSlide, slideInterval);
+        });
+    });
+}
+
+// Reveal animation on scroll
+function initRevealAnimation() {
     function reveal() {
         const reveals = document.querySelectorAll('.reveal');
         reveals.forEach(element => {
@@ -14,100 +90,96 @@ document.addEventListener('DOMContentLoaded', function() {
 
     window.addEventListener('scroll', reveal);
     reveal();
-    
-    // Check login status on page load
-    checkLoginStatus();
-});
+}
 
+// Product Modal Functions
 let currentQuantity = 1;
 let currentProduct = {};
 
 function openModal(name, price, img, description) {
+    const modal = document.getElementById('productModal');
+    const modalName = document.getElementById('modalProductName');
+    const modalPrice = document.getElementById('modalProductPrice');
+    const modalImg = document.getElementById('modalProductImg');
+    const modalDesc = document.getElementById('modalProductDescription');
+    const quantityDisplay = document.getElementById('quantityDisplay');
+    
+    if (!modal || !modalName || !modalPrice || !modalImg || !modalDesc || !quantityDisplay) return;
+    
     currentProduct = { name, price, img, description };
     currentQuantity = 1;
     
-    document.getElementById('modalProductName').textContent = name;
-    document.getElementById('modalProductPrice').textContent = price;
-    document.getElementById('modalProductImg').src = img;
-    document.getElementById('modalProductDescription').textContent = description;
-    document.getElementById('quantityDisplay').textContent = currentQuantity;
+    modalName.textContent = name;
+    modalPrice.textContent = price;
+    modalImg.src = img;
+    modalDesc.textContent = description;
+    quantityDisplay.textContent = currentQuantity;
     
-    document.getElementById('productModal').classList.add('active');
+    modal.classList.add('active');
     document.body.style.overflow = 'hidden';
 }
 
 function closeModal() {
-    document.getElementById('productModal').classList.remove('active');
+    const modal = document.getElementById('productModal');
+    if (!modal) return;
+    
+    modal.classList.remove('active');
     document.body.style.overflow = 'auto';
 }
 
 function increaseQuantity() {
+    const quantityDisplay = document.getElementById('quantityDisplay');
+    if (!quantityDisplay) return;
+    
     currentQuantity++;
-    document.getElementById('quantityDisplay').textContent = currentQuantity;
+    quantityDisplay.textContent = currentQuantity;
 }
 
 function decreaseQuantity() {
+    const quantityDisplay = document.getElementById('quantityDisplay');
+    if (!quantityDisplay) return;
+    
     if (currentQuantity > 1) {
         currentQuantity--;
-        document.getElementById('quantityDisplay').textContent = currentQuantity;
+        quantityDisplay.textContent = currentQuantity;
     }
 }
 
-// Close modal when clicking outside
-window.onclick = function(event) {
-    const modal = document.getElementById('productModal');
-    const authModal = document.getElementById('authModal');
-    
-    if (event.target === modal) {
-        closeModal();
+// Cart Functions
+function initCart() {
+    const cartIcon = document.querySelector('a[href="cart.html"]');
+    const cartSidebar = document.getElementById('cartSidebar');
+    const cartOverlay = document.getElementById('cartOverlay');
+    const closeCart = document.getElementById('closeCart');
+
+    if (cartIcon && cartSidebar && cartOverlay) {
+        cartIcon.addEventListener('click', (e) => {
+            e.preventDefault();
+            cartSidebar.classList.add('active');
+            cartOverlay.classList.add('active');
+            loadCart();
+        });
     }
-    
-    if (event.target === authModal) {
-        closeAuthModal();
+
+    if (closeCart && cartSidebar && cartOverlay) {
+        closeCart.addEventListener('click', () => {
+            cartSidebar.classList.remove('active');
+            cartOverlay.classList.remove('active');
+        });
+    }
+
+    if (cartOverlay && cartSidebar) {
+        cartOverlay.addEventListener('click', () => {
+            cartSidebar.classList.remove('active');
+            cartOverlay.classList.remove('active');
+        });
     }
 }
 
-// Close modal with Escape key
-document.addEventListener('keydown', function(event) {
-    if (event.key === 'Escape') {
-        closeModal();
-        closeAuthModal();
-    }
-});
-
-// Cart functionality
-const cartIcon = document.querySelector('a[href="cart.html"]');
-const cartSidebar = document.getElementById('cartSidebar');
-const cartOverlay = document.getElementById('cartOverlay');
-const closeCart = document.getElementById('closeCart');
-
-// Open cart when clicking cart icon
-if (cartIcon) {
-    cartIcon.addEventListener('click', (e) => {
-        e.preventDefault();
-        cartSidebar.classList.add('active');
-        cartOverlay.classList.add('active');
-        loadCart();
-    });
-}
-
-// Close cart
-if (closeCart) {
-    closeCart.addEventListener('click', () => {
-        cartSidebar.classList.remove('active');
-        cartOverlay.classList.remove('active');
-    });
-}
-
-if (cartOverlay) {
-    cartOverlay.addEventListener('click', () => {
-        cartSidebar.classList.remove('active');
-        cartOverlay.classList.remove('active');
-    });
-}
-
-// Update cart badge count
 function updateCartBadge() {
+    const cartIcon = document.querySelector('a[href="cart.html"]');
+    if (!cartIcon) return;
+    
     const formData = new FormData();
     formData.append('action', 'get');
     
@@ -144,12 +216,18 @@ function updateCartBadge() {
     });
 }
 
-// Add to cart function
 function addToCart() {
-    const name = document.getElementById('modalProductName').textContent;
-    const price = document.getElementById('modalProductPrice').textContent;
-    const image = document.getElementById('modalProductImg').src;
-    const quantity = parseInt(document.getElementById('quantityDisplay').textContent);
+    const modalName = document.getElementById('modalProductName');
+    const modalPrice = document.getElementById('modalProductPrice');
+    const modalImg = document.getElementById('modalProductImg');
+    const quantityDisplay = document.getElementById('quantityDisplay');
+    
+    if (!modalName || !modalPrice || !modalImg || !quantityDisplay) return;
+    
+    const name = modalName.textContent;
+    const price = modalPrice.textContent;
+    const image = modalImg.src;
+    const quantity = parseInt(quantityDisplay.textContent);
     
     const formData = new FormData();
     formData.append('action', 'add');
@@ -173,8 +251,13 @@ function addToCart() {
             closeModal();
             currentQuantity = 1;
             updateCartBadge();
-            cartSidebar.classList.add('active');
-            cartOverlay.classList.add('active');
+            
+            const cartSidebar = document.getElementById('cartSidebar');
+            const cartOverlay = document.getElementById('cartOverlay');
+            if (cartSidebar && cartOverlay) {
+                cartSidebar.classList.add('active');
+                cartOverlay.classList.add('active');
+            }
             loadCart();
         } else {
             console.error('Error from server:', data.error);
@@ -211,7 +294,6 @@ function loadCart() {
     });
 }
 
-// Mix & Match pricing: 3 mochi (except Mochi Bites) = ₱100
 function calculateTotal(cart) {
     let mochiItems = [];
     let specialItems = [];
@@ -244,6 +326,8 @@ function displayCart(cart) {
     const cartItems = document.getElementById('cartItems');
     const cartFooter = document.getElementById('cartFooter');
     const cartTotal = document.getElementById('cartTotal');
+    
+    if (!cartItems || !cartFooter || !cartTotal) return;
     
     if (!cart || cart.length === 0) {
         cartItems.innerHTML = '<div class="cart-empty">Your cart is empty</div>';
@@ -327,7 +411,7 @@ function removeFromCart(index) {
     });
 }
 
-// AUTH MODAL FUNCTIONS
+// Auth Modal Functions
 function openAuthModal() {
     const authModal = document.getElementById('authModal');
     if (authModal) {
@@ -344,7 +428,6 @@ function closeAuthModal() {
     }
 }
 
-// Check login status
 function checkLoginStatus() {
     const formData = new FormData();
     formData.append('action', 'check');
@@ -356,10 +439,8 @@ function checkLoginStatus() {
     .then(response => response.json())
     .then(data => {
         if (data.success && data.logged_in) {
-            // User is logged in
             updateUIForLoggedInUser(data.user);
         } else {
-            // User is not logged in
             updateUIForGuest();
         }
     })
@@ -369,12 +450,10 @@ function checkLoginStatus() {
 }
 
 function updateUIForLoggedInUser(user) {
-    // You can update the account icon or show user name
     console.log('User logged in:', user.name);
 }
 
 function updateUIForGuest() {
-    // Set up checkout button to show auth modal
     const checkoutBtn = document.querySelector('.checkout-btn');
     if (checkoutBtn) {
         checkoutBtn.onclick = function() {
@@ -383,7 +462,6 @@ function updateUIForGuest() {
     }
 }
 
-// Check authentication before checkout
 function checkAuthBeforeCheckout() {
     const formData = new FormData();
     formData.append('action', 'check');
@@ -395,10 +473,8 @@ function checkAuthBeforeCheckout() {
     .then(response => response.json())
     .then(data => {
         if (data.success && data.logged_in) {
-            // User is logged in, proceed to checkout
             proceedToCheckout();
         } else {
-            // User is not logged in, show auth modal
             openAuthModal();
         }
     })
@@ -409,11 +485,39 @@ function checkAuthBeforeCheckout() {
 }
 
 function proceedToCheckout() {
-    // Proceed with checkout process
     alert('Proceeding to checkout...');
-    // You can redirect to a checkout page or show checkout form
-    // window.location.href = 'checkout.html';
 }
 
-// Load cart badge on page load
-updateCartBadge();
+// Modal close handlers
+function initModalHandlers() {
+    window.onclick = function(event) {
+        const modal = document.getElementById('productModal');
+        const authModal = document.getElementById('authModal');
+        
+        if (modal && event.target === modal) {
+            closeModal();
+        }
+        
+        if (authModal && event.target === authModal) {
+            closeAuthModal();
+        }
+    }
+
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeModal();
+            closeAuthModal();
+        }
+    });
+}
+
+// Initialize everything on DOM load
+document.addEventListener('DOMContentLoaded', function() {
+    initHeroSlider();
+    initBestsellerSlider();
+    initRevealAnimation();
+    initCart();
+    initModalHandlers();
+    checkLoginStatus();
+    updateCartBadge();
+});

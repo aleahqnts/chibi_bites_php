@@ -63,22 +63,31 @@
 </nav>
 
 	<section class="section section-1">
-    <section class="container">
-        <div class="slider-wrapper">
+        <section class="container">
+            <div class="slider-wrapper">
+                <div class="slider">
+                    <img class="active" src="images/homeslide1.png" alt="Slide 1">
+                    <img src="images/homeslide2.png" alt="Slide 2">
+                    <img src="images/homeslide3.png" alt="Slide 3">
+                    <img src="images/homeslide4.png" alt="Slide 4">
+                </div>
 
-            <div class="slider">
-                <img id="slide-1" src="images/homeslide1.png" alt="Slide 1">
-                <img id="slide-2" src="images/homeslide2.png" alt="Slide 2">
+                <div class="hero-content">
+                    <br><br>
+                    <h1>CHiBi BiTES</h1>
+                    <p><i>"Bringing sweetness in every bite"</i></p>
+                    <a href="shop.html" class="hero-btn">Shop Now</a>
+                </div>
+
+                <div class="slider-nav">
+                    <a class="active" data-slide="0"></a>
+                    <a data-slide="1"></a>
+                    <a data-slide="2"></a>
+                    <a data-slide="3"></a>
+                </div>
             </div>
-
-            <div class="slider-nav">
-                <a href="#slide-1"></a>
-                <a href="#slide-2"></a>
-            </div>
-
-        </div>
+        </section>
     </section>
-</section>
 
     <!-- SECTION 2 -->
     <section class="section section-2">
@@ -86,47 +95,68 @@
     <div class="center-div">
         <div class="left-div reveal">
             <h1>What is Mochi?</h1><br>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt <br><br>
-			ut labore et dolore magna aliqua. Ut enim ad minim veniam,ut labore et dolore magna aliqua. Ut enim ad minim veniam,ut labore et dolore magna aliqua. Ut enim ad minim veniam, </p>
+            <p>At Chibi Bites, mochi is our soft and chewy rice treat that’s perfect for any sweet craving. 
+                <br><br>
+			Made from glutinous rice, each bite has a unique, chewy texture and a gentle sweetness that melts in your mouth. 
+            Our mochis come in a variety of flavors, making them the perfect snack or dessert for everyone.</p>
         </div>
         <div class="right-div reveal">
-             <img src="images/whatismochi.jpg" alt="Mochi" class="right-img">
+             <img src="images/whatismochi.png" alt="Mochi" class="right-img">
         </div>
     </div>
     </section>
 
     <!-- SECTION 3 -->
-   <section class="section section-3">
+
+<section class="section section-3">
     <section class="container">
         <div class="slider-wrapper">
+            <div class="slider bestseller-slider">
+                <img class="active" src="images/bestseller1.png" alt="Slide 1">
+                <img src="images/bestseller2.png" alt="Slide 2">
+            </div>
 
-            <div class="slider">
-                <img id="slide-1" src="images/bestseller1.png" alt="Slide 1">
-                <img id="slide-2" src="images/bestseller2.png" alt="Slide 2">
+            <!-- Add this new div for bestseller info -->
+            <div class="bestseller-info">
+                <div class="bestseller-text active">
+                    <h2>Berry Cream</h2>
+                    <p>A soft, chewy mochi filled with smooth, creamy goodness and a burst 
+                        of sweet berry flavor. Perfectly balanced between fruity and creamy, this 
+                        best-seller is light, refreshing, and irresistibly satisfying in every bite.<br><br><b>Starting at ₱35.00</b></p>
+                </div>
+                <div class="bestseller-text">
+                    <h2>Matcha Zen</h2>
+                    <p>Delicately chewy mochi infused with rich matcha flavor and a creamy center that melts 
+                        in your mouth. Earthy, smooth, and calming, this best-seller is perfect for matcha 
+                        lovers seeking a peaceful, not-too-sweet treat.<br><br><b>Starting at ₱35.00</b></p>
+                </div>
             </div>
 
             <div class="slider-nav">
-                <a href="#slide-1"></a>
-                <a href="#slide-2"></a>
+                <a class="active" data-slide="0"></a>
+                <a data-slide="1"></a>
             </div>
-
         </div>
     </section>
 </section>
 
-<!-- SECTION 2 -->
-    <section class="section section-4">
-        <section class="section section-4">
+<!-- SECTION 4 -->
+<section class="section section-4">
     <div class="center-div">
         <div class="left-div reveal">
-            <img src="images/shopnow.png" alt="Mochi" class="right-img">
+            <a href="shop.html" class="image-link-wrapper">
+                <img src="images/shopnow.png" alt="Mochi" class="right-img">
+                <div class="floating-text">Shop Now!</div>
+            </a>
         </div>
         <div class="right-div reveal">
-             <img src="images/storeloc.png" alt="Mochi" class="right-img">
+            <a href="contact.html" class="image-link-wrapper">
+                <img src="images/storeloc.png" alt="Mochi" class="right-img">
+                <div class="floating-text">Store<br> Locations</div>
+            </a>
         </div>
     </div>
 </section>
-    </section>
 
     <!-- Authentication Modal -->
 <div id="authModal" class="auth-modal">

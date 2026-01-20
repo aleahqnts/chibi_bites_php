@@ -15,7 +15,7 @@ main {
 .reveal {
 	opacity: 0;
 	transform: translateY(50px);
-	transition: all 0.8s;
+	transition: all 0.7s;
 }
 
 .reveal.active {
@@ -25,7 +25,10 @@ main {
 
 
 .navbar {
-    background-color:#f5f5dc;
+    /*background-color:#f5f5dc;*/
+    background-color: white;
+    box-shadow: 0 5px 7px rgba(0, 0, 0, 0.1);
+    border-bottom: 2px solid pink;
     padding: 15px 30px;
     display: flex;
     justify-content: space-between;
@@ -65,7 +68,8 @@ main {
 }
 
 .title-img {
-    height: 25px;
+    margin-top: 2px;
+    height: 20px;
     width: auto;
 }
 
@@ -127,59 +131,169 @@ main {
     width: 100%;
 }
 
-/* SLIDER WRAPPER */
-.slider-wrapper {
-    position: relative;
-    height: 100%;
-    width: 100%;
-    margin: 0;
-}
+.hero-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 10;
+            color: pink;          
+        }
 
-/* SLIDER */
-.slider {
-    display: flex;
-    height: 100%;
-    width: 100%;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
-}
+        .hero-content h1 {
+            font-family: 'Coiny', cursive;
+            text-shadow: 
+            -5px -2px 0 #6b4b50,
+            3px -2px 0 #6b4b50,
+            -3px 2px 0 #6b4b50,
+            2px 2px 0 #6b4b50,
+            -3px 7px 6px #a1a1a1; /* new shadow added here */
+            font-size: clamp(2rem, 8vw, 5rem);
+            margin-bottom: -20px;
+            animation: fadeInDown 1s;
+        }
 
-/* SLIDES */
-.slider img {
-    flex: 0 0 100%;
-    height: 100%;
-    width: 100%;
-    object-fit: cover;
-    scroll-snap-align: start;
-}
+        .hero-content p {
+            color: #6b4b50;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 40px;
+            margin-bottom: 60px;
+            animation: fadeInUp 1s 0.3s both;
+            margin-top: 0px;
+            text-shadow: 0px 2px 3px #a1a1a1;
+        }
 
-/* NAV DOTS */
-.slider-nav {
-    display: flex;
-    column-gap: 1rem;
-    position: absolute;
-    bottom: 1.5rem;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1;
-}
+        .hero-btn {
+            display: inline-block;
+            padding: 15px 40px;
+            background: #9aa559;
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            animation: fadeInUp 1s 0.6s both;
+            box-shadow: 0px 2px 3px #a1a1a1;
+        }
 
-.slider-nav a {
-    width: 0.6rem;
-    height: 0.6rem;
-    border-radius: 50%;
-    background-color: #fff;
-    opacity: 0.75;
-    transition: opacity 250ms ease;
-}
+        .hero-btn:hover {
+            background: pink;
+            color: #6b4b50;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
 
-.slider-nav a:hover {
-    opacity: 1;
-}
+        /* SLIDER WRAPPER */
+        .slider-wrapper {
+            position: relative;
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* SLIDER */
+        .slider {
+            position: relative;
+            height: 100%;
+            width: 100%;
+        }
+
+        /* SLIDES */
+        .section-1 .slider img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+        }
+
+        .section-1 .slider img.active {
+            opacity: 1;
+        }
+
+        /* SLIDES - Only for section-3 (horizontal slide) */
+        .section-3 .slider img {
+            flex: 0 0 100%;
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+        }
+
+        /* NAV DOTS */
+        .slider-nav {
+            display: flex;
+            column-gap: 1rem;
+            position: absolute;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1;
+        }
+
+        .slider-nav a {
+            width: 0.6rem;
+            height: 0.6rem;
+            border-radius: 50%;
+            background-color: #fff;
+            opacity: 0.75;
+            transition: opacity 250ms ease;
+            cursor: pointer;
+        }
+
+        .slider-nav a:hover {
+            opacity: 1;
+        }
+
+        .slider-nav a.active {
+            opacity: 1;
+            background-color: #9aa559;
+        }
+
+                /* First slide fade-in on load */
+        .slider img:first-child {
+            animation: firstSlideFadeIn 1.5s ease-in-out forwards;
+        }
+
+        @keyframes firstSlideFadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
 
-.center-div {
+.section-2 .center-div {
     width: 70%;                 
     max-width: 1200px;
     height: 90%;                
@@ -197,6 +311,28 @@ main {
 	height: 400px;
 	justify-content:center;
 	align-content:center;
+	
+}
+
+.section-4 .center-div {
+    width: 70%;                 
+    max-width: 950px;
+    height: 90%;                
+    margin: 0 auto;              
+    display: flex;               
+    gap: 30px;                   
+    align-items: center;         
+    justify-content: center;
+}
+
+.section-4 .left-div, .section-4 .right-div {
+    flex: 1;                        
+    padding: 20px;
+	height: 300px;
+    width: 300px;
+	justify-content:center;
+	align-content:center;
+    
 	
 }
 
@@ -220,7 +356,7 @@ main {
 
 .left-div p{
 	color: #6b4b50;
-	text-align:center;
+	text-align:justify;
 	font-size:21px;
 }
 
@@ -230,24 +366,149 @@ main {
     border-radius: 10px;  
 }
 
-.right-img {
+.section-2 .right-img {
     width: 100%;
     height: 100%;
-    object-fit: cover;    
+    object-fit: cover;  
+    object-position: bottom; 
     display: block;
 	transition: transform 0.3s;
 	box-shadow: 0 10px 10px rgba(0,0,0,0.2);
+    border-radius: 20px;
+    border: 1px solid #6b4b50;
 }
 
-.right-img:hover {
-			transform: scale(1.05);
+
+
+.section-4 .left-div, .section-4 .right-div {
+    flex: 1;                        
+    padding: 20px;
+    height: 300px;
+    width: 300px;
+    justify-content: center;
+    align-content: center;
+    overflow: visible; /* Add this */
+    
 }
 
+.section-4 .right-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;  
+    object-position: top; 
+    display: block;
+    transition: transform 0.3s;
+    box-shadow: 0 10px 10px rgba(0,0,0,0.2); /* Made it stronger */
+    border-radius: 20px;
+    border: 1px solid #6b4b50;
+    
+}
+
+.image-link-wrapper {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    overflow: visible; /* Change from hidden to visible */
+    border-radius: 20px;
+}
+
+.section-4 .right-img:hover {
+			transform: scale(1.02);
+}
+
+
+.floating-text {
+    position: absolute;
+    top: 50%;
+    left: 60%;
+    transform: translate(-50%, -50%);
+    font-family: 'Coiny';
+    font-size: 45px;
+    color: #6b4b50;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    pointer-events: none;
+    transition: color 0.3s ease;
+    z-index: 5;
+    width: 100%;
+    line-height: 1;
+    text-align: center;
+}
+
+.image-link-wrapper:hover .floating-text {
+    color: #543b3f;
+}
+
+.image-link-wrapper:hover .right-img {
+    transform: scale(1.02);
+}
 
 .section-3 {
     height: 100vh;          
     width: 100%;
     display: flex;
+}
+
+
+/* Bestseller Info Overlay */
+/* SLIDER */
+.bestseller-slider {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    transition: transform 1s ease-in-out;
+}
+
+.bestseller-slider img {
+    flex: 0 0 100%;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+.bestseller-info {
+    position: absolute;
+    top: 25%;
+    left: 14%;
+    transform: translateY(-50%);
+    z-index: 10;
+    width: 500px;
+    
+}
+
+.bestseller-text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+    padding: 30px;
+}
+
+.bestseller-text.active {
+    opacity: 1;
+}
+
+.bestseller-text h2 {
+    font-family: 'Coiny', cursive;
+    color: #6b4b50;
+    font-size: 50px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.bestseller-text p {
+    font-family: 'Montserrat', sans-serif;
+    color: #6b4b50;
+    font-size: 20px;
+    line-height: 1.6;
+    text-align: justify;
+}
+
+.bestseller-text:nth-child(2) h2,
+.bestseller-text:nth-child(2) p {
+    color: white;
 }
 
 /* FOOTER STYLES - REPLACE OLD FOOTER CSS WITH THIS */
@@ -412,8 +673,10 @@ main {
   object-position: bottom;
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);
   margin-top: 3px;
+  border-radius: 13px;
   
 }
+
 
 .product-card {
 	margin-top:0px;
@@ -437,6 +700,15 @@ main {
 	transform: scale(1.05);
 }
  
+.edu-school{
+    font-family:"Montserrat";
+    color: gray;
+    text-align:center;
+    font-size:16px;
+}
+
+
+
 
 
 .sectionshop{
@@ -462,15 +734,34 @@ main {
 	
 }
 
-.mixmatch{
+.mixmatch-faqs{
 	margin-top: 10px;
-	background-color:pink;
+     border-left: 4px solid #ff9db3;
+    border-right: 4px solid #ff9db3;
 	padding: 9px;
 	margin-bottom: 15px;
     opacity: 0;
     animation: fadeIn 0.5s ease-in forwards;
     animation-delay: 0.1s; 
+    box-shadow: 0 3px 7px rgba(122, 121, 121, 0.2);
+    border-radius: 10px;
 }
+
+.sectionshop .mixmatch {
+    margin: 10px auto 15px auto;
+    max-width: 1080px;
+    width: 90%;
+    border-left: 4px solid #ff9db3;
+    border-right: 4px solid #ff9db3;
+    padding: 9px 12px;
+    color: #6b4b50;
+    opacity: 0;
+    animation: fadeIn 0.5s ease-in forwards;
+    animation-delay: 0.1s; 
+    box-shadow: 0 3px 7px rgba(122, 121, 121, 0.2);
+    border-radius: 10px;
+}
+
 
 
 @keyframes fadeIn {
@@ -486,7 +777,15 @@ main {
 
 .mixmatch p{
 	font-family:"Montserrat";
-	color: white;
+	color: gray;
+	text-align:center;
+	font-size:16px;
+	
+}
+
+.mixmatch-faqs p{
+	font-family:"Montserrat";
+	color: #6b4b50;
 	text-align:center;
 	font-size:18px;
 	
@@ -501,25 +800,25 @@ main {
 }
 
 button{
-	background-color:#b5c07a;
+	background-color:pink;
 	margin-top:10px;
 	text-align:center;
 	font-size:15px;
 	font-family: "Montserrat";
 	font-weight:500;
 	width:200px;
-	color:white;
+	color: #6b4b50;
 	border-radius: 50px;
-	border: 2px solid rgb(191, 188, 173) ;
+	border: 2px solid pink;
 	padding:6px;
 	
 	
 }
 
 button:hover{
-	border: 2px solid pink;
-	background-color:pink;
-	color:black;
+	border: 2px solid #b5c07a;
+	background-color:#b5c07a;
+	color:white;
 	
 }
 
@@ -551,6 +850,8 @@ button:hover{
 	position: relative;
 	box-shadow: 0 10px 30px rgba(0,0,0,0.3);
 	animation: slideUp 0.3s ease;
+    border-left: 5px solid pink;
+    border-right: 5px solid pink;
 }
 
 .close-btn {
@@ -571,6 +872,7 @@ button:hover{
 .close-btn:hover {
 	color: #9aa559;
 	background: none;
+    border: 1px solid pink;
 }
 
 .modal-product-img {
@@ -604,7 +906,7 @@ button:hover{
 	font-size: 16px;
 	line-height: 1.6;
 	margin: 20px 0;
-	text-align: left;
+	text-align: justify;
 }
 
 .quantity-selector {
@@ -632,6 +934,7 @@ button:hover{
 
 .quantity-btn:hover {
 	background-color: pink;
+    border: 1px solid pink;
 	color: black;
 }
 
@@ -828,6 +1131,7 @@ button:hover{
     z-index: 10000;
     display: flex;
     flex-direction: column;
+    border-left: 2px solid pink;
 }
 
 .cart-sidebar.active {
@@ -865,6 +1169,7 @@ button:hover{
 .cart-close:hover {
     color: white;
     background-color: pink;
+    border: 1px solid pink;
 }
 
 .cart-items {
@@ -965,6 +1270,7 @@ button:hover{
 .cart-remove:hover {
     color: #ff4444;
     background: none;
+    border: 1px solid #ff4444;
 }
 
 .cart-footer {
@@ -1007,6 +1313,7 @@ button:hover{
 .checkout-btn:hover {
     background: pink;
     color: black;
+    border: 1px solid pink;
 }
 
 .cart-empty {
