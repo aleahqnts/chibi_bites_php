@@ -43,7 +43,7 @@ function initBestsellerSlider() {
     if (!slider || slides.length === 0 || navDots.length === 0 || textElements.length === 0) return;
     
     let currentSlide = 0;
-    const slideInterval = 15000;
+    const slideInterval = 8000;
 
     function showSlide(index) {
         textElements.forEach(text => text.classList.remove('active'));
