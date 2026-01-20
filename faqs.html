@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chibi Bites - FAQs</title>
+    <title>Chibi Bites</title>
     <link rel="icon" href="images/logo.png" type="image/x-icon">   
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Coiny&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -46,22 +46,27 @@
             color: var(--text-brown);
             margin-bottom: 10px;
             margin-top: 80px;
-             opacity: 0; 
-            animation: fadeIn 0.5s ease-in forwards;
-            animation-delay: 0.1s; 
+            
         }
 
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px); /* Optional: slide down effect */
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+       .fade-in {
+    opacity: 0;
+    animation: fadeInUp 0.6s ease forwards;
+    animation-delay: 0.2s;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 
         .faq-container {
             display: flex;
@@ -72,7 +77,9 @@
         .faq-item {
             background-color: var(--white);
             border: 1px solid var(--text-brown);
+            border-radius: 10px;
             transition: transform 0.3s;
+            color: var(--text-brown);
             
             }
 
@@ -100,6 +107,7 @@
             transition: max-height 0.3s ease, padding 0.3s ease;
             font-size: 0.95rem;
             line-height: 1.6;
+            color:gray;
         }
 
         .faq-item.active .faq-answer {
@@ -193,10 +201,10 @@
  
 
     <main>
-        <h1>FAQs</h1>
-        <div class="mixmatch"><p>Frequently Asked Questions</p></div>
+        <h1 class = "fade-in">FAQs</h1>
+        <div class="mixmatch-faqs fade-in"><p>Frequently Asked Questions</p></div>
 
-        <div class="faq-container reveal">
+        <div class="faq-container fade-in">
             <div class="faq-item">
                 <div class="faq-question">
                     How should I store Chibi Bites?
