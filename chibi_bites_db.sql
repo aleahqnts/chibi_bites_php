@@ -33,7 +33,7 @@ CREATE TABLE `order_items` (
   PRIMARY KEY (`id`),
   KEY `order_id` (`order_id`),
   CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -42,7 +42,7 @@ CREATE TABLE `order_items` (
 
 LOCK TABLES `order_items` WRITE;
 /*!40000 ALTER TABLE `order_items` DISABLE KEYS */;
-INSERT INTO `order_items` VALUES (1,3,'Choco Berry',3,35.00),(2,3,'Berry Cream',3,35.00),(3,4,'Choco Berry',3,35.00),(4,5,'Choco Berry',3,35.00),(5,5,'Berry Cream',3,35.00),(6,6,'Matcha Zen',3,35.00),(7,7,'Choco Lava',3,35.00),(8,8,'Choco Lava',3,35.00),(9,9,'Biscoff Bliss',1,35.00),(10,10,'Matcha Zen',3,35.00),(11,10,'Mochi Bites',1,80.00),(12,10,'Oreo Cream',3,35.00),(13,11,'Berry Cream',6,35.00),(14,12,'Choco Berry',3,35.00),(15,18,'Choco Berry',3,35.00),(16,18,'Sunny Mango',3,35.00),(17,19,'Choco Berry',3,35.00),(18,20,'Berry Cream',3,35.00);
+INSERT INTO `order_items` VALUES (1,3,'Choco Berry',3,35.00),(2,3,'Berry Cream',3,35.00),(3,4,'Choco Berry',3,35.00),(4,5,'Choco Berry',3,35.00),(5,5,'Berry Cream',3,35.00),(6,6,'Matcha Zen',3,35.00),(7,7,'Choco Lava',3,35.00),(8,8,'Choco Lava',3,35.00),(9,9,'Biscoff Bliss',1,35.00),(10,10,'Matcha Zen',3,35.00),(11,10,'Mochi Bites',1,80.00),(12,10,'Oreo Cream',3,35.00),(13,11,'Berry Cream',6,35.00),(14,12,'Choco Berry',3,35.00),(15,18,'Choco Berry',3,35.00),(16,18,'Sunny Mango',3,35.00),(17,19,'Choco Berry',3,35.00),(18,20,'Berry Cream',3,35.00),(19,21,'Choco Berry',3,35.00);
 /*!40000 ALTER TABLE `order_items` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -64,7 +64,7 @@ CREATE TABLE `orders` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -73,7 +73,7 @@ CREATE TABLE `orders` (
 
 LOCK TABLES `orders` WRITE;
 /*!40000 ALTER TABLE `orders` DISABLE KEYS */;
-INSERT INTO `orders` VALUES (1,1,450.00,'506 Jamaica St., Vermont Park, Quezon City','cod','completed','2026-01-19 13:27:28'),(2,1,450.00,'506 Jamaica St., Vermont Park, Quezon City','cod','completed','2026-01-19 13:27:54'),(3,1,0.00,', ','GCash','pending','2026-01-22 05:38:25'),(4,1,0.00,', ','GCash','pending','2026-01-22 05:39:35'),(5,1,250.00,'506 Jamaica St., Vermont Park, Quezon City','cod','pending','2026-01-22 06:45:30'),(6,1,150.00,'506 Jamaica St., Vermont Park, Quezon City','cod','pending','2026-01-22 06:47:03'),(7,1,150.00,'506 Jamaica St., Vermont Park, Quezon City','cod','pending','2026-01-22 07:03:59'),(8,1,150.00,'506 Jamaica St., Vermont Park, Quezon City','cod','pending','2026-01-22 07:23:33'),(9,1,85.00,'506 Jamaica St., Vermont Park, Quezon City','cod','pending','2026-01-22 08:04:56'),(10,1,330.00,'506 Jamaica St., Vermont Park, Quezon City','cod','pending','2026-01-22 08:19:45'),(11,1,250.00,'506 Jamaica St., Vermont Park, Quezon City','cod','pending','2026-01-22 08:40:18'),(12,1,150.00,'506 Jamaica St., Vermont Park Village, Quezon City','cod','pending','2026-01-22 08:45:34'),(18,1,250.00,'506 Jamaica St., Vermont Park Village, Antipolo','cod','pending','2026-01-22 09:20:19'),(19,1,150.00,'506 Jamaica St., Vermont Park Village, Antipolo','gcash','pending','2026-01-22 09:23:13'),(20,1,150.00,'506 Jamaica St., Vermont Park Village, Antipolo','gcash','pending','2026-01-22 09:23:28');
+INSERT INTO `orders` VALUES (1,1,450.00,'506 Jamaica St., Vermont Park, Quezon City','cod','cancelled','2026-01-19 13:27:28'),(2,1,450.00,'506 Jamaica St., Vermont Park, Quezon City','cod','delivered','2026-01-19 13:27:54'),(3,1,0.00,', ','GCash','out_for_delivery','2026-01-22 05:38:25'),(4,1,0.00,', ','GCash','confirmed','2026-01-22 05:39:35'),(5,1,250.00,'506 Jamaica St., Vermont Park, Quezon City','cod','processing','2026-01-22 06:45:30'),(6,1,150.00,'506 Jamaica St., Vermont Park, Quezon City','cod','ready','2026-01-22 06:47:03'),(7,1,150.00,'506 Jamaica St., Vermont Park, Quezon City','cod','pending','2026-01-22 07:03:59'),(8,1,150.00,'506 Jamaica St., Vermont Park, Quezon City','cod','pending','2026-01-22 07:23:33'),(9,1,85.00,'506 Jamaica St., Vermont Park, Quezon City','cod','pending','2026-01-22 08:04:56'),(10,1,330.00,'506 Jamaica St., Vermont Park, Quezon City','cod','pending','2026-01-22 08:19:45'),(11,1,250.00,'506 Jamaica St., Vermont Park, Quezon City','cod','pending','2026-01-22 08:40:18'),(12,1,150.00,'506 Jamaica St., Vermont Park Village, Quezon City','cod','pending','2026-01-22 08:45:34'),(18,1,250.00,'506 Jamaica St., Vermont Park Village, Antipolo','cod','pending','2026-01-22 09:20:19'),(19,1,150.00,'506 Jamaica St., Vermont Park Village, Antipolo','gcash','pending','2026-01-22 09:23:13'),(20,1,150.00,'506 Jamaica St., Vermont Park Village, Antipolo','gcash','pending','2026-01-22 09:23:28'),(21,1,150.00,'506 Jamaica St., Vermont Park Village, Antipolo','gcash','pending','2026-01-22 09:59:56');
 /*!40000 ALTER TABLE `orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -136,7 +136,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'Chester Alcanzarin','chestersaan25@gmail.com','09705730898','506 Jamaica St., Vermont Park Village','Antipolo','1870','$2y$10$IfZjQqCp1rhXPjGGBxMVOeXRwzbIBm5wXIqNricE6fGHnonwlafFO','2026-01-17 22:40:09','2026-01-22 08:54:55'),(2,'sample','sample@email.com','09705730898','123 street','Quezon City','1234','$2y$10$PaBnOQf0bRNZPiDEqk/PVO44/O1SFFBVJHIGePeMmH55mHtwFq63O','2026-01-18 04:50:44','2026-01-18 04:50:44');
+INSERT INTO `users` VALUES (1,'Chester Alcanzarin','chestersaan25@gmail.com','09705730898','506 Jamaica St., Vermont Park','Antipolo','1870','$2y$10$IfZjQqCp1rhXPjGGBxMVOeXRwzbIBm5wXIqNricE6fGHnonwlafFO','2026-01-17 22:40:09','2026-01-22 10:00:11'),(2,'sample','sample@email.com','09705730898','123 street','Quezon City','1234','$2y$10$PaBnOQf0bRNZPiDEqk/PVO44/O1SFFBVJHIGePeMmH55mHtwFq63O','2026-01-18 04:50:44','2026-01-18 04:50:44');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -357,4 +357,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-01-22 17:27:03
+-- Dump completed on 2026-01-22 19:07:36

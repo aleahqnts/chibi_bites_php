@@ -1316,6 +1316,7 @@ button:hover {
 }
 
 /* History Modal Styling */
+/* History Modal Styling */
 .history-modal-overlay {
     position: fixed;
     top: 0;
@@ -1386,11 +1387,11 @@ button:hover {
     table-layout: fixed;
 }
 
-.history-table th:nth-child(1), .history-table td:nth-child(1) { width: 15%; } /* ID */
-.history-table th:nth-child(2), .history-table td:nth-child(2) { width: 25%; } /* Date */
-.history-table th:nth-child(3), .history-table td:nth-child(3) { width: 20%; } /* Time */
-.history-table th:nth-child(4), .history-table td:nth-child(4) { width: 20%; } /* Total */
-.history-table th:nth-child(5), .history-table td:nth-child(5) { width: 20%; } /* Status */
+.history-table th:nth-child(1), .history-table td:nth-child(1) { width: 12%; } /* ID */
+.history-table th:nth-child(2), .history-table td:nth-child(2) { width: 22%; } /* Date */
+.history-table th:nth-child(3), .history-table td:nth-child(3) { width: 18%; } /* Time */
+.history-table th:nth-child(4), .history-table td:nth-child(4) { width: 18%; } /* Total */
+.history-table th:nth-child(5), .history-table td:nth-child(5) { width: 30%; } /* Status */
 
 .history-table th {
     position: sticky;
@@ -1413,21 +1414,68 @@ button:hover {
     padding: 12px 5px;
     border-bottom: 1px solid #eee;
     font-size: 14px;
-    overflow: hidden;
-    text-overflow: ellipsis;
+}
+
+/* Prevent text wrapping in status column */
+.history-table td:nth-child(5) {
     white-space: nowrap;
 }
 
+/* Status Badge Styling */
 .status-badge {
-    padding: 5px 10px;
-    border-radius: 15px;
-    font-size: 11px;
-    font-weight: bold;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
     text-transform: uppercase;
+    display: inline-block;
 }
 
-.status-pending { background: #fff3cd; color: #856404; }
-.status-completed { background: #d4edda; color: #155724; }
+/* Order Status Colors */
+.status-pending { 
+    background: #fff3cd; 
+    color: #856404; 
+}
+
+.status-confirmed { 
+    background: #d1ecf1; 
+    color: #0c5460; 
+}
+
+.status-processing { 
+    background: #cce5ff; 
+    color: #004085; 
+}
+
+.status-ready { 
+    background: #d4edda; 
+    color: #155724; 
+}
+
+.status-out_for_delivery { 
+    background: #bee5eb; 
+    color: #0c5460; 
+}
+
+.status-delivered { 
+    background: #d4edda; 
+    color: #155724; 
+}
+
+.status-completed { 
+    background: #d4edda; 
+    color: #155724; 
+}
+
+.status-cancelled { 
+    background: #f8d7da; 
+    color: #721c24; 
+}
+
+.status-refunded { 
+    background: #e2e3e5; 
+    color: #383d41; 
+}
 
 @keyframes zoomIn {
     from { transform: scale(0.9); opacity: 0; }

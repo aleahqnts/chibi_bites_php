@@ -706,3 +706,95 @@ function checkUserAuthenticationA() {
         openAuthModal();
     });
 }
+
+// Close modals with Escape key
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        // Close product modal
+        const productModal = document.getElementById('productModal');
+        if (productModal && productModal.classList.contains('active')) {
+            closeModal();
+        }
+        
+        // Close auth modal
+        const authModal = document.getElementById('authModal');
+        if (authModal && authModal.classList.contains('active')) {
+            closeAuthModal();
+        }
+        
+        // Close history modal
+        const historyModal = document.getElementById('historyModal');
+        if (historyModal && historyModal.classList.contains('active')) {
+            closeHistoryModal();
+        }
+        
+        // Close edit profile modal
+        const editModal = document.getElementById('editModal');
+        if (editModal && editModal.classList.contains('active')) {
+            closeEditModal();
+        }
+    }
+});
+
+// Close modal when clicking outside (on overlay)
+window.onclick = function(event) {
+    // Product modal
+    const productModal = document.getElementById('productModal');
+    if (event.target === productModal) {
+        closeModal();
+    }
+    
+    // Auth modal
+    const authModal = document.getElementById('authModal');
+    if (event.target === authModal) {
+        closeAuthModal();
+    }
+    
+    // History modal
+    const historyModal = document.getElementById('historyModal');
+    if (event.target === historyModal) {
+        closeHistoryModal();
+    }
+    
+    // Edit modal
+    const editModal = document.getElementById('editModal');
+    if (event.target === editModal) {
+        closeEditModal();
+    }
+}
+
+// Function to close history modal
+function closeHistoryModal() {
+    const modal = document.getElementById('historyModal');
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+}
+
+// Function to close edit modal
+function closeEditModal() {
+    const modal = document.getElementById('editModal');
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+}
+
+// Function to close product modal
+function closeModal() {
+    const modal = document.getElementById('productModal');
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+}
+
+// Function to close auth modal
+function closeAuthModal() {
+    const authModal = document.getElementById('authModal');
+    if (authModal) {
+        authModal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+}
