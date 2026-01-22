@@ -614,3 +614,95 @@ function checkUserAuthentication() {
     });
 }
 
+// Open Edit Profile Modal
+function openEditModal() {
+    const modal = document.getElementById('editModal');
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    
+    // Pre-fill form with current data
+    const formData = new FormData();
+    formData.append('action', 'check');
+    
+    fetch('auth.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success && data.user) {
+            document.getElementById('editFullname').value = data.user.fullname || '';
+            document.getElementById('editPhone').value = data.user.phone || '';
+            document.getElementById('editStreet').value = data.user.street || '';
+            document.getElementById('editCity').value = data.user.city || '';
+            document.getElementById('editZipcode').value = data.user.zipcode || '';
+        }
+    })
+    .catch(error => console.error('Error loading profile:', error));
+}
+
+function closeEditModal() {
+    document.getElementById('editModal').classList.remove('active');
+    document.body.style.overflow = 'auto';
+}
+
+// Handle Edit Profile Form Submission
+document.addEventListener('DOMContentLoaded', function() {
+    const editForm = document.getElementById('editProfileForm');
+    if (editForm) {
+        editForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData();
+            formData.append('action', 'update_profile');
+            formData.append('fullname', document.getElementById('editFullname').value);
+            formData.append('phone', document.getElementById('editPhone').value);
+            formData.append('street', document.getElementById('editStreet').value);
+            formData.append('city', document.getElementById('editCity').value);
+            formData.append('zipcode', document.getElementById('editZipcode').value);
+            
+            fetch('auth.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Profile updated successfully!');
+                    closeEditModal();
+                    checkLoginStatus(); // Refresh profile display
+                } else {
+                    alert('Error updating profile: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error updating profile. Please try again.');
+            });
+        });
+    }
+});
+
+function checkUserAuthenticationA() {
+    const formData = new FormData();
+    formData.append('action', 'check');
+    
+    fetch('auth.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success && data.logged_in) {
+            // User is logged in, go to checkout
+            window.location.href = 'checkout.php';
+        } else {
+            // User is not logged in, show auth modal
+            openAuthModal();
+        }
+    })
+    .catch(error => {
+        console.error('Error checking authentication:', error);
+        openAuthModal();
+    });
+}

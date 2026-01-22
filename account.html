@@ -320,7 +320,7 @@
                 <span>Total</span>
                 <span class="cart-total-amount" id="cartTotal">₱0.00</span>
             </div>
-            <button class="checkout-btn" onclick="checkUserAuthentication()">CHECKOUT</button>
+            <button class="checkout-btn" onclick="checkUserAuthenticationA()">CHECKOUT</button>
         </div>
     </div>
 
@@ -423,6 +423,7 @@
                 
                 <div class="account-buttons">
                     <button class="account-btn account-btn-primary" onclick="window.location.href='shop.php'">SHOP NOW</button>
+                    <button class="account-btn account-btn-secondary" onclick="openEditModal()">EDIT PROFILE</button>
                     <button class="account-btn account-btn-outline" onclick="openHistoryModal()">VIEW HISTORY</button>
                     <button class="account-btn account-btn-danger" onclick="logout()">LOGOUT</button>
                 </div>
@@ -451,6 +452,65 @@
                                 <tbody id="historyList">
                                     </tbody>
                             </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- Edit Profile Modal -->
+                <div id="editModal" class="history-modal-overlay">
+                    <div class="history-modal-content">
+                        <div class="history-header">
+                            <h2>Edit Profile</h2>
+                            <button class="close-history" onclick="closeEditModal()">&times;</button>
+                        </div>
+                        <div class="history-body">
+                            <form id="editProfileForm" class="edit-profile-form">
+                                <div class="form-group">
+                                    <label>Full Name</label>
+                                    <input type="text" id="editFullname" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Phone Number</label>
+                                    <input type="tel" id="editPhone" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Street Address</label>
+                                    <input type="text" id="editStreet" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>City</label>
+                                    <select id="editCity" required>
+                                        <option value="">Select your city...</option>
+                                        <option value="Caloocan">Caloocan</option>
+                                        <option value="Antipolo">Antipolo</option>
+                                        <option value="Las Piñas">Las Piñas</option>
+                                        <option value="Makati">Makati</option>
+                                        <option value="Malabon">Malabon</option>
+                                        <option value="Mandaluyong">Mandaluyong</option>
+                                        <option value="Manila">Manila</option>
+                                        <option value="Marikina">Marikina</option>
+                                        <option value="Muntinlupa">Muntinlupa</option>
+                                        <option value="Navotas">Navotas</option>
+                                        <option value="Parañaque">Parañaque</option>
+                                        <option value="Pasay">Pasay</option>
+                                        <option value="Pasig">Pasig</option>
+                                        <option value="Quezon City">Quezon City</option>
+                                        <option value="San Juan">San Juan</option>
+                                        <option value="Taguig">Taguig</option>
+                                        <option value="Valenzuela">Valenzuela</option>
+                                        <option value="Pateros">Pateros</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Zip Code</label>
+                                    <input type="text" id="editZipcode" maxlength="4" required>
+                                </div>
+                                
+                                <button type="submit" class="submit-btn">SAVE CHANGES</button>
+                            </form>
                         </div>
                     </div>
                 </div>

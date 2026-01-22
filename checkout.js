@@ -1,3 +1,4 @@
+
 function updateCartBadge() {
     const formData = new FormData();
     formData.append('action', 'get');
@@ -146,41 +147,13 @@ function removeFromCart(index) {
     });
 }
 
-function calculateTotal(cart) {
-    let mochiItems = [];
-    let specialItems = [];
-    
-    cart.forEach(item => {
-        if (item.name === 'Mochi Bites') {
-            specialItems.push(item);
-        } else {
-            for (let i = 0; i < item.quantity; i++) {
-                mochiItems.push(item);
-            }
-        }
-    });
-    
-    const sets = Math.floor(mochiItems.length / 3);
-    const remainder = mochiItems.length % 3;
-    
-    let total = sets * 100;
-    total += remainder * 35;
-    
-    specialItems.forEach(item => {
-        const priceNum = parseFloat(item.price.replace('₱', '').replace(',', ''));
-        total += priceNum * item.quantity;
-    });
-    
-    return total;
-}
-
 
 // ==========================================
 // CHECKOUT PAGE FUNCTIONALITY
 // ==========================================
 
 // Global variables
-let selectedPaymentMethod = 'cod'; // Default payment method
+let selectedPaymentMethod = 'gcash'; // Default payment method
 const DELIVERY_FEE = 50.00;
 
 // ==========================================

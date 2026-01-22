@@ -1433,3 +1433,43 @@ button:hover {
     from { transform: scale(0.9); opacity: 0; }
     to { transform: scale(1); opacity: 1; }
 }
+
+/* EDIT PROFILE FORM */
+
+.edit-profile-form {
+    padding: 20px;
+}
+
+.edit-profile-form .form-group {
+    margin-bottom: 20px;
+}
+
+.edit-profile-form label {
+    display: block;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    color: var(--primary-brown);
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.edit-profile-form input,
+.edit-profile-form select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+}
+
+.edit-profile-form input:focus,
+.edit-profile-form select:focus {
+    outline: none;
+    border-color: var(--primary-pink);
+}
+
+.edit-profile-form .submit-btn {
+    width: 100%;
+    margin-top: 10px;
+}

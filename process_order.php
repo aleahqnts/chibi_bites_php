@@ -2,10 +2,8 @@
 session_start();
 header('Content-Type: application/json');
 
-// Include database connection
 require_once 'db_connect.php';
 
-// Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
     echo json_encode(['success' => false, 'message' => 'User not logged in']);
     exit;
@@ -20,24 +18,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $total = floatval($_POST['total']);
         $payment_method = mysqli_real_escape_string($conn, $_POST['payment_method']);
         
-        // Validate cart
         if (empty($cart)) {
             echo json_encode(['success' => false, 'message' => 'Cart is empty']);
             exit;
         }
         
-        // Get user's delivery address from session or database
+        // Get delivery address
         $delivery_address = '';
         if (isset($_SESSION['user_street']) && isset($_SESSION['user_city'])) {
             $delivery_address = $_SESSION['user_street'] . ', ' . $_SESSION['user_city'];
         } else {
-            // Fetch from database if not in session
-            $user_query = "SELECT street, city FROM users WHERE id = $user_id";
-            $user_result = $conn->query($user_query);
+            $user_result = $conn->query("CALL GetUserProfile($user_id)");
             if ($user_result && $user_result->num_rows > 0) {
                 $user_data = $user_result->fetch_assoc();
-                $delivery_address = $user_data['street'] . ', ' . $user_data['city'];
+                $delivery_address = $user_data['full_address'];
             }
+            $conn->next_result(); // Clear result set
         }
         
         if (empty($delivery_address)) {
@@ -49,28 +45,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $conn->begin_transaction();
         
         try {
-            // Insert into orders table
-            $order_sql = "INSERT INTO orders (user_id, total_amount, delivery_address, status, created_at) 
-                          VALUES ($user_id, $total, '$delivery_address', 'pending', NOW())";
+            // Create order using stored procedure
+            $stmt = $conn->prepare("CALL CreateOrder(?, ?, ?, ?, @order_id)");
+            $stmt->bind_param("idss", $user_id, $total, $delivery_address, $payment_method);
+            $stmt->execute();
+            $stmt->close();
             
-            if (!$conn->query($order_sql)) {
-                throw new Exception('Error creating order: ' . $conn->error);
-            }
+            // Get the order_id
+            $result = $conn->query("SELECT @order_id as order_id");
+            $row = $result->fetch_assoc();
+            $order_id = $row['order_id'];
             
-            $order_id = $conn->insert_id;
+            $conn->next_result(); // Clear result
             
-            // Insert order items
+            // Add order items
             foreach ($cart as $item) {
                 $product_name = mysqli_real_escape_string($conn, $item['name']);
                 $quantity = intval($item['quantity']);
                 $price = floatval(str_replace(['₱', ','], '', $item['price']));
                 
-                $item_sql = "INSERT INTO order_items (order_id, product_name, quantity, price) 
-                             VALUES ($order_id, '$product_name', $quantity, $price)";
+                $stmt = $conn->prepare("CALL AddOrderItem(?, ?, ?, ?)");
+                $stmt->bind_param("isid", $order_id, $product_name, $quantity, $price);
                 
-                if (!$conn->query($item_sql)) {
-                    throw new Exception('Error adding order item: ' . $conn->error);
+                if (!$stmt->execute()) {
+                    throw new Exception('Error adding order item: ' . $stmt->error);
                 }
+                
+                $stmt->close();
+                $conn->next_result(); // Clear result after each call
             }
             
             // Commit transaction
@@ -83,7 +85,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ]);
             
         } catch (Exception $e) {
-            // Rollback on error
             $conn->rollback();
             echo json_encode(['success' => false, 'message' => $e->getMessage()]);
         }

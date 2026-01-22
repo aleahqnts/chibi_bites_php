@@ -152,4 +152,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 }
+
+// UPDATE PROFILE
+if ($action === 'update_profile') {
+    if (!isset($_SESSION['user_id'])) {
+        echo json_encode(['success' => false, 'message' => 'Not logged in']);
+        exit;
+    }
+    
+    $user_id = $_SESSION['user_id'];
+    $fullname = mysqli_real_escape_string($conn, $_POST['fullname']);
+    $phone = mysqli_real_escape_string($conn, $_POST['phone']);
+    $street = mysqli_real_escape_string($conn, $_POST['street']);
+    $city = mysqli_real_escape_string($conn, $_POST['city']);
+    $zipcode = mysqli_real_escape_string($conn, $_POST['zipcode']);
+    
+    // Call stored procedure
+    $stmt = $conn->prepare("CALL UpdateUserProfile(?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("isssss", $user_id, $fullname, $phone, $street, $city, $zipcode);
+    
+    if ($stmt->execute()) {
+        // Update session variables
+        $_SESSION['user_name'] = $fullname;
+        $_SESSION['user_phone'] = $phone;
+        $_SESSION['user_street'] = $street;
+        $_SESSION['user_city'] = $city;
+        $_SESSION['user_zipcode'] = $zipcode;
+        
+        echo json_encode(['success' => true, 'message' => 'Profile updated successfully']);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Error updating profile: ' . $stmt->error]);
+    }
+    
+    $stmt->close();
+    exit;
+}
+
 ?>
+

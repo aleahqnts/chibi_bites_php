@@ -185,7 +185,7 @@ if ($result && $result->num_rows > 0) {
             </div>
         </div>
     </footer>
-    <!-- <script src="checkout.js"></script> -->
+    
     <script src="script.js"></script>
 </body>
 </html>

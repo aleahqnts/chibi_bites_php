@@ -360,13 +360,13 @@
                 <div class="checkout-section">
                     <h2>Payment Method</h2>
                     <div class="payment-methods">
-                        <div class="payment-option selected" onclick="selectPayment('cod')">
-                            <input type="radio" name="payment" value="cod" checked>
-                            <label>Cash on Delivery</label>
-                        </div>
-                        <div class="payment-option" onclick="selectPayment('gcash')">
-                            <input type="radio" name="payment" value="gcash">
+                        <div class="payment-option selected" onclick="selectPayment('gcash')">
+                            <input type="radio" name="payment" value="gcash" checked>
                             <label>GCash</label>
+                        </div>
+                        <div class="payment-option" onclick="selectPayment('bank_transfer')">
+                            <input type="radio" name="payment" value="bank_transfer">
+                            <label>Bank Transfer</label>
                         </div>
                     </div>
                 </div>
