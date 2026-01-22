@@ -589,3 +589,28 @@ function closeHistoryModal() {
     document.getElementById('historyModal').classList.remove('active');
     document.body.style.overflow = 'auto';
 }
+
+function checkUserAuthentication() {
+    const formData = new FormData();
+    formData.append('action', 'check');
+    
+    fetch('auth.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success && data.logged_in) {
+            // User is logged in, proceed to checkout
+            window.location.href = 'checkout.php';
+        } else {
+            // User is not logged in, show auth modal
+            openAuthModal();
+        }
+    })
+    .catch(error => {
+        console.error('Error checking authentication:', error);
+        openAuthModal();
+    });
+}
+

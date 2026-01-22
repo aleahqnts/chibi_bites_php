@@ -89,51 +89,55 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     // CHECK LOGIN STATUS & GET STATS
     if ($action === 'check') {
-        if (isset($_SESSION['user_id'])) {
-            $user_id = $_SESSION['user_id'];
+    if (isset($_SESSION['user_id'])) {
+        $user_id = $_SESSION['user_id'];
+        
+        // CALL the Stored Procedure (if you have it)
+        // OR use regular queries:
+        
+        $user_query = "SELECT * FROM users WHERE id = $user_id";
+        $user_result = $conn->query($user_query);
+        
+        if ($user_result && $user_result->num_rows > 0) {
+            $user = $user_result->fetch_assoc();
             
-            // CALL the Stored Procedure
-            if ($conn->multi_query("CALL GetUserDashboardData($user_id)")) {
-                
-                // 1. Fetch User Info
-                $result = $conn->store_result();
-                $user = $result->fetch_assoc();
-                $result->free();
-                $conn->next_result();
-
-                // 2. Fetch Stats
-                $result = $conn->store_result();
-                $stats = $result->fetch_assoc();
-                $result->free();
-                $conn->next_result();
-
-                // 3. Fetch History
-                $result = $conn->store_result();
-                $history = [];
-                while($row = $result->fetch_assoc()) {
+            // Get stats
+            $stats_query = "SELECT COUNT(*) as order_count, COALESCE(SUM(total_amount), 0) as total_spent FROM orders WHERE user_id = $user_id";
+            $stats_result = $conn->query($stats_query);
+            $stats = $stats_result ? $stats_result->fetch_assoc() : ['order_count' => 0, 'total_spent' => 0];
+            
+            // Get history
+            $history_query = "SELECT * FROM orders WHERE user_id = $user_id ORDER BY created_at DESC";
+            $history_result = $conn->query($history_query);
+            $history = [];
+            if ($history_result) {
+                while($row = $history_result->fetch_assoc()) {
                     $history[] = $row;
                 }
-                $result->free();
-
-                echo json_encode([
-                    'success' => true,
-                    'logged_in' => true,
-                    'user' => [
-                        'fullname' => $user['fullname'],
-                        'email' => $user['email'],
-                        'phone' => $user['phone'],
-                        'address' => $user['street'] . ', ' . $user['city'],
-                        'order_count' => $stats['order_count'],
-                        'total_spent' => $stats['total_spent'],
-                        'history' => $history
-                    ]
-                ]);
             }
-        } else {
-            echo json_encode(['success' => true, 'logged_in' => false]);
+            
+            echo json_encode([
+                'success' => true,
+                'logged_in' => true,
+                'user' => [
+                    'fullname' => $user['fullname'],
+                    'name' => $user['fullname'],
+                    'email' => $user['email'],
+                    'phone' => $user['phone'],
+                    'street' => $user['street'],
+                    'city' => $user['city'],
+                    'address' => $user['street'] . ', ' . $user['city'],
+                    'order_count' => $stats['order_count'],
+                    'total_spent' => $stats['total_spent'],
+                    'history' => $history
+                ]
+            ]);
         }
-        exit;
+    } else {
+        echo json_encode(['success' => true, 'logged_in' => false]);
     }
+    exit;
+}
 
     // GET PRODUCTS
         if ($action === 'get_products') {

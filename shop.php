@@ -42,7 +42,7 @@ if ($result && $result->num_rows > 0) {
                 <span>Total</span>
                 <span class="cart-total-amount" id="cartTotal">₱0.00</span>
             </div>
-            <button class="checkout-btn">CHECKOUT</button>
+            <button class="checkout-btn" onclick="checkUserAuthentication()">CHECKOUT</button>
         </div>
     </div>
 
@@ -133,6 +133,19 @@ if ($result && $result->num_rows > 0) {
 </div>
     </section>
 
+        <!-- Authentication Modal -->
+        <div id="authModal" class="auth-modal">
+            <div class="auth-modal-content">
+                <button class="auth-close-btn" onclick="closeAuthModal()">&times;</button>
+                <h2>Login Required</h2>
+                <p>Please login or create an account to proceed with checkout.</p>
+                <div class="auth-modal-buttons">
+                    <a href="login.html" class="auth-btn auth-btn-primary">LOGIN</a>
+                    <a href="signup.html" class="auth-btn auth-btn-secondary">SIGN UP</a>
+                </div>
+            </div>
+        </div>
+
     <footer class="site-footer">
         <div class="footer-container">
             <div class="footer-column">
@@ -172,6 +185,7 @@ if ($result && $result->num_rows > 0) {
             </div>
         </div>
     </footer>
+    <!-- <script src="checkout.js"></script> -->
     <script src="script.js"></script>
 </body>
 </html>
