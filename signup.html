@@ -1,13 +1,117 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Sign Up - Chibi Bites</title>
+    <title>Chibi Bites - Sign Up</title>
     <link rel="icon" href="images/logo.png" type="image/x-icon" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Coiny&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+
+    <style>
+    /* Success Modal Styles */
+    .success-modal {
+        display: none;
+        position: fixed;
+        z-index: 10002;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        animation: fadeIn 0.3s ease;
+    }
+
+    .success-modal.active {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .success-modal-content {
+        background-color: white;
+        padding: 50px 40px;
+        border-radius: 20px;
+        max-width: 450px;
+        width: 90%;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        animation: slideUp 0.3s ease;
+        border-left: 5px solid pink;
+        border-right: 5px solid pink;
+    }
+
+    .success-icon {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 20px;
+        background: #9aa559;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: scaleIn 0.5s ease;
+    }
+
+    .success-icon svg {
+        width: 50px;
+        height: 50px;
+        fill: white;
+    }
+
+    .success-modal-content h2 {
+        font-family: 'Coiny', cursive;
+        color: #6b4b50;
+        font-size: 32px;
+        margin-bottom: 15px;
+    }
+
+    .success-modal-content p {
+        font-family: 'Montserrat', sans-serif;
+        color: #6b4b50;
+        font-size: 16px;
+        margin-bottom: 30px;
+        line-height: 1.6;
+    }
+
+    .success-btn {
+        width: 100%;
+        max-width: 300px;
+        padding: 15px;
+        background-color: #9aa559;
+        color: white;
+        border: 2px solid #9aa559;
+        border-radius: 25px;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 600;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .success-btn:hover {
+        background-color: pink;
+        border-color: pink;
+        color: black;
+    }
+
+    @keyframes scaleIn {
+        0% {
+            transform: scale(0);
+            opacity: 0;
+        }
+        50% {
+            transform: scale(1.1);
+        }
+        100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+</style>
 </head>
 
 <body>
@@ -35,6 +139,20 @@
             </div>
         </div>
     </nav>
+
+    <!-- Success Modal -->
+<div id="successModal" class="success-modal">
+    <div class="success-modal-content">
+        <div class="success-icon">
+            <svg viewBox="0 0 24 24">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+            </svg>
+        </div>
+        <h2>Account Created!</h2>
+        <p>Your account has been successfully created. You can now log in and start shopping!</p>
+        <a href="login.html" class="success-btn">PROCEED TO LOGIN</a>
+    </div>
+</div>
 
     <div class="auth-page">
         <div class="auth-container">
@@ -130,111 +248,116 @@
     </div>
 
     <script>
-        function togglePassword(fieldId) {
-            const passwordInput = document.getElementById(fieldId);
-            const toggleBtn = passwordInput.parentElement.querySelector('.password-toggle-btn');
-            
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                toggleBtn.textContent = 'Hide';
-            } else {
-                passwordInput.type = 'password';
-                toggleBtn.textContent = 'Show';
-            }
+    function togglePassword(fieldId) {
+        const passwordInput = document.getElementById(fieldId);
+        const toggleBtn = passwordInput.parentElement.querySelector('.password-toggle-btn');
+        
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            toggleBtn.textContent = 'Hide';
+        } else {
+            passwordInput.type = 'password';
+            toggleBtn.textContent = 'Show';
         }
+    }
 
-        document.getElementById('signupForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const fullname = document.getElementById('fullname').value;
-            const email = document.getElementById('email').value;
-            const phone = document.getElementById('phone').value;
-            const street = document.getElementById('street').value;
-            const city = document.getElementById('city').value;
-            const zipcode = document.getElementById('zipcode').value;
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            
-            // Reset all errors
-            document.querySelectorAll('.form-error').forEach(error => {
-                error.classList.remove('active');
-            });
-            
-            // Validation
-            let isValid = true;
-            
-            if (!fullname || fullname.trim().length < 2) {
-                document.getElementById('nameError').classList.add('active');
-                isValid = false;
-            }
-            
-            if (!email || !email.includes('@')) {
-                document.getElementById('emailError').classList.add('active');
-                isValid = false;
-            }
-            
-            if (!phone || phone.length < 10) {
-                document.getElementById('phoneError').classList.add('active');
-                isValid = false;
-            }
-            
-            if (!street || street.trim().length < 5) {
-                document.getElementById('streetError').classList.add('active');
-                isValid = false;
-            }
-            
-            if (!city) {
-                document.getElementById('cityError').classList.add('active');
-                isValid = false;
-            }
-            
-            if (!zipcode || zipcode.length !== 4) {
-                document.getElementById('zipcodeError').classList.add('active');
-                isValid = false;
-            }
-            
-            if (!password || password.length < 6) {
-                document.getElementById('passwordError').classList.add('active');
-                isValid = false;
-            }
-            
-            if (password !== confirmPassword) {
-                document.getElementById('confirmError').classList.add('active');
-                isValid = false;
-            }
-            
-            if (isValid) {
-                // Send to PHP for registration
-                const formData = new FormData();
-                formData.append('action', 'signup');
-                formData.append('fullname', fullname);
-                formData.append('email', email);
-                formData.append('phone', phone);
-                formData.append('street', street);
-                formData.append('city', city);
-                formData.append('zipcode', zipcode);
-                formData.append('password', password);
-                
-                fetch('auth.php', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('Account created successfully!');
-                        window.location.href = 'login.html';
-                    } else {
-                        alert(data.message || 'Error creating account');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Signup error. Please try again.');
-                });
-            }
+    function showSuccessModal() {
+        const modal = document.getElementById('successModal');
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    document.getElementById('signupForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const fullname = document.getElementById('fullname').value;
+        const email = document.getElementById('email').value;
+        const phone = document.getElementById('phone').value;
+        const street = document.getElementById('street').value;
+        const city = document.getElementById('city').value;
+        const zipcode = document.getElementById('zipcode').value;
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        
+        // Reset all errors
+        document.querySelectorAll('.form-error').forEach(error => {
+            error.classList.remove('active');
         });
-    </script>
+        
+        // Validation
+        let isValid = true;
+        
+        if (!fullname || fullname.trim().length < 2) {
+            document.getElementById('nameError').classList.add('active');
+            isValid = false;
+        }
+        
+        if (!email || !email.includes('@')) {
+            document.getElementById('emailError').classList.add('active');
+            isValid = false;
+        }
+        
+        if (!phone || phone.length < 10) {
+            document.getElementById('phoneError').classList.add('active');
+            isValid = false;
+        }
+        
+        if (!street || street.trim().length < 5) {
+            document.getElementById('streetError').classList.add('active');
+            isValid = false;
+        }
+        
+        if (!city) {
+            document.getElementById('cityError').classList.add('active');
+            isValid = false;
+        }
+        
+        if (!zipcode || zipcode.length !== 4) {
+            document.getElementById('zipcodeError').classList.add('active');
+            isValid = false;
+        }
+        
+        if (!password || password.length < 6) {
+            document.getElementById('passwordError').classList.add('active');
+            isValid = false;
+        }
+        
+        if (password !== confirmPassword) {
+            document.getElementById('confirmError').classList.add('active');
+            isValid = false;
+        }
+        
+        if (isValid) {
+            // Send to PHP for registration
+            const formData = new FormData();
+            formData.append('action', 'signup');
+            formData.append('fullname', fullname);
+            formData.append('email', email);
+            formData.append('phone', phone);
+            formData.append('street', street);
+            formData.append('city', city);
+            formData.append('zipcode', zipcode);
+            formData.append('password', password);
+            
+            fetch('auth.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showSuccessModal(); // ← CHANGED THIS LINE
+                } else {
+                    alert(data.message || 'Error creating account');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Signup error. Please try again.');
+            });
+        }
+    });
+</script>
 
     <script src="script.js"></script>
 </body>

@@ -43,7 +43,7 @@ $products_result = $conn->query($products_query);
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Admin Panel - Chibi Bites</title>
+    <title>Chibi Bites - Admin</title>
     <link rel="icon" href="images/logo.png" type="image/x-icon" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -51,7 +51,7 @@ $products_result = $conn->query($products_query);
     <link href="https://fonts.googleapis.com/css2?family=Coiny&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-brown: #7C474A;
+            --primary-brown: #6b4b50;
             --primary-pink: #FEBBCC;
             --light-pink: #FFE7F0;
             --accent-green: #9aa559;
@@ -69,19 +69,67 @@ $products_result = $conn->query($products_query);
             background: #f5f5f5;
         }
 
-        .admin-header {
-            background: var(--primary-brown);
-            color: white;
-            padding: 20px 40px;
+        .navbar {
+            background-color: #6d5256; 
+            box-shadow: 0 5px 7px rgba(0, 0, 0, 0.1);
+            border-bottom: 4px solid pink;
+            padding: 15px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;          
+            z-index: 1000;
+        }
+
+        .navbar p{
+            color:white;
+            font-weight: 600;
+            font-size: 18px;
+            margin-bottom:2px;
+        }
+
+        .admin-header {
+            background: var(--primary-brown);
+            color: var(--white);
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+            border-bottom: 3px solid pink;
+            margin-bottom: 60px;
         }
 
         .admin-header h1 {
-            font-family: 'Coiny', cursive;
-            font-size: 32px;
+            font-family: 'Coiny';
+            font-size: 23px;
+        }
+
+        .admin-header img{
+            height: 35px; 
+            width: auto;
+            margin-left: 15px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
+
+        .logo-img {
+            height: 33px;
+            width: auto;
+        }
+
+        .title-img {
+            margin-top: 2px;
+            height: 20px;
+            width: auto;
         }
 
         .logout-btn {
@@ -104,6 +152,7 @@ $products_result = $conn->query($products_query);
             max-width: 1400px;
             margin: 30px auto;
             padding: 0 20px;
+            margin-top:120px;
         }
 
         .stats-grid {
@@ -396,6 +445,101 @@ $products_result = $conn->query($products_query);
             color: var(--primary-brown);
         }
 
+        /* Success Modal Styles */
+        .success-modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+        }
+
+        .success-modal-content .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 30px;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.3s;
+        }
+
+        .success-modal-content .close-modal:hover {
+            color: #333;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: #d4edda;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: #155724;
+        }
+
+        .success-icon svg {
+            width: 48px;
+            height: 48px;
+            fill: #155724;
+        }
+
+        .success-modal-content h2 {
+            font-family: 'Coiny', cursive;
+            color: var(--primary-brown);
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+
+        .success-modal-content p {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .success-modal-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .success-btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .success-btn.ok {
+            background: var(--accent-green);
+            color: var(--white);
+        }
+
+        .success-btn.ok:hover {
+            background: #a8b561;
+            transform: translateY(-2px);
+        }
+
+        .success-btn.update-again {
+            background: var(--primary-brown);
+            color: var(--white);
+        }
+
+        .success-btn.update-again:hover {
+            background: #5a3e42;
+            transform: translateY(-2px);
+        }
+
         @media (max-width: 768px) {
             .admin-header {
                 flex-direction: column;
@@ -419,17 +563,27 @@ $products_result = $conn->query($products_query);
             th, td {
                 padding: 10px 5px;
             }
+
+            .success-modal-buttons {
+                flex-direction: column;
+            }
+
+            .success-btn {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="admin-header">
-        <div style="display: flex; align-items: center; gap: 15px;">
-            <img src="images/logo.png" alt="Logo" style="height: 50px; width: auto;">
-            <h1>Chibi Bites Admin</h1>
-        </div>
-        <button class="logout-btn" onclick="logout()">Logout</button>
+    <nav class="navbar">
+    <div class="brand">
+        <a href="index.html"><img src="images/logo.png" alt="Logo" class="logo-img"></a>
+        <a href="index.html"><img src="images/title.png" alt="Website Title" class="title-img"></a>
+        <p>Admin Dashboard</p>
     </div>
+        
+        <button class="logout-btn" onclick="logout()">Logout</button>
+    </nav>
 
     <div class="admin-container">
         <!-- Statistics -->
@@ -674,7 +828,27 @@ $products_result = $conn->query($products_query);
         </div>
     </div>
 
+ <!-- Success Modal -->
+<div id="successModal" class="modal">
+    <div class="success-modal-content">
+        <button class="close-modal" onclick="closeSuccessModal()">&times;</button>
+        <div class="success-icon">
+            <svg viewBox="0 0 24 24">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+            </svg>
+        </div>
+        <h2>Order Status Updated!</h2>
+        <p>The order status has been updated successfully.</p>
+        <div class="success-modal-buttons">
+            <button class="success-btn update-again" onclick="updateAnotherOrder()">Update Again</button>
+            <button class="success-btn ok" onclick="closeSuccessModal()">OK</button>
+        </div>
+    </div>
+</div>
+
     <script>
+
+        let lastUpdatedOrderId = null;
         // Tab Switching
         function switchTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
@@ -734,8 +908,10 @@ $products_result = $conn->query($products_query);
             });
         }
 
+
         // Update Order Status
         function updateOrderStatus(orderId) {
+            lastUpdatedOrderId = orderId;
             document.getElementById('statusOrderId').value = orderId;
             document.getElementById('displayOrderId').value = '#' + orderId;
             document.getElementById('statusModal').classList.add('active');
@@ -759,8 +935,10 @@ $products_result = $conn->query($products_query);
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert('Order status updated successfully!');
-                    location.reload();
+                    // Close the status modal
+                    closeModal('statusModal');
+                    // Show success modal
+                    document.getElementById('successModal').classList.add('active');
                 } else {
                     alert('Error: ' + data.message);
                 }
@@ -923,6 +1101,18 @@ $products_result = $conn->query($products_query);
         function logout() {
             if (confirm('Are you sure you want to logout?')) {
                 window.location.href = 'admin_logout.php';
+            }
+        }
+
+       function closeSuccessModal() {
+            document.getElementById('successModal').classList.remove('active');
+            location.reload();
+        }
+
+        function updateAnotherOrder() {
+            document.getElementById('successModal').classList.remove('active');
+            if (lastUpdatedOrderId) {
+                updateOrderStatus(lastUpdatedOrderId);
             }
         }
     </script>

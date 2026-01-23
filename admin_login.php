@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Admin Login - Chibi Bites</title>
+    <title>Chibi Bites - Admin Login</title>
     <link rel="icon" href="images/logo.png" type="image/x-icon" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         body {
             font-family: 'Montserrat', sans-serif;
-            background: linear-gradient(135deg, var(--light-pink) 0%, white 100%);
+             background: linear-gradient(135deg, #f5f5dc 0%, rgb(255, 240, 243) 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
