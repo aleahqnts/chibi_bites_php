@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Checkout - Chibi Bites</title>
+    <title>Chibi Bites - Checkout</title>
     <link rel="icon" href="images/logo.png" type="image/x-icon" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -283,6 +283,147 @@
                 position: static;
             }
         }
+
+        /* Order Success Modal */
+        .order-success-modal {
+            display: none;
+            position: fixed;
+            z-index: 10002;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .order-success-modal.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .order-success-content {
+            background-color: white;
+            padding: 50px 40px;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            animation: slideUp 0.3s ease;
+            border-left: 5px solid pink;
+            border-right: 5px solid pink;
+        }
+
+        .success-icon-large {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 25px;
+            background: #9aa559;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: scaleIn 0.5s ease;
+        }
+
+        .success-icon-large svg {
+            width: 40px;
+            height: 40px;
+            fill: white;
+        }
+
+        .order-success-content h2 {
+            font-family: 'Coiny', cursive;
+            color: #6b4b50;
+            font-size: 36px;
+            margin-bottom: 15px;
+        }
+
+        .order-id-display {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: #6b4b50;
+            margin: 20px 0;
+            padding: 15px;
+            background: var(--light-pink);
+            border-radius: 12px;
+        }
+
+        .order-success-content p {
+            font-family: 'Montserrat', sans-serif;
+            color: #6b4b50;
+            font-size: 16px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .order-success-btn {
+            width: 100%;
+            max-width: 300px;
+            padding: 15px;
+            background-color: #9aa559;
+            color: white;
+            border: 2px solid #9aa559;
+            border-radius: 25px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            margin: 5px;
+        }
+
+        .order-success-btn:hover {
+            background-color: pink;
+            border-color: pink;
+            color: black;
+        }
+
+        .order-success-btn.secondary {
+            background-color: white;
+            color: #6b4b50;
+            border-color: #6b4b50;
+        }
+
+        .order-success-btn.secondary:hover {
+            background-color: #6b4b50;
+            color: white;
+        }
+
+        @keyframes scaleIn {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from { 
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to { 
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
     </style>
 </head>
 
@@ -332,6 +473,24 @@
             </div>
         </div>
     </nav>
+
+    <!-- Order Success Modal -->
+<div id="orderSuccessModal" class="order-success-modal">
+    <div class="order-success-content">
+        <div class="success-icon-large">
+            <svg viewBox="0 0 24 24">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+            </svg>
+        </div>
+        <h2>Order Placed!</h2>
+        <div class="order-id-display">
+            Order ID: <span id="displayOrderId">#0000</span>
+        </div>
+        <p>Thank you for your order! We'll start preparing your delicious mochi right away. You can track your order status in your account.</p>
+        <a href="account.html" class="order-success-btn">VIEW MY ORDERS</a>
+        <a href="shop.php" class="order-success-btn secondary">CONTINUE SHOPPING</a>
+    </div>
+</div>
 
     <div class="checkout-page">
         <div class="checkout-container" id="checkoutContainer">

@@ -448,6 +448,31 @@ function placeOrder() {
 }
 
 // ==========================================
+// SHOW ORDER SUCCESS MODAL
+// ==========================================
+function showOrderSuccessModal(orderId) {
+    // Update order ID in modal
+    const orderIdDisplay = document.getElementById('displayOrderId');
+    if (orderIdDisplay) {
+        orderIdDisplay.textContent = '#' + orderId;
+    }
+    
+    // Show modal
+    const modal = document.getElementById('orderSuccessModal');
+    if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    
+    // Reset the place order button
+    const placeOrderBtn = document.querySelector('.place-order-btn');
+    if (placeOrderBtn) {
+        placeOrderBtn.disabled = false;
+        placeOrderBtn.textContent = 'PLACE ORDER';
+    }
+}
+
+// ==========================================
 // SUBMIT ORDER TO DATABASE
 // ==========================================
 function submitOrder(cart, total, paymentMethod) {
@@ -467,9 +492,8 @@ function submitOrder(cart, total, paymentMethod) {
             // Clear cart
             clearCart();
             
-            // Show success message and redirect
-            alert('Order placed successfully! Order ID: #' + data.order_id);
-            window.location.href = 'account.html';
+            // Show success modal instead of alert
+            showOrderSuccessModal(data.order_id);
         } else {
             alert('Error placing order: ' + (data.message || 'Unknown error'));
             const placeOrderBtn = document.querySelector('.place-order-btn');

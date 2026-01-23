@@ -10,3 +10,5 @@ Thumbs.db
 
 # Ignore local environment files
 .env
+
+chibi_bites_db_local.sql

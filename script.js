@@ -1,3 +1,77 @@
+function initHeroSlider() {
+    const slides = document.querySelectorAll('.section-1 .slider img');
+    const navDots = document.querySelectorAll('.section-1 .slider-nav a');
+    
+    if (slides.length === 0 || navDots.length === 0) return;
+    
+    let currentSlide = 0;
+    const slideInterval = 3000;
+
+    function showSlide(index) {
+        slides.forEach(slide => slide.classList.remove('active'));
+        navDots.forEach(dot => dot.classList.remove('active'));
+        
+        slides[index].classList.add('active');
+        navDots[index].classList.add('active');
+    }
+
+    function nextSlide() {
+        currentSlide = (currentSlide + 1) % slides.length;
+        showSlide(currentSlide);
+    }
+
+    let autoSlide = setInterval(nextSlide, slideInterval);
+
+    navDots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            currentSlide = index;
+            showSlide(currentSlide);
+            clearInterval(autoSlide);
+            autoSlide = setInterval(nextSlide, slideInterval);
+        });
+    });
+}
+
+// Section 3 Bestseller Slider
+function initBestsellerSlider() {
+    const slider = document.querySelector('.bestseller-slider');
+    const slides = document.querySelectorAll('.bestseller-slider img');
+    const navDots = document.querySelectorAll('.section-3 .slider-nav a');
+    const textElements = document.querySelectorAll('.bestseller-text');
+    
+    if (!slider || slides.length === 0 || navDots.length === 0 || textElements.length === 0) return;
+    
+    let currentSlide = 0;
+    const slideInterval = 8000;
+
+    function showSlide(index) {
+        textElements.forEach(text => text.classList.remove('active'));
+        slider.style.transform = `translateX(-${index * 100}%)`;
+        navDots.forEach(dot => dot.classList.remove('active'));
+        navDots[index].classList.add('active');
+        
+        setTimeout(() => {
+            textElements[index].classList.add('active');
+        }, 1000);
+    }
+
+    function nextSlide() {
+        currentSlide = (currentSlide + 1) % slides.length;
+        showSlide(currentSlide);
+    }
+
+    let autoSlide = setInterval(nextSlide, slideInterval);
+
+    navDots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            currentSlide = index;
+            showSlide(currentSlide);
+            clearInterval(autoSlide);
+            autoSlide = setInterval(nextSlide, slideInterval);
+        });
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     function reveal() {
         const reveals = document.querySelectorAll('.reveal');
@@ -14,6 +88,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     window.addEventListener('scroll', reveal);
     reveal();
+
+    initHeroSlider();
+    initBestsellerSlider();
     
     // Check login status on page load
     checkLoginStatus();
