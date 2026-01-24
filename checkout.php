@@ -23,7 +23,7 @@
             width: 100%;
             display: grid;
             grid-template-columns: 1fr 400px;
-            gap: 30px;
+            gap: 20px;
             opacity: 0;
             animation: fadeInUp 0.5s ease forwards;
         }
@@ -41,7 +41,7 @@
 
         .checkout-section {
             background: white;
-            padding: 30px;
+            padding: 20px;
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             border: 1px solid #e0e0e0;
@@ -53,7 +53,7 @@
             font-family: 'Coiny', cursive;
             color: var(--primary-brown);
             font-size: 28px;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
 
         .section-title {
@@ -61,7 +61,7 @@
             color: var(--primary-brown);
             font-size: 36px;
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 0px;
             grid-column: 1 / -1;
         }
 
@@ -395,6 +395,178 @@
             color: white;
         }
 
+        /* Payment Modal Styles */
+        .payment-modal-content {
+            background-color: white;
+            padding: 50px 40px 40px;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 100vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            animation: slideUp 0.3s ease;
+            border-left: 5px solid pink;
+            
+            position: relative;
+        }
+
+        .payment-modal-content .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #f5f5f5;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #666;
+            transition: all 0.3s;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .payment-modal-content .close-modal:hover {
+            background: var(--primary-pink);
+            color: white;
+        }
+
+        /* Responsive close button position */
+        @media (max-width: 600px) {
+            .payment-modal-content .close-modal {
+                right: calc((100vw - 90vw) / 2 + 15px);
+            }
+            
+            .payment-modal-content {
+                padding: 50px 30px 30px;
+            }
+        }
+
+        .payment-modal-content h2 {
+            font-family: 'Coiny', cursive;
+            color: #6b4b50;
+            font-size: 28px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .payment-summary {
+            background: var(--light-pink);
+            padding: 15px 40px 15px 40px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: #6b4b50;
+        }
+
+        .total-amount {
+            font-size: 20px;
+            color: var(--primary-brown);
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .qr-code-section {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .payment-instruction {
+            font-family: 'Montserrat', sans-serif;
+            color: #6b4b50;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .qr-code-img {
+            width: 300px;
+            height: 420px;
+            border: 3px solid var(--primary-pink);
+            border-radius: 12px;
+            
+            background: white;
+
+        }
+
+        .upload-section {
+            margin-bottom: 25px;
+        }
+
+        .upload-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 15px;
+            background: var(--light-pink);
+            border: 2px dashed var(--primary-pink);
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            color: #6b4b50;
+            transition: all 0.3s;
+        }
+
+        .upload-label:hover {
+            background: var(--primary-pink);
+            color: var(--primary-brown);
+        }
+
+        .file-name {
+            margin-top: 10px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            color: #6b4b50;
+            text-align: center;
+        }
+
+        .file-preview {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .file-preview img {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 12px;
+        }
+
+        .confirm-payment-btn {
+            width: 100%;
+            padding: 15px;
+            background-color: #9aa559;
+            color: white;
+            border: 2px solid #9aa559;
+            border-radius: 25px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .confirm-payment-btn:hover:not(:disabled) {
+            background-color: #737c41;
+            border-color: #737c41;
+            color: white;
+        }
+
+        .confirm-payment-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
         @keyframes scaleIn {
             0% {
                 transform: scale(0);
@@ -474,7 +646,44 @@
         </div>
     </nav>
 
-    <!-- Order Success Modal -->
+ <!-- Payment Confirmation Modal -->
+<div id="paymentModal" class="order-success-modal">
+    <div class="payment-modal-content">
+        <button class="close-modal" onclick="closePaymentModal()">&times;</button>
+        
+        <h2>Complete Your Payment</h2>
+        
+        <div class="payment-summary">
+            <div class="summary-row">
+                <span>Order Total:</span>
+                <span class="total-amount" id="modalTotalAmount">₱0.00</span>
+            </div>
+        </div>
+
+        <div class="qr-code-section" id="qrCodeSection">
+           
+            <img id="qrCodeImage" src="" alt="Payment QR Code" class="qr-code-img">
+        </div>
+
+        <div class="upload-section">
+            <label for="paymentProof" class="upload-label">
+                <svg viewBox="0 0 24 24" width="24" height="24">
+                    <path fill="currentColor" d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/>
+                </svg>
+                Upload Proof of Payment
+            </label>
+            <input type="file" id="paymentProof" accept="image/png,image/jpeg,image/jpg" style="display: none;" onchange="handleFileSelect(event)">
+            <div id="fileName" class="file-name"></div>
+            <div id="filePreview" class="file-preview"></div>
+        </div>
+
+        <button class="confirm-payment-btn" id="confirmPaymentBtn" onclick="confirmPayment()" disabled>
+            CONFIRM PAYMENT
+        </button>
+    </div>
+</div>
+
+<!-- Order Success Modal -->
 <div id="orderSuccessModal" class="order-success-modal">
     <div class="order-success-content">
         <div class="success-icon-large">

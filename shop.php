@@ -1,7 +1,7 @@
 <?php
 require_once 'db_connect.php';
 
-$sql = "SELECT * FROM products";
+$sql = "SELECT * FROM products WHERE is_active = 1";
 $result = $conn->query($sql);
 $products = [];
 

@@ -317,6 +317,7 @@ $products_result = $conn->query($products_query);
             width: 90%;
             max-height: 80vh;
             overflow-y: auto;
+            border-left: 5px solid pink;
         }
 
         .modal-header {
@@ -329,6 +330,7 @@ $products_result = $conn->query($products_query);
         .modal-header h2 {
             font-family: 'Coiny', cursive;
             color: var(--primary-brown);
+            
         }
 
         .close-modal {
@@ -531,16 +533,269 @@ $products_result = $conn->query($products_query);
         }
 
         .success-btn.update-again {
-            background: var(--primary-brown);
-            color: var(--white);
+            
+            color: gray;
+            border: 2px solid gray
         }
 
         .success-btn.update-again:hover {
-            background: #5a3e42;
+            background: gray;
+            color:white;
             transform: translateY(-2px);
         }
 
-        @media (max-width: 768px) {
+        /* Success Modal Overlay Styles */
+        .success-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 10001;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .success-modal-overlay.active {
+            display: flex;
+        }
+
+        .success-modal-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 20px;
+            background: #9aa559;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .success-modal-icon svg {
+            width: 35px;
+            height: 35px;
+            fill: white;
+        }
+
+        .success-modal-title {
+            font-family: 'Coiny';
+            color: var(--primary-brown);
+            font-size: 28px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .success-modal-text {
+            font-family: 'Montserrat', sans-serif;
+            color: black;
+            text-align: center;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            opacity: 0.8;
+        }
+
+        .success-modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            font-size: 28px;
+            color: var(--primary-brown);
+            cursor: pointer;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s;
+            opacity: 0.6;
+            border: none;
+        }
+
+        .success-modal-close:hover {
+            background-color: var(--primary-brown);
+            color: white;
+            opacity: 1;
+        }
+
+        .success-modal-btn {
+            padding: 15px 20px;
+            font-size: 15px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid;
+            background-color: #9aa559;
+            color: white;
+            border-color: #9aa559;
+        }
+
+        .success-modal-btn:hover {
+            background-color: pink;
+            border-color: pink;
+            color: var(--primary-brown);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+        }
+
+        .success-modal-overlay .success-modal-content {
+            border-left: 5px solid pink;
+            border-right: 5px solid pink;
+        }
+
+ 
+               /* Logout Modal Styles */
+        .logout-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logout-modal-overlay.active {
+            display: flex;
+        }
+
+        .logout-modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 450px;
+            width: 90%;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logout-modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            font-size: 28px;
+            color: var(--primary-brown);
+            cursor: pointer;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s;
+            opacity: 0.6;
+            border: none;
+        }
+
+        .logout-modal-close:hover {
+            background-color: var(--primary-brown);
+            border:none;
+            opacity: 1;
+        }
+
+        .logout-modal-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #fff5f5 0%, #ffebee 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logout-modal-icon svg {
+            width: 35px;
+            height: 35px;
+            fill: #d32f2f;
+        }
+
+        .logout-modal-title {
+            font-family: 'Coiny', cursive;
+            color: var(--primary-brown);
+            font-size: 28px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .logout-modal-text {
+            font-family: 'Montserrat', sans-serif;
+            color: black;
+            text-align: center;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            opacity: 0.8;
+        }
+
+        .logout-modal-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .logout-modal-btn {
+            flex: 1;
+            padding: 15px;
+            font-size: 15px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid;
+            text-transform: uppercase;
+        }
+
+        .logout-modal-btn-cancel {
+            background-color: #f5f5f5;
+            color: #666;
+            border-color: #e0e0e0;
+        }
+
+        .logout-modal-btn-cancel:hover {
+            background-color: #e0e0e0;
+            border-color: #bdbdbd;
+            transform: translateY(-2px);
+            color: #666;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .logout-modal-btn-confirm {
+            background-color: #d32f2f;
+            color: white;
+            border-color: #d32f2f;
+        }
+
+        .logout-modal-btn-confirm:hover {
+            background-color: #b71c1c;
+            border-color: #b71c1c;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3);
+        }
+
+               @media (max-width: 768px) {
             .admin-header {
                 flex-direction: column;
                 gap: 15px;
@@ -571,7 +826,326 @@ $products_result = $conn->query($products_query);
             .success-btn {
                 width: 100%;
             }
+
+            .logout-modal-content {
+                padding: 30px 20px;
+            }
+
+            .logout-modal-buttons {
+                flex-direction: column;
+            }
         }
+
+        /* Deactivate/Activate Modal Styles */
+        .toggle-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .toggle-modal-overlay.active {
+            display: flex;
+        }
+
+        .toggle-modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 450px;
+            width: 90%;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        .toggle-modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            font-size: 28px;
+            color: var(--primary-brown);
+            cursor: pointer;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s;
+            opacity: 0.6;
+            border: none;
+        }
+
+        .toggle-modal-close:hover {
+            background-color: var(--primary-brown);
+            color: white;
+            opacity: 1;
+        }
+
+        .toggle-modal-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .toggle-modal-icon svg {
+            width: 35px;
+            height: 35px;
+            fill: #856404;
+        }
+
+        .toggle-modal-title {
+            font-family: 'Coiny', cursive;
+            color: var(--primary-brown);
+            font-size: 28px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .toggle-modal-text {
+            font-family: 'Montserrat', sans-serif;
+            color: black;
+            text-align: center;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            opacity: 0.8;
+        }
+
+        .toggle-modal-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .toggle-modal-btn {
+            flex: 1;
+            padding: 15px;
+            font-size: 15px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid;
+            text-transform: uppercase;
+        }
+
+        .toggle-modal-btn-cancel {
+            background-color: #f5f5f5;
+            color: #666;
+            border-color: #e0e0e0;
+        }
+
+        .toggle-modal-btn-cancel:hover {
+            background-color: #e0e0e0;
+            border-color: #bdbdbd;
+            transform: translateY(-2px);
+            color: #666;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .toggle-modal-btn-confirm {
+            background-color: #856404;
+            color: white;
+            border-color: #856404;
+        }
+
+        .toggle-modal-btn-confirm:hover {
+            background-color: #6c5003;
+            border-color: #6c5003;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(133, 100, 4, 0.3);
+        }
+
+        .upload-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 15px;
+            background: var(--light-pink);
+            border: 2px dashed var(--primary-pink);
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            color: #6b4b50;
+            transition: all 0.3s;
+        }
+
+        .upload-label:hover {
+            background: var(--primary-pink);
+            color: var(--primary-brown);
+        }
+
+        .upload-label svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        #addProductModal .modal-content {
+            max-height: 90vh;
+            overflow-y: auto;
+            margin-top:30px;
+        }
+
+        /* Delete Product Modal Styles */
+        .delete-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .delete-modal-overlay.active {
+            display: flex;
+        }
+
+        .delete-modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 450px;
+            width: 90%;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        .delete-modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            font-size: 28px;
+            color: var(--primary-brown);
+            cursor: pointer;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s;
+            opacity: 0.6;
+            border: none;
+        }
+
+        .delete-modal-close:hover {
+            background-color: var(--primary-brown);
+            color: white;
+            opacity: 1;
+        }
+
+        .delete-modal-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #fff5f5 0%, #ffebee 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .delete-modal-icon svg {
+            width: 35px;
+            height: 35px;
+            fill: #d32f2f;
+        }
+
+        .delete-modal-title {
+            font-family: 'Coiny', cursive;
+            color: var(--primary-brown);
+            font-size: 28px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .delete-modal-text {
+            font-family: 'Montserrat', sans-serif;
+            color: black;
+            text-align: center;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            opacity: 0.8;
+        }
+
+        .delete-modal-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .delete-modal-btn {
+            flex: 1;
+            padding: 15px;
+            font-size: 15px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid;
+            text-transform: uppercase;
+        }
+
+        .delete-modal-btn-cancel {
+            background-color: #f5f5f5;
+            color: #666;
+            border-color: #e0e0e0;
+        }
+
+        .delete-modal-btn-cancel:hover {
+            background-color: #e0e0e0;
+            border-color: #bdbdbd;
+            transform: translateY(-2px);
+            color: #666;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .delete-modal-btn-confirm {
+            background-color: #d32f2f;
+            color: white;
+            border-color: #d32f2f;
+        }
+
+        .delete-modal-btn-confirm:hover {
+            background-color: #b71c1c;
+            border-color: #b71c1c;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3);
+        }
+
+        .action-btn.toggle {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .action-btn.toggle:hover {
+            background: #856404;
+            color: white;
+        }
+
     </style>
 </head>
 <body>
@@ -581,8 +1155,8 @@ $products_result = $conn->query($products_query);
         <a href="index.html"><img src="images/title.png" alt="Website Title" class="title-img"></a>
         <p>Admin Dashboard</p>
     </div>
-        
-        <button class="logout-btn" onclick="logout()">Logout</button>
+
+        <button class="logout-btn" onclick="openLogoutModal()">Logout</button>
     </nav>
 
     <div class="admin-container">
@@ -686,7 +1260,7 @@ $products_result = $conn->query($products_query);
                         <th>Phone</th>
                         <th>Address</th>
                         <th>Joined</th>
-                        <th>Actions</th>
+                        
                     </tr>
                 </thead>
                 <tbody>
@@ -698,9 +1272,7 @@ $products_result = $conn->query($products_query);
                         <td><?php echo htmlspecialchars($user['phone']); ?></td>
                         <td><?php echo htmlspecialchars($user['street'] . ', ' . $user['city']); ?></td>
                         <td><?php echo date('M d, Y', strtotime($user['created_at'])); ?></td>
-                        <td>
-                            <button class="action-btn view" onclick="viewUser(<?php echo $user['id']; ?>)">View Details</button>
-                        </td>
+                        
                     </tr>
                     <?php endwhile; ?>
                 </tbody>
@@ -736,9 +1308,10 @@ $products_result = $conn->query($products_query);
                         </td>
                         <td>
                             <button class="action-btn" onclick="editProduct(<?php echo $product['id']; ?>)">Edit</button>
-                            <button class="action-btn delete" onclick="toggleProductStatus(<?php echo $product['id']; ?>, <?php echo $product['is_active']; ?>)">
+                            <button class="action-btn toggle" onclick="toggleProductStatus(<?php echo $product['id']; ?>, <?php echo $product['is_active']; ?>)">
                                 <?php echo $product['is_active'] ? 'Deactivate' : 'Activate'; ?>
                             </button>
+                            <button class="action-btn delete" onclick="deleteProduct(<?php echo $product['id']; ?>, '<?php echo htmlspecialchars($product['name']); ?>')">Delete</button>
                         </td>
                     </tr>
                     <?php endwhile; ?>
@@ -828,6 +1401,66 @@ $products_result = $conn->query($products_query);
         </div>
     </div>
 
+<div id="addProductModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Add New Product</h2>
+            <button class="close-modal" onclick="closeModal('addProductModal')">&times;</button>
+        </div>
+        <form id="addProductForm" enctype="multipart/form-data">
+            <div class="form-group">
+                <label>Product Name</label>
+                <input type="text" id="addProductName" required>
+            </div>
+
+            <div class="form-group">
+                <label>Price (₱)</label>
+                <input type="number" id="addProductPrice" step="0.01" required>
+            </div>
+
+            <div class="form-group">
+                <label>Description</label>
+                <textarea id="addProductDescription" rows="4" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Product Image</label>
+                <input type="file" id="addProductImage" accept="image/*" required style="display: none;">
+                <label for="addProductImage" class="upload-label">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/>
+                    </svg>
+                    <span id="uploadText">Choose Image</span>
+                </label>
+                <small style="color: #666; display: block; margin-top: 5px;">
+                    Accepted formats: JPG, JPEG, PNG, GIF (Max 5MB)
+                </small>
+                <div id="imagePreview" style="margin-top: 10px; display: none;">
+                    <img id="previewImg" style="max-width: 200px; border-radius: 10px; border: 2px solid #e0e0e0;">
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">Add Product</button>
+        </form>
+    </div>
+</div>
+
+<!-- Add Product Success Modal -->
+<div id="addSuccessModal" class="success-modal-overlay">
+    <div class="success-modal-content">
+        <button class="success-modal-close" onclick="closeAddSuccessModal()">&times;</button>
+        <div class="success-modal-icon">
+            <svg viewBox="0 0 24 24">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+            </svg>
+        </div>
+        <h2 class="success-modal-title">Product Added!</h2>
+        <p class="success-modal-text">The new product has been added successfully.</p>
+        <button class="success-modal-btn" onclick="closeAddSuccessModal()">OK</button>
+    </div>
+</div>
+
+
  <!-- Success Modal -->
 <div id="successModal" class="modal">
     <div class="success-modal-content">
@@ -846,9 +1479,123 @@ $products_result = $conn->query($products_query);
     </div>
 </div>
 
+<!-- Edit Product Success Modal -->
+<div id="editSuccessModal" class="success-modal-overlay">
+    <div class="success-modal-content">
+        <button class="success-modal-close" onclick="closeEditSuccessModal()">&times;</button>
+        <div class="success-modal-icon">
+            <svg viewBox="0 0 24 24">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+            </svg>
+        </div>
+        <h2 class="success-modal-title">Product Updated!</h2>
+        <p class="success-modal-text">The product has been updated successfully.</p>
+        <button class="success-modal-btn" onclick="closeEditSuccessModalAndRedirect()">OK</button>
+    </div>
+</div>
+
+<!-- Toggle Product Status Confirmation Modal -->
+<div id="toggleModal" class="toggle-modal-overlay">
+    <div class="toggle-modal-content">
+        <button class="toggle-modal-close" onclick="closeToggleModal()">&times;</button>
+        
+        <div class="toggle-modal-icon">
+            <svg viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+            </svg>
+        </div>
+        
+        <h2 class="toggle-modal-title" id="toggleModalTitle">Deactivate Product?</h2>
+        <p class="toggle-modal-text" id="toggleModalText">Are you sure you want to deactivate this product? It will be hidden from customers.</p>
+        
+        <div class="toggle-modal-buttons">
+            <button class="toggle-modal-btn toggle-modal-btn-cancel" onclick="closeToggleModal()">Cancel</button>
+            <button class="toggle-modal-btn toggle-modal-btn-confirm" onclick="confirmToggleProduct()" id="toggleConfirmBtn">Yes, Deactivate</button>
+        </div>
+    </div>
+</div>
+
+<!-- Toggle Success Modal -->
+<div id="toggleSuccessModal" class="success-modal-overlay">
+    <div class="success-modal-content">
+        <button class="success-modal-close" onclick="closeToggleSuccessModal()">&times;</button>
+        <div class="success-modal-icon">
+            <svg viewBox="0 0 24 24">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+            </svg>
+        </div>
+        <h2 class="success-modal-title" id="toggleSuccessTitle">Product Updated!</h2>
+        <p class="success-modal-text" id="toggleSuccessText">The product status has been updated successfully.</p>
+        <button class="success-modal-btn" onclick="closeToggleSuccessModal()">OK</button>
+    </div>
+</div>
+
+               <!-- Logout Confirmation Modal -->
+        <div id="logoutModal" class="logout-modal-overlay">
+            <div class="logout-modal-content">
+                <button class="logout-modal-close" onclick="closeLogoutModal()">&times;</button>
+                
+                <div class="logout-modal-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+                    </svg>
+                </div>
+                
+                <h2 class="logout-modal-title">Logout?</h2>
+                <p class="logout-modal-text">Are you sure you want to log out of your account?</p>
+                
+                <div class="logout-modal-buttons">
+                    <button class="logout-modal-btn logout-modal-btn-cancel" onclick="closeLogoutModalAdmin()">Cancel</button>
+                    <button class="logout-modal-btn logout-modal-btn-confirm" onclick="confirmLogoutAdmin()">Yes, Logout</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delete Product Confirmation Modal -->
+<div id="deleteProductModal" class="delete-modal-overlay">
+    <div class="delete-modal-content">
+        <button class="delete-modal-close" onclick="closeDeleteModal()">&times;</button>
+        
+        <div class="delete-modal-icon">
+            <svg viewBox="0 0 24 24">
+                <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+            </svg>
+        </div>
+        
+        <h2 class="delete-modal-title">Delete Product?</h2>
+        <p class="delete-modal-text" id="deleteProductText">Are you sure you want to permanently delete this product?</p>
+        
+        <div class="delete-modal-buttons">
+            <button class="delete-modal-btn delete-modal-btn-cancel" onclick="closeDeleteModal()">Cancel</button>
+            <button class="delete-modal-btn delete-modal-btn-confirm" onclick="confirmDeleteProduct()">Yes, Delete</button>
+        </div>
+    </div>
+</div>
+
     <script>
 
         let lastUpdatedOrderId = null;
+
+        // Check if we need to switch to a specific tab on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const activeTab = sessionStorage.getItem('activeTab');
+    if (activeTab) {
+        // Switch to the saved tab
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        
+        document.getElementById(activeTab + '-tab').classList.add('active');
+        
+        // Activate the correct tab button
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        if (activeTab === 'orders') tabButtons[0].classList.add('active');
+        if (activeTab === 'users') tabButtons[1].classList.add('active');
+        if (activeTab === 'products') tabButtons[2].classList.add('active');
+        
+        // Clear the storage
+        sessionStorage.removeItem('activeTab');
+    }
+});
         // Tab Switching
         function switchTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
@@ -950,45 +1697,67 @@ $products_result = $conn->query($products_query);
         });
 
         // View Order Details
-        function viewOrder(orderId) {
-            fetch('admin_actions.php?action=get_order&order_id=' + orderId)
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const order = data.order;
-                    const items = data.items;
-                    
-                    let html = `
-                        <p><strong>Order ID:</strong> #${order.id}</p>
-                        <p><strong>Customer:</strong> ${order.fullname}</p>
-                        <p><strong>Email:</strong> ${order.email}</p>
-                        <p><strong>Phone:</strong> ${order.phone}</p>
-                        <p><strong>Address:</strong> ${order.delivery_address}</p>
-                        <p><strong>Payment Method:</strong> ${order.payment_method.toUpperCase()}</p>
-                        <p><strong>Status:</strong> <span class="status-badge status-${order.status}">${order.status}</span></p>
-                        <p><strong>Total:</strong> ₱${parseFloat(order.total_amount).toFixed(2)}</p>
-                        <p><strong>Date:</strong> ${new Date(order.created_at).toLocaleString()}</p>
-                        
-                        <div class="order-items">
-                            <h4>Order Items:</h4>
-                    `;
-                    
-                    items.forEach(item => {
-                        html += `
-                            <div class="order-item">
-                                <span>${item.product_name} x${item.quantity}</span>
-                                <span>₱${parseFloat(item.price).toFixed(2)}</span>
-                            </div>
-                        `;
-                    });
-                    
-                    html += '</div>';
-                    
-                    document.getElementById('orderDetails').innerHTML = html;
-                    document.getElementById('viewOrderModal').classList.add('active');
-                }
+function viewOrder(orderId) {
+    fetch('admin_actions.php?action=get_order&order_id=' + orderId)
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const order = data.order;
+            const items = data.items;
+
+            let html = `
+                <div class="order-items">
+                    <h4>Order Items:</h4>
+            `;
+
+            items.forEach(item => {
+                html += `
+                    <div class="order-item">
+                        <span>${item.product_name} x${item.quantity}</span>
+                        <span>₱${parseFloat(item.price).toFixed(2)}</span>
+                    </div>
+                `;
             });
+
+            html += `</div><br>`;
+
+            // Order details AFTER items
+            html += `
+                <p><strong>Order ID:</strong> #${order.id}</p>
+                <p><strong>Customer:</strong> ${order.fullname}</p>
+                <p><strong>Email:</strong> ${order.email}</p>
+                <p><strong>Phone:</strong> ${order.phone}</p>
+                <p><strong>Address:</strong> ${order.delivery_address}</p>
+                <p><strong>Payment Method:</strong> ${order.payment_method.toUpperCase()}</p>
+                <p><strong>Status:</strong> 
+                    <span class="status-badge status-${order.status}">
+                        ${order.status}
+                    </span>
+                </p>
+                <p><strong>Total:</strong> ₱${parseFloat(order.total_amount).toFixed(2)}</p>
+                <p><strong>Date:</strong> ${new Date(order.created_at).toLocaleString()}</p>
+            `;
+
+            // Payment proof (still after details)
+            if (order.payment_proof) {
+                html += `
+                    <div style="margin-top: 20px;">
+                        <p><strong>Payment Proof:</strong></p>
+                        <img 
+                            src="${order.payment_proof}" 
+                            alt="Payment Proof" 
+                            style="max-width: 100%; max-height: 400px; border-radius: 10px; margin-top: 10px;"
+                        >
+                    </div>
+                `;
+            }
+
+            document.getElementById('orderDetails').innerHTML = html;
+            document.getElementById('viewOrderModal').classList.add('active');
         }
+    });
+}
+
 
         // View User Details
         function viewUser(userId) {
@@ -1008,10 +1777,109 @@ $products_result = $conn->query($products_query);
             }
         }
 
-        // Product Management (placeholder functions)
-        function addProduct() {
-            alert('Add product functionality - to be implemented');
+ // Add Product Function
+function addProduct() {
+    document.getElementById('addProductModal').classList.add('active');
+}
+
+// Image Preview
+document.getElementById('addProductImage').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        // Update button text
+        document.getElementById('uploadText').textContent = file.name;
+        
+        // Show preview
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('previewImg').src = e.target.result;
+            document.getElementById('imagePreview').style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+// Handle Add Product Form Submission
+document.getElementById('addProductForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const fileInput = document.getElementById('addProductImage');
+    const file = fileInput.files[0];
+    
+    // Validate file size (5MB max)
+    if (file.size > 5 * 1024 * 1024) {
+        alert('Image size must be less than 5MB');
+        return;
+    }
+    
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+    if (!allowedTypes.includes(file.type)) {
+        alert('Only JPG, JPEG, PNG, and GIF images are allowed');
+        return;
+    }
+    
+    const formData = new FormData();
+    formData.append('action', 'add_product');
+    formData.append('name', document.getElementById('addProductName').value);
+    formData.append('price', document.getElementById('addProductPrice').value);
+    formData.append('description', document.getElementById('addProductDescription').value);
+    formData.append('product_image', file);
+    
+    // Show loading state
+    const submitBtn = e.target.querySelector('.submit-btn');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = 'Uploading...';
+    submitBtn.disabled = true;
+    
+    fetch('admin_actions.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+        
+        if (data.success) {
+            // Close add modal
+            closeModal('addProductModal');
+            // Clear form and preview
+            document.getElementById('addProductForm').reset();
+            document.getElementById('imagePreview').style.display = 'none';
+            // Show success modal
+            document.getElementById('addSuccessModal').classList.add('active');
+        } else {
+            alert('Error: ' + data.message);
         }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+        alert('Error adding product');
+    });
+});
+
+// Close Add Success Modal
+function closeAddSuccessModal() {
+    document.getElementById('addSuccessModal').classList.remove('active');
+    // Switch to products tab and reload
+    sessionStorage.setItem('activeTab', 'products');
+    location.reload();
+}
+
+// Close modal when clicking outside
+document.addEventListener('DOMContentLoaded', function() {
+    const addSuccessModal = document.getElementById('addSuccessModal');
+    if (addSuccessModal) {
+        addSuccessModal.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeAddSuccessModal();
+            }
+        });
+    }
+});
 
         function editProduct(productId) {
             // Fetch product details
@@ -1038,64 +1906,41 @@ $products_result = $conn->query($products_query);
             });
         }
 
-        // Handle Edit Product Form Submission
-        document.getElementById('editProductForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const formData = new FormData();
-            formData.append('action', 'update_product');
-            formData.append('id', document.getElementById('editProductId').value);
-            formData.append('name', document.getElementById('editProductName').value);
-            formData.append('price', document.getElementById('editProductPrice').value);
-            formData.append('description', document.getElementById('editProductDescription').value);
-            formData.append('image_path', document.getElementById('editProductImage').value);
-            
-            fetch('admin_actions.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Product updated successfully!');
-                    location.reload();
-                } else {
-                    alert('Error: ' + data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Error updating product');
-            });
-        });
-
-        function toggleProductStatus(productId, currentStatus) {
-            const action = currentStatus ? 'deactivate' : 'activate';
-            if (confirm(`Are you sure you want to ${action} this product?`)) {
-                const formData = new FormData();
-                formData.append('action', 'toggle_product');
-                formData.append('id', productId);
-                formData.append('is_active', currentStatus);
-                
-                fetch('admin_actions.php', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('Product status updated successfully!');
-                        location.reload();
-                    } else {
-                        alert('Error: ' + data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Error updating product status');
-                });
-            }
+ document.getElementById('editProductForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData();
+    formData.append('action', 'update_product');
+    formData.append('id', document.getElementById('editProductId').value);
+    formData.append('name', document.getElementById('editProductName').value);
+    formData.append('price', document.getElementById('editProductPrice').value);
+    formData.append('description', document.getElementById('editProductDescription').value);
+    formData.append('image_path', document.getElementById('editProductImage').value);
+    
+    fetch('admin_actions.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Close edit modal
+            closeModal('editProductModal');
+            // Show edit success modal
+            document.getElementById('editSuccessModal').classList.add('active');
+        } else {
+            alert('Error: ' + data.message);
         }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error updating product');
+    });
+});
+
+ function toggleProductStatus(productId, currentStatus) {
+    openToggleModal(productId, currentStatus);
+}
 
         // Logout
         function logout() {
@@ -1115,6 +1960,203 @@ $products_result = $conn->query($products_query);
                 updateOrderStatus(lastUpdatedOrderId);
             }
         }
+
+        // Open logout modal
+function openLogoutModal() {
+    document.getElementById('logoutModal').classList.add('active');
+}
+
+// Close logout modal
+function closeLogoutModalAdmin() {
+    document.getElementById('logoutModal').classList.remove('active');
+}
+
+// Confirm logout
+function confirmLogoutAdmin() {
+    window.location.href = 'admin_logout.php';
+}
+
+// Close modal when clicking outside
+document.addEventListener('DOMContentLoaded', function() {
+    const logoutModal = document.getElementById('logoutModal');
+    if (logoutModal) {
+        logoutModal.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeLogoutModalAdmin();
+            }
+        });
+    }
+});
+
+// Edit Product Success Modal Functions
+function closeEditSuccessModal() {
+    document.getElementById('editSuccessModal').classList.remove('active');
+}
+
+function closeEditSuccessModalAndRedirect() {
+    closeEditSuccessModal();
+    
+    // Switch to products tab BEFORE reloading
+    sessionStorage.setItem('activeTab', 'products');
+    
+    // Reload to show updated data
+    location.reload();
+}
+
+// Toggle Product Status Variables
+let toggleProductId = null;
+let toggleCurrentStatus = null;
+
+function openToggleModal(productId, currentStatus) {
+    toggleProductId = productId;
+    toggleCurrentStatus = parseInt(currentStatus); // ADD parseInt HERE
+    
+    console.log('Product ID:', productId, 'Current Status:', toggleCurrentStatus, 'Type:', typeof toggleCurrentStatus);
+    
+    const modal = document.getElementById('toggleModal');
+    const title = document.getElementById('toggleModalTitle');
+    const text = document.getElementById('toggleModalText');
+    const confirmBtn = document.getElementById('toggleConfirmBtn');
+    
+    if (toggleCurrentStatus === 1) {
+        // Deactivating
+        title.textContent = 'Deactivate Product?';
+        text.textContent = 'Are you sure you want to deactivate this product? It will be hidden from customers.';
+        confirmBtn.textContent = 'Yes, Deactivate';
+    } else {
+        // Activating
+        title.textContent = 'Activate Product?';
+        text.textContent = 'Are you sure you want to activate this product? It will be visible to customers.';
+        confirmBtn.textContent = 'Yes, Activate';
+    }
+    
+    modal.classList.add('active');
+}
+
+// Close toggle modal
+function closeToggleModal() {
+    document.getElementById('toggleModal').classList.remove('active');
+    toggleProductId = null;
+    toggleCurrentStatus = null;
+}
+
+function confirmToggleProduct() {
+    if (toggleProductId === null) return;
+    
+    const formData = new FormData();
+    formData.append('action', 'toggle_product');
+    formData.append('id', toggleProductId);
+    formData.append('is_active', toggleCurrentStatus);
+    
+    fetch('admin_actions.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        closeToggleModal();
+        
+        if (data.success) {
+            // Just reload to show updated status - no success modal
+            sessionStorage.setItem('activeTab', 'products');
+            location.reload();
+        } else {
+            alert('Error: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        closeToggleModal();
+        alert('Error updating product status');
+    });
+}
+
+// Close toggle success modal
+function closeToggleSuccessModal() {
+    document.getElementById('toggleSuccessModal').classList.remove('active');
+    // Switch to products tab and reload
+    sessionStorage.setItem('activeTab', 'products');
+    location.reload();
+}
+
+// Close modal when clicking outside
+document.addEventListener('DOMContentLoaded', function() {
+    const toggleModal = document.getElementById('toggleModal');
+    if (toggleModal) {
+        toggleModal.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeToggleModal();
+            }
+        });
+    }
+    
+    const toggleSuccessModal = document.getElementById('toggleSuccessModal');
+    if (toggleSuccessModal) {
+        toggleSuccessModal.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeToggleSuccessModal();
+            }
+        });
+    }
+});
+
+let deleteProductId = null;
+
+// Open delete modal
+function deleteProduct(productId, productName) {
+    deleteProductId = productId;
+    document.getElementById('deleteProductText').textContent = 
+        `Are you sure you want to permanently delete "${productName}"? This action cannot be undone.`;
+    document.getElementById('deleteProductModal').classList.add('active');
+}
+
+// Close delete modal
+function closeDeleteModal() {
+    document.getElementById('deleteProductModal').classList.remove('active');
+    deleteProductId = null;
+}
+
+// Confirm delete product
+function confirmDeleteProduct() {
+    if (deleteProductId === null) return;
+    
+    const formData = new FormData();
+    formData.append('action', 'delete_product');
+    formData.append('id', deleteProductId);
+    
+    fetch('admin_actions.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        closeDeleteModal();
+        
+        if (data.success) {
+            sessionStorage.setItem('activeTab', 'products');
+            location.reload();
+        } else {
+            alert('Error: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        closeDeleteModal();
+        alert('Error deleting product');
+    });
+}
+
+// Close modal when clicking outside
+document.addEventListener('DOMContentLoaded', function() {
+    const deleteModal = document.getElementById('deleteProductModal');
+    if (deleteModal) {
+        deleteModal.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeDeleteModal();
+            }
+        });
+    }
+});
     </script>
 </body>
 </html>

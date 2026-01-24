@@ -492,10 +492,6 @@ function getInitials(name) {
 }
 
 function logout() {
-    if (!confirm('Are you sure you want to logout?')) {
-        return;
-    }
-    
     const formData = new FormData();
     formData.append('action', 'logout');
     
@@ -506,6 +502,8 @@ function logout() {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
+            localStorage.removeItem('user');
+            sessionStorage.removeItem('user');
             window.location.href = 'account.html';
         } else {
             alert('Error logging out. Please try again.');
@@ -745,8 +743,8 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert('Profile updated successfully!');
-                    closeEditModal();
+                    openSuccessModal();
+                    
                     checkLoginStatus(); // Refresh profile display
                 } else {
                     alert('Error updating profile: ' + data.message);
@@ -874,4 +872,41 @@ function closeAuthModal() {
         authModal.classList.remove('active');
         document.body.style.overflow = 'auto';
     }
+}
+
+// Open logout modal
+function openLogoutModal() {
+    document.getElementById('logoutModal').classList.add('active');
+}
+
+// Close logout modal
+function closeLogoutModal() {
+    document.getElementById('logoutModal').classList.remove('active');
+}
+
+// Confirm logout - call your existing logout function
+function confirmLogout() {
+    closeLogoutModal();
+    logout(); // Your existing logout function
+}
+
+// Close modal when clicking outside (add this event listener)
+document.addEventListener('DOMContentLoaded', function() {
+    const logoutModal = document.getElementById('logoutModal');
+    if (logoutModal) {
+        logoutModal.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeLogoutModal();
+            }
+        });
+    }
+});
+
+function openSuccessModal() {
+    document.getElementById('successModal').classList.add('active');
+}
+
+function closeSuccessModal() {
+    document.getElementById('successModal').classList.remove('active');
+    closeEditModal(); // Also close the edit modal
 }

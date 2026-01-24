@@ -160,14 +160,15 @@ const DELIVERY_FEE = 50.00;
 // INITIALIZE ON PAGE LOAD
 // ==========================================
 document.addEventListener('DOMContentLoaded', function() {
-    // Check if user is logged in
-    checkUserAuthentication();
+    // Only run checkout functions if we're on the checkout page
+    const checkoutContainer = document.getElementById('checkoutContainer');
     
-    // Load cart items
-    loadCheckoutCart();
-    
-    // Set up payment method selection
-    setupPaymentSelection();
+    if (checkoutContainer) {
+        // We're on the checkout page
+        checkUserAuthentication();
+        loadCheckoutCart();
+        setupPaymentSelection();
+    }
 });
 
 // ==========================================
@@ -224,7 +225,7 @@ function displayUserInfo(user) {
             nameElement.textContent = user.fullname || user.name || 'N/A';
             console.log('✓ Name set to:', nameElement.textContent);
         } else {
-            console.error('❌ checkoutName element not found!');
+            console.log('checkoutName element not found - probably not on checkout page');
         }
         
         // Display phone
@@ -234,7 +235,7 @@ function displayUserInfo(user) {
             phoneElement.textContent = user.phone || 'N/A';
             console.log('✓ Phone set to:', phoneElement.textContent);
         } else {
-            console.error('❌ checkoutPhone element not found!');
+            console.log('checkoutPhone element not found - probably not on checkout page');
         }
         
         // Display address
@@ -244,7 +245,7 @@ function displayUserInfo(user) {
             addressElement.textContent = user.address || 'N/A';
             console.log('✓ Address set to:', addressElement.textContent);
         } else {
-            console.error('❌ checkoutAddress element not found!');
+            console.log('checkoutAddress element not found - probably not on checkout page');
         }
     });
 }
@@ -408,13 +409,15 @@ function selectPayment(method) {
 }
 
 // ==========================================
-// PLACE ORDER
+// PLACE ORDER - SHOW PAYMENT MODAL
 // ==========================================
+let currentOrderData = null;
+
 function placeOrder() {
     // Disable button to prevent double submission
     const placeOrderBtn = document.querySelector('.place-order-btn');
     placeOrderBtn.disabled = true;
-    placeOrderBtn.textContent = 'PLACING ORDER...';
+    placeOrderBtn.textContent = 'PROCESSING...';
     
     // Get cart data
     const formData = new FormData();
@@ -431,8 +434,19 @@ function placeOrder() {
             const subtotal = calculateTotal(data.cart);
             const total = subtotal + DELIVERY_FEE;
             
-            // Submit order to server
-            submitOrder(data.cart, total, selectedPaymentMethod);
+            // Store order data for later
+            currentOrderData = {
+                cart: data.cart,
+                total: total,
+                paymentMethod: selectedPaymentMethod
+            };
+            
+            // Show payment modal
+            showPaymentModal(total, selectedPaymentMethod);
+            
+            // Re-enable button
+            placeOrderBtn.disabled = false;
+            placeOrderBtn.textContent = 'PLACE ORDER';
         } else {
             alert('Your cart is empty!');
             placeOrderBtn.disabled = false;
@@ -475,7 +489,7 @@ function showOrderSuccessModal(orderId) {
 // ==========================================
 // SUBMIT ORDER TO DATABASE
 // ==========================================
-function submitOrder(cart, total, paymentMethod) {
+/*function submitOrder(cart, total, paymentMethod) {
     const formData = new FormData();
     formData.append('action', 'place_order');
     formData.append('cart', JSON.stringify(cart));
@@ -508,7 +522,7 @@ function submitOrder(cart, total, paymentMethod) {
         placeOrderBtn.disabled = false;
         placeOrderBtn.textContent = 'PLACE ORDER';
     });
-}
+}*/
 
 // ==========================================
 // CLEAR CART AFTER ORDER
@@ -527,5 +541,128 @@ function clearCart() {
     })
     .catch(error => {
         console.error('Error clearing cart:', error);
+    });
+}
+
+// ==========================================
+// PAYMENT MODAL FUNCTIONS
+// ==========================================
+let selectedFile = null;
+
+function showPaymentModal(total, paymentMethod) {
+    // Set total amount
+    document.getElementById('modalTotalAmount').textContent = '₱' + total.toFixed(2);
+    
+    // Set QR code based on payment method
+    const qrImage = document.getElementById('qrCodeImage');
+    if (paymentMethod === 'gcash') {
+        qrImage.src = 'images/gcash-qr.jpg';
+    } else if (paymentMethod === 'bank_transfer') {
+        qrImage.src = 'images/bank-qr.jpg';
+    }
+    
+    // Show modal
+    document.getElementById('paymentModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+    
+    // Reset file upload
+    selectedFile = null;
+    document.getElementById('paymentProof').value = '';
+    document.getElementById('fileName').textContent = '';
+    document.getElementById('filePreview').innerHTML = '';
+    document.getElementById('confirmPaymentBtn').disabled = true;
+}
+
+function closePaymentModal() {
+    document.getElementById('paymentModal').classList.remove('active');
+    document.body.style.overflow = '';
+    selectedFile = null;
+}
+
+function handleFileSelect(event) {
+    const file = event.target.files[0];
+    
+    if (!file) return;
+    
+    // Validate file type
+    const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+    if (!validTypes.includes(file.type)) {
+        alert('Please upload only JPG or PNG images');
+        event.target.value = '';
+        return;
+    }
+    
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+        alert('File size must be less than 5MB');
+        event.target.value = '';
+        return;
+    }
+    
+    selectedFile = file;
+    
+    // Display file name
+    document.getElementById('fileName').textContent = file.name;
+    
+    // Show preview
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        document.getElementById('filePreview').innerHTML = 
+            `<img src="${e.target.result}" alt="Payment Proof Preview">`;
+    };
+    reader.readAsDataURL(file);
+    
+    // Enable confirm button
+    document.getElementById('confirmPaymentBtn').disabled = false;
+}
+
+function confirmPayment() {
+    if (!selectedFile || !currentOrderData) {
+        alert('Please upload payment proof');
+        return;
+    }
+    
+    const confirmBtn = document.getElementById('confirmPaymentBtn');
+    confirmBtn.disabled = true;
+    confirmBtn.textContent = 'UPLOADING...';
+    
+    // Create form data with order and file
+    const formData = new FormData();
+    formData.append('action', 'place_order');
+    formData.append('cart', JSON.stringify(currentOrderData.cart));
+    formData.append('total', currentOrderData.total);
+    formData.append('payment_method', currentOrderData.paymentMethod);
+    formData.append('payment_proof', selectedFile);
+    
+    fetch('process_order.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Clear cart
+            clearCart();
+            
+            // Close payment modal
+            closePaymentModal();
+            
+            // Show success modal
+            showOrderSuccessModal(data.order_id);
+            
+            // Reset
+            currentOrderData = null;
+            selectedFile = null;
+        } else {
+            alert('Error placing order: ' + (data.message || 'Unknown error'));
+            confirmBtn.disabled = false;
+            confirmBtn.textContent = 'CONFIRM PAYMENT';
+        }
+    })
+    .catch(error => {
+        console.error('Error submitting order:', error);
+        alert('Error submitting order. Please try again.');
+        confirmBtn.disabled = false;
+        confirmBtn.textContent = 'CONFIRM PAYMENT';
     });
 }
