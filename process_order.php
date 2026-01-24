@@ -3,6 +3,7 @@ session_start();
 header('Content-Type: application/json');
 
 require_once 'db_connect.php';
+require_once 'upload_payment.php';
 
 if (!isset($_SESSION['user_id'])) {
     echo json_encode(['success' => false, 'message' => 'User not logged in']);
@@ -23,17 +24,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
         
+        // Handle payment proof upload
+        $payment_proof = null;
+        if (isset($_FILES['payment_proof']) && $_FILES['payment_proof']['error'] === UPLOAD_ERR_OK) {
+            $upload_result = uploadPaymentProof($_FILES['payment_proof']);
+            if ($upload_result['success']) {
+                $payment_proof = $upload_result['filepath'];
+            } else {
+                echo json_encode(['success' => false, 'message' => $upload_result['message']]);
+                exit;
+            }
+        }
+        
         // Get delivery address
         $delivery_address = '';
         if (isset($_SESSION['user_street']) && isset($_SESSION['user_city'])) {
             $delivery_address = $_SESSION['user_street'] . ', ' . $_SESSION['user_city'];
         } else {
-            $user_result = $conn->query("CALL GetUserProfile($user_id)");
+            $user_result = $conn->query("SELECT CONCAT(street, ', ', city) as full_address FROM users WHERE id = $user_id");
             if ($user_result && $user_result->num_rows > 0) {
                 $user_data = $user_result->fetch_assoc();
                 $delivery_address = $user_data['full_address'];
             }
-            $conn->next_result(); // Clear result set
         }
         
         if (empty($delivery_address)) {
@@ -45,18 +57,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $conn->begin_transaction();
         
         try {
-            // Create order using stored procedure
-            $stmt = $conn->prepare("CALL CreateOrder(?, ?, ?, ?, @order_id)");
-            $stmt->bind_param("idss", $user_id, $total, $delivery_address, $payment_method);
+            // Create order
+            $stmt = $conn->prepare("INSERT INTO orders (user_id, total_amount, delivery_address, payment_method, payment_proof, status, created_at) VALUES (?, ?, ?, ?, ?, 'pending', NOW())");
+            $stmt->bind_param("idsss", $user_id, $total, $delivery_address, $payment_method, $payment_proof);
             $stmt->execute();
+            $order_id = $stmt->insert_id;
             $stmt->close();
-            
-            // Get the order_id
-            $result = $conn->query("SELECT @order_id as order_id");
-            $row = $result->fetch_assoc();
-            $order_id = $row['order_id'];
-            
-            $conn->next_result(); // Clear result
             
             // Add order items
             foreach ($cart as $item) {
@@ -64,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $quantity = intval($item['quantity']);
                 $price = floatval(str_replace(['₱', ','], '', $item['price']));
                 
-                $stmt = $conn->prepare("CALL AddOrderItem(?, ?, ?, ?)");
+                $stmt = $conn->prepare("INSERT INTO order_items (order_id, product_name, quantity, price) VALUES (?, ?, ?, ?)");
                 $stmt->bind_param("isid", $order_id, $product_name, $quantity, $price);
                 
                 if (!$stmt->execute()) {
@@ -72,7 +78,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
                 
                 $stmt->close();
-                $conn->next_result(); // Clear result after each call
             }
             
             // Commit transaction
@@ -86,6 +91,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
         } catch (Exception $e) {
             $conn->rollback();
+            // Delete uploaded file if order failed
+            if ($payment_proof && file_exists($payment_proof)) {
+                unlink($payment_proof);
+            }
             echo json_encode(['success' => false, 'message' => $e->getMessage()]);
         }
         

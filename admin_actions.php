@@ -70,24 +70,62 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
     
-    // ADD PRODUCT
-    if ($action === 'add_product') {
-        $name = mysqli_real_escape_string($conn, $_POST['name']);
-        $price = floatval($_POST['price']);
-        $description = mysqli_real_escape_string($conn, $_POST['description']);
-        $category = mysqli_real_escape_string($conn, $_POST['category']);
-        $image_path = mysqli_real_escape_string($conn, $_POST['image_path']);
+ // ADD PRODUCT
+if ($action === 'add_product') {
+    $name = mysqli_real_escape_string($conn, $_POST['name']);
+    $price = floatval($_POST['price']);
+    $description = mysqli_real_escape_string($conn, $_POST['description']);
+    
+    // Handle file upload
+    if (isset($_FILES['product_image']) && $_FILES['product_image']['error'] === 0) {
+        $file = $_FILES['product_image'];
         
-        $sql = "INSERT INTO products (name, price, description, category, image_path, is_active) 
-                VALUES ('$name', $price, '$description', '$category', '$image_path', 1)";
-        
-        if ($conn->query($sql)) {
-            echo json_encode(['success' => true, 'message' => 'Product added successfully']);
-        } else {
-            echo json_encode(['success' => false, 'message' => 'Error: ' . $conn->error]);
+        // Validate file type
+        $allowed_types = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+        if (!in_array($file['type'], $allowed_types)) {
+            echo json_encode(['success' => false, 'message' => 'Invalid file type. Only JPG, PNG, and GIF are allowed.']);
+            exit;
         }
+        
+        // Validate file size (5MB max)
+        if ($file['size'] > 5 * 1024 * 1024) {
+            echo json_encode(['success' => false, 'message' => 'File size must be less than 5MB']);
+            exit;
+        }
+        
+        // Generate filename from product name
+        $file_extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+        $safe_name = strtolower(preg_replace('/[^a-zA-Z0-9]/', '_', $name));
+        $filename = $safe_name . '.' . $file_extension;
+        $upload_path = 'images/' . $filename;
+        
+        // Move uploaded file
+        if (move_uploaded_file($file['tmp_name'], $upload_path)) {
+            $image_path = $upload_path;
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Failed to upload image']);
+            exit;
+        }
+    } else {
+        echo json_encode(['success' => false, 'message' => 'No image uploaded']);
         exit;
     }
+    
+    // Insert product into database
+$sql = "INSERT INTO products (name, price, description, image_path, is_active) 
+        VALUES ('$name', $price, '$description', '$image_path', 1)";
+    
+    if ($conn->query($sql)) {
+        echo json_encode(['success' => true, 'message' => 'Product added successfully', 'image_path' => $image_path]);
+    } else {
+        // Delete uploaded image if database insert fails
+        if (file_exists($image_path)) {
+            unlink($image_path);
+        }
+        echo json_encode(['success' => false, 'message' => 'Database error: ' . $conn->error]);
+    }
+    exit;
+}
     
     // UPDATE PRODUCT
     if ($action === 'update_product') {
@@ -108,6 +146,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         exit;
     }
+
+    // DELETE PRODUCT
+if ($action === 'delete_product') {
+    $id = intval($_POST['id']);
+    
+    // Get product image path before deleting
+    $get_image_query = "SELECT image_path FROM products WHERE id = $id";
+    $result = $conn->query($get_image_query);
+    
+    if ($result && $result->num_rows > 0) {
+        $product = $result->fetch_assoc();
+        $image_path = $product['image_path'];
+        
+        // Delete from database
+        $sql = "DELETE FROM products WHERE id = $id";
+        
+        if ($conn->query($sql)) {
+            // Delete image file if it exists
+            if (file_exists($image_path)) {
+                unlink($image_path);
+            }
+            echo json_encode(['success' => true, 'message' => 'Product deleted successfully']);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Error: ' . $conn->error]);
+        }
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Product not found']);
+    }
+    exit;
+}
     
     // TOGGLE PRODUCT STATUS
     if ($action === 'toggle_product') {
@@ -144,41 +212,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $action = isset($_GET['action']) ? $_GET['action'] : '';
     
-    // GET ORDER DETAILS
-    if ($action === 'get_order') {
-        $order_id = intval($_GET['order_id']);
+ // GET ORDER DETAILS
+if ($action === 'get_order') {
+    $order_id = intval($_GET['order_id']);
+    
+    // Get order with user info
+    $order_query = "
+        SELECT o.*, u.fullname, u.email, u.phone 
+        FROM orders o 
+        JOIN users u ON o.user_id = u.id 
+        WHERE o.id = $order_id
+    ";
+    $order_result = $conn->query($order_query);
+    
+    if ($order_result && $order_result->num_rows > 0) {
+        $order = $order_result->fetch_assoc();
         
-        // Get order with user info
-        $order_query = "
-            SELECT o.*, u.fullname, u.email, u.phone 
-            FROM orders o 
-            JOIN users u ON o.user_id = u.id 
-            WHERE o.id = $order_id
-        ";
-        $order_result = $conn->query($order_query);
+        // Get order items
+        $items_query = "SELECT * FROM order_items WHERE order_id = $order_id";
+        $items_result = $conn->query($items_query);
         
-        if ($order_result && $order_result->num_rows > 0) {
-            $order = $order_result->fetch_assoc();
-            
-            // Get order items
-            $items_query = "SELECT * FROM order_items WHERE order_id = $order_id";
-            $items_result = $conn->query($items_query);
-            
-            $items = [];
-            while ($item = $items_result->fetch_assoc()) {
-                $items[] = $item;
-            }
-            
-            echo json_encode([
-                'success' => true,
-                'order' => $order,
-                'items' => $items
-            ]);
-        } else {
-            echo json_encode(['success' => false, 'message' => 'Order not found']);
+        $items = [];
+        while ($item = $items_result->fetch_assoc()) {
+            $items[] = $item;
         }
-        exit;
+        
+        echo json_encode([
+            'success' => true,
+            'order' => $order,
+            'items' => $items
+        ]);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Order not found']);
     }
+    exit;
+}
     
     // GET USER DETAILS
     if ($action === 'get_user') {

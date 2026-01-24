@@ -1534,7 +1534,6 @@ button:hover {
 }
 
 /* History Modal Styling */
-/* History Modal Styling */
 .history-modal-overlay {
     position: fixed;
     top: 0;
@@ -1550,7 +1549,8 @@ button:hover {
 
 .history-modal-overlay.active {
     display: flex;
-}
+} 
+
 
 .history-modal-content {
     background: white;
@@ -1560,12 +1560,13 @@ button:hover {
     border-radius: 25px;
     overflow: hidden;
     animation: zoomIn 0.3s ease;
+    border: 1px solid #6b4b50;
 }
 
 .history-header {
-    background: var(--primary-pink);
+    background: var(--primary-brown);
     padding: 20px;
-    color: var(--primary-brown);
+    color: var(--white);
     display: flex;
     justify-content: center; 
     align-items: center;
@@ -1573,24 +1574,46 @@ button:hover {
 }
 
 .history-header h2 {
-    font-family: 'Coiny', cursive;
+    font-family: 'Coiny';
     margin: 0;
-    font-size: 20px;
+    font-size: 28px;
     text-align: center;
 }
 
 .close-history {
-    position: absolute; 
-    right: 20px;      
-    top: 50%;
-    transform: translateY(-50%); 
-    background: none;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: transparent;
     border: none;
-    font-size: 30px;
+    border-radius: 50%;
+
+    font-size: 26px;
     cursor: pointer;
-    color: var(--primary-brown);
-    line-height: 1;
+    color: var(--white);
+
+    transition: background-color 0.2s ease, transform 0.15s ease;
 }
+
+.close-history:hover {
+    background-color: white;
+    color: var(--primary-brown);
+    border:none;
+    transform: scale(1.05);
+}
+
+.close-history:active {
+    transform: scale(0.95);
+}
+
 
 .history-body {
     padding: 0 20px 20px 20px;

@@ -173,9 +173,9 @@
         }
 
         .account-btn-primary:hover {
-            background-color: white;
-            border-color: var(--primary-brown);
-            color: var(--primary-brown);
+            background-color: #9aa559;
+            border-color: #9aa559;
+            color: white;
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
@@ -194,9 +194,9 @@
         }
 
         .account-btn-danger {
-            background-color: #fff5f5;
-            color: #d32f2f;
-            border: 2px solid #ffcdd2;
+            background-color: white;
+            color: gray;
+            border: 2px solid gray;
             grid-column: 1 / -1;
         }
 
@@ -257,7 +257,7 @@
         .stat-number {
             font-family: 'Coiny', cursive;
             font-size: 32px;
-            color: var(--primary-pink);
+            color: var(--primary-brown);
             display: block;
             margin-bottom: 5px;
         }
@@ -269,6 +269,151 @@
             opacity: 0.7;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+        }
+
+        /* Logout Modal Styles */
+        .logout-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logout-modal-overlay.active {
+            display: flex;
+        }
+
+        .logout-modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 450px;
+            width: 90%;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logout-modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            font-size: 28px;
+            color: var(--primary-brown);
+            cursor: pointer;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s;
+            opacity: 0.6;
+            border: none;
+        }
+
+        .logout-modal-close:hover {
+            background-color: var(--primary-brown);
+            border:none;
+            opacity: 1;
+        }
+
+        .logout-modal-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #fff5f5 0%, #ffebee 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logout-modal-icon svg {
+            width: 35px;
+            height: 35px;
+            fill: #d32f2f;
+        }
+
+        .logout-modal-title {
+            font-family: 'Coiny', cursive;
+            color: var(--primary-brown);
+            font-size: 28px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .logout-modal-text {
+            font-family: 'Montserrat', sans-serif;
+            color: black;
+            text-align: center;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            opacity: 0.8;
+        }
+
+        .logout-modal-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .logout-modal-btn {
+            flex: 1;
+            padding: 15px;
+            font-size: 15px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid;
+            text-transform: uppercase;
+        }
+
+        .logout-modal-btn-cancel {
+            background-color: #f5f5f5;
+            color: #666;
+            border-color: #e0e0e0;
+        }
+
+        .logout-modal-btn-cancel:hover {
+            background-color: #e0e0e0;
+            border-color: #bdbdbd;
+            transform: translateY(-2px);
+            color: #666;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .logout-modal-btn-confirm {
+            background-color: #d32f2f;
+            color: white;
+            border-color: #d32f2f;
+        }
+
+        .logout-modal-btn-confirm:hover {
+            background-color: #b71c1c;
+            border-color: #b71c1c;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3);
         }
 
         @media (max-width: 768px) {
@@ -298,6 +443,128 @@
                 height: 80px;
                 font-size: 36px;
             }
+
+            .logout-modal-content {
+                padding: 30px 20px;
+            }
+
+            .logout-modal-buttons {
+                flex-direction: column;
+            }
+        }
+
+        /* Success Modal Styles */
+        .success-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 10001;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .success-modal-overlay.active {
+            display: flex;
+        }
+
+        .success-modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 450px;
+            width: 90%;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            animation: modalSlideIn 0.3s ease;
+            text-align: center;
+            border-left: 5px solid pink;
+            border-right: 5px solid pink;
+        }
+
+        .success-modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            font-size: 28px;
+            color: var(--primary-brown);
+            cursor: pointer;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s;
+            opacity: 0.6;
+            border: none;
+        }
+
+        .success-modal-close:hover {
+            background-color: var(--primary-brown);
+            color: white;
+            opacity: 1;
+        }
+
+        .success-modal-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 20px;
+            background: #9aa559;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .success-modal-icon svg {
+            width: 35px;
+            height: 35px;
+            fill: white;
+        }
+
+        .success-modal-title {
+            font-family: 'Coiny';
+            color: var(--primary-brown);
+            font-size: 28px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .success-modal-text {
+            font-family: 'Montserrat', sans-serif;
+            color: black;
+            text-align: center;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            opacity: 0.8;
+        }
+
+        .success-modal-btn {
+            padding: 15px 20px;
+            font-size: 15px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid;
+            background-color: #9aa559;
+            color: white;
+            border-color: #9aa559;
+        }
+
+        .success-modal-btn:hover {
+            background-color: pink;
+            border-color: pink;
+            color:var(--primary-brown);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
         }
     </style>
 </head>
@@ -355,7 +622,7 @@
             
             <!-- Profile Section (shown when logged in) -->
             <div class="profile-section" id="profileSection">
-                <p class="welcome-text">Welcome back! 🏡</p>
+                <p class="welcome-text">Welcome back!</p>
                 
                 <div class="user-icon" id="userInitials">?</div>
                 
@@ -425,7 +692,7 @@
                     <button class="account-btn account-btn-primary" onclick="window.location.href='shop.php'">SHOP NOW</button>
                     <button class="account-btn account-btn-secondary" onclick="openEditModal()">EDIT PROFILE</button>
                     <button class="account-btn account-btn-outline" onclick="openHistoryModal()">VIEW HISTORY</button>
-                    <button class="account-btn account-btn-danger" onclick="logout()">LOGOUT</button>
+                    <button class="account-btn account-btn-danger" onclick="openLogoutModal()">LOGOUT</button>
                 </div>
 
                 <div id="historyModal" class="history-modal-overlay">
@@ -515,7 +782,8 @@
                     </div>
                 </div>
             </div>
-            
+
+
             <!-- Login Section (shown when not logged in) -->
             <div class="login-section" id="loginSection">
                 <div class="guest-message">
@@ -578,6 +846,48 @@
             </div>
         </div>
     </footer>
+
+
+
+
+                <!-- Logout Confirmation Modal -->
+        <div id="logoutModal" class="logout-modal-overlay">
+            <div class="logout-modal-content">
+                <button class="logout-modal-close" onclick="closeLogoutModal()">&times;</button>
+                
+                <div class="logout-modal-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+                    </svg>
+                </div>
+                
+                <h2 class="logout-modal-title">Logout?</h2>
+                <p class="logout-modal-text">Are you sure you want to log out of your account?</p>
+                
+                <div class="logout-modal-buttons">
+                    <button class="logout-modal-btn logout-modal-btn-cancel" onclick="closeLogoutModal()">Cancel</button>
+                    <button class="logout-modal-btn logout-modal-btn-confirm" onclick="confirmLogout()">Yes, Logout</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Modal -->
+<div id="successModal" class="success-modal-overlay">
+    <div class="success-modal-content">
+        <button class="success-modal-close" onclick="closeSuccessModal()">&times;</button>
+        
+        <div class="success-modal-icon">
+            <svg viewBox="0 0 24 24">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+            </svg>
+        </div>
+        
+        <h2 class="success-modal-title">Success!</h2>
+        <p class="success-modal-text">Your profile has been updated successfully.</p>
+        
+        <button class="success-modal-btn" onclick="closeSuccessModal()">OK</button>
+    </div>
+</div>
 
     <script src="script.js"></script>
     <script src="checkout.js"></script>
