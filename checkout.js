@@ -154,7 +154,66 @@ function removeFromCart(index) {
 
 // Global variables
 let selectedPaymentMethod = 'gcash'; // Default payment method
-const DELIVERY_FEE = 50.00;
+
+// ==========================================
+// DELIVERY FEE CONFIGURATION
+// ==========================================
+const DELIVERY_FEES = {
+  'antipolo': 50,
+
+  // Zone 1 – Near East NCR (6–10 km)
+  'marikina': 80,
+  'pasig': 80,
+  'pateros': 80,
+
+  // Zone 2 – Central NCR (11–15 km)
+  'quezon city': 100,
+  'mandaluyong': 100,
+  'san juan': 100,
+  'makati': 100,
+  'taguig': 100,
+
+  // Zone 3 – Far NCR (16–20 km)
+  'manila': 120,
+  'pasay': 120,
+  'parañaque': 120,
+  'muntinlupa': 120,
+
+  // Zone 4 – Farthest NCR (21–25 km)
+  'caloocan': 150,
+  'malabon': 150,
+  'navotas': 160,
+  'valenzuela': 150,
+  'las piñas': 150,
+
+  // Fallback
+  'default': 170
+};
+
+
+// Function to get delivery fee based on city
+function getDeliveryFee(city) {
+    if (!city) return DELIVERY_FEES['default'];
+    
+    const cityLower = city.toLowerCase().trim();
+    
+    // Check if exact match exists
+    if (DELIVERY_FEES[cityLower]) {
+        return DELIVERY_FEES[cityLower];
+    }
+    
+    // Check for partial matches
+    for (let key in DELIVERY_FEES) {
+        if (cityLower.includes(key) || key.includes(cityLower)) {
+            return DELIVERY_FEES[key];
+        }
+    }
+    
+    // Return default if no match found
+    return DELIVERY_FEES['default'];
+}
+
+let currentDeliveryFee = DELIVERY_FEES['default']; // Will be updated based on user's city
 
 // ==========================================
 // INITIALIZE ON PAGE LOAD
@@ -220,34 +279,43 @@ function displayUserInfo(user) {
     requestAnimationFrame(() => {
         // Display name
         const nameElement = document.getElementById('checkoutName');
-        console.log('Name element found:', nameElement);
         if (nameElement) {
             nameElement.textContent = user.fullname || user.name || 'N/A';
-            console.log('✓ Name set to:', nameElement.textContent);
-        } else {
-            console.log('checkoutName element not found - probably not on checkout page');
         }
         
         // Display phone
         const phoneElement = document.getElementById('checkoutPhone');
-        console.log('Phone element found:', phoneElement);
         if (phoneElement) {
             phoneElement.textContent = user.phone || 'N/A';
-            console.log('✓ Phone set to:', phoneElement.textContent);
-        } else {
-            console.log('checkoutPhone element not found - probably not on checkout page');
         }
         
         // Display address
         const addressElement = document.getElementById('checkoutAddress');
-        console.log('Address element found:', addressElement);
         if (addressElement) {
             addressElement.textContent = user.address || 'N/A';
-            console.log('✓ Address set to:', addressElement.textContent);
-        } else {
-            console.log('checkoutAddress element not found - probably not on checkout page');
         }
+        
+        // SET DELIVERY FEE BASED ON USER'S CITY
+        const userCity = user.city || '';
+        currentDeliveryFee = getDeliveryFee(userCity);
+        console.log('User city:', userCity, '| Delivery fee:', currentDeliveryFee);
+        
+        // Update delivery fee display
+        updateDeliveryFeeDisplay();
+        
+        // Reload cart to recalculate totals with new delivery fee
+        loadCheckoutCart();
     });
+}
+
+// ==========================================
+// UPDATE DELIVERY FEE DISPLAY
+// ==========================================
+function updateDeliveryFeeDisplay() {
+    const deliveryFeeElement = document.querySelector('.summary-item:nth-child(2) span:last-child');
+    if (deliveryFeeElement) {
+        deliveryFeeElement.textContent = '₱' + currentDeliveryFee.toFixed(2);
+    }
 }
 
 // ==========================================
@@ -281,9 +349,6 @@ function loadCheckoutCart() {
     });
 }
 
-// ==========================================
-// DISPLAY CART ITEMS IN CHECKOUT
-// ==========================================
 function displayCheckoutItems(cart) {
     const orderItemsContainer = document.getElementById('orderItems');
     
@@ -292,8 +357,18 @@ function displayCheckoutItems(cart) {
     let html = '';
     
     cart.forEach((item, index) => {
-        const priceNum = parseFloat(item.price.replace('₱', '').replace(',', ''));
-        const itemTotal = priceNum * item.quantity;
+        let itemTotal;
+        
+        if (item.name === 'Mochi Bites') {
+            // Mochi Bites at regular price
+            const priceNum = parseFloat(item.price.replace('₱', '').replace(',', ''));
+            itemTotal = priceNum * item.quantity;
+        } else {
+            // Regular mochi with mix & match pricing
+            const sets = Math.floor(item.quantity / 3);
+            const remainder = item.quantity % 3;
+            itemTotal = (sets * 100) + (remainder * 35);
+        }
         
         html += `
             <div class="order-item">
@@ -351,13 +426,16 @@ function calculateTotal(cart) {
 // ==========================================
 function calculateCheckoutTotals(cart) {
     const subtotal = calculateTotal(cart);
-    const total = subtotal + DELIVERY_FEE;
+    const total = subtotal + currentDeliveryFee; // Use dynamic fee
     
     // Update subtotal
     const subtotalElement = document.getElementById('summarySubtotal');
     if (subtotalElement) {
         subtotalElement.textContent = '₱' + subtotal.toFixed(2);
     }
+    
+    // Update delivery fee
+    updateDeliveryFeeDisplay();
     
     // Update total
     const totalElement = document.getElementById('summaryTotal');
@@ -430,9 +508,9 @@ function placeOrder() {
     .then(response => response.json())
     .then(data => {
         if (data.success && data.cart && data.cart.length > 0) {
-            // Calculate totals
+            // Calculate totals with dynamic delivery fee
             const subtotal = calculateTotal(data.cart);
-            const total = subtotal + DELIVERY_FEE;
+            const total = subtotal + currentDeliveryFee; // Use dynamic fee
             
             // Store order data for later
             currentOrderData = {
