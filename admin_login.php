@@ -4,7 +4,7 @@ session_start();
 // Simple hardcoded admin credentials - CHANGE THESE!
 // In production, use hashed passwords in database
 $ADMIN_USERNAME = "admin";
-$ADMIN_PASSWORD = "admin123"; // CHANGE THIS!
+$ADMIN_PASSWORD = "4dm1N1@2#3"; // CHANGE THIS!
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'] ?? '';
