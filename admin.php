@@ -1284,38 +1284,47 @@ $products_result = $conn->query($products_query);
             <button class="action-btn" onclick="addProduct()" style="margin-bottom: 20px;">+ Add New Product</button>
 
             <table id="productsTable">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Price</th>
-                        <th>Description</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Description</th>
+                            <th>Stock</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
                 <tbody>
-                    <?php while($product = $products_result->fetch_assoc()): ?>
-                    <tr>
-                        <td><?php echo $product['id']; ?></td>
-                        <td><?php echo htmlspecialchars($product['name']); ?></td>
-                        <td>₱<?php echo number_format($product['price'], 2); ?></td>
-                        <td><?php echo htmlspecialchars(substr($product['description'], 0, 50)) . '...'; ?></td>
-                        <td>
-                            <span class="status-badge <?php echo $product['is_active'] ? 'status-delivered' : 'status-cancelled'; ?>">
-                                <?php echo $product['is_active'] ? 'Active' : 'Inactive'; ?>
-                            </span>
-                        </td>
-                        <td>
-                            <button class="action-btn" onclick="editProduct(<?php echo $product['id']; ?>)">Edit</button>
-                            <button class="action-btn toggle" onclick="toggleProductStatus(<?php echo $product['id']; ?>, <?php echo $product['is_active']; ?>)">
-                                <?php echo $product['is_active'] ? 'Deactivate' : 'Activate'; ?>
-                            </button>
-                            <button class="action-btn delete" onclick="deleteProduct(<?php echo $product['id']; ?>, '<?php echo htmlspecialchars($product['name']); ?>')">Delete</button>
-                        </td>
-                    </tr>
-                    <?php endwhile; ?>
-                </tbody>
+                        <?php while($product = $products_result->fetch_assoc()): ?>
+                        <tr>
+                            <td><?php echo $product['id']; ?></td>
+                            <td><?php echo htmlspecialchars($product['name']); ?></td>
+                            <td>₱<?php echo number_format($product['price'], 2); ?></td>
+                    
+                            <td><?php echo htmlspecialchars(substr($product['description'], 0, 50)) . '...'; ?></td>
+
+                             <td>
+                                <span style="font-weight: 600; color: <?php echo $product['stock'] > 0 ? '#155724' : '#721c24'; ?>">
+                                    <?php echo $product['stock']; ?> 
+                                </span>
+                            </td>
+
+                            <td>
+                                <span class="status-badge <?php echo $product['is_active'] ? 'status-delivered' : 'status-cancelled'; ?>">
+                                    <?php echo $product['is_active'] ? 'Active' : 'Inactive'; ?>
+                                </span>
+                            </td>
+                            <td>
+                                <button class="action-btn" onclick="editProduct(<?php echo $product['id']; ?>)">Edit</button>
+                                <button class="action-btn toggle" onclick="toggleProductStatus(<?php echo $product['id']; ?>, <?php echo $product['is_active']; ?>)">
+                                    <?php echo $product['is_active'] ? 'Deactivate' : 'Activate'; ?>
+                                </button>
+                                <button class="action-btn delete" onclick="deleteProduct(<?php echo $product['id']; ?>, '<?php echo htmlspecialchars($product['name']); ?>')">Delete</button>
+                            </td>
+                        </tr>
+                        <?php endwhile; ?>
+                    </tbody>
             </table>
         </div>
     </div>
@@ -1392,6 +1401,15 @@ $products_result = $conn->query($products_query);
                 </div>
 
                 <div class="form-group">
+                    <label>Stock Quantity</label>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <button type="button" onclick="adjustEditStock(-1)" style="width: 40px; height: 40px; border: 2px solid #e0e0e0; background: white; border-radius: 8px; cursor: pointer; font-size: 20px;">−</button>
+                        <input type="number" id="editProductStock" min="0" value="0" required style="width: 100px; text-align: center;">
+                        <button type="button" onclick="adjustEditStock(1)" style="width: 40px; height: 40px; border: 2px solid #e0e0e0; background: white; border-radius: 8px; cursor: pointer; font-size: 20px;">+</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
                     <label>Image Path</label>
                     <input type="text" id="editProductImage" required>
                 </div>
@@ -1422,6 +1440,15 @@ $products_result = $conn->query($products_query);
                 <label>Description</label>
                 <textarea id="addProductDescription" rows="4" required></textarea>
             </div>
+
+            <div class="form-group">
+            <label>Stock Quantity</label>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <button type="button" onclick="adjustAddStock(-1)" style="width: 40px; height: 40px; border: 2px solid #e0e0e0; background: white; border-radius: 8px; cursor: pointer; font-size: 20px;">−</button>
+                <input type="number" id="addProductStock" min="0" value="0" required style="width: 100px; text-align: center;">
+                <button type="button" onclick="adjustAddStock(1)" style="width: 40px; height: 40px; border: 2px solid #e0e0e0; background: white; border-radius: 8px; cursor: pointer; font-size: 20px;">+</button>
+            </div>
+        </div>
 
             <div class="form-group">
                 <label>Product Image</label>
@@ -1822,8 +1849,9 @@ document.getElementById('addProductForm').addEventListener('submit', function(e)
     const formData = new FormData();
     formData.append('action', 'add_product');
     formData.append('name', document.getElementById('addProductName').value);
-    formData.append('price', document.getElementById('addProductPrice').value);
+    formData.append('price', document.getElementById('addProductPrice').value); // ADD THIS LINE
     formData.append('description', document.getElementById('addProductDescription').value);
+    formData.append('stock', document.getElementById('addProductStock').value);
     formData.append('product_image', file);
     
     // Show loading state
@@ -1881,30 +1909,30 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-        function editProduct(productId) {
-            // Fetch product details
-            fetch('admin_actions.php?action=get_product&product_id=' + productId)
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const product = data.product;
-                    
-                    document.getElementById('editProductId').value = product.id;
-                    document.getElementById('editProductName').value = product.name;
-                    document.getElementById('editProductPrice').value = product.price;
-                    document.getElementById('editProductDescription').value = product.description;
-                    document.getElementById('editProductImage').value = product.image_path;
-                    
-                    document.getElementById('editProductModal').classList.add('active');
-                } else {
-                    alert('Error loading product: ' + data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Error loading product');
-            });
+ function editProduct(productId) {
+    fetch('admin_actions.php?action=get_product&product_id=' + productId)
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const product = data.product;
+            
+            document.getElementById('editProductId').value = product.id;
+            document.getElementById('editProductName').value = product.name;
+            document.getElementById('editProductPrice').value = product.price; // ADD THIS LINE
+            document.getElementById('editProductDescription').value = product.description;
+            document.getElementById('editProductStock').value = product.stock || 0;
+            document.getElementById('editProductImage').value = product.image_path;
+            
+            document.getElementById('editProductModal').classList.add('active');
+        } else {
+            alert('Error loading product: ' + data.message);
         }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error loading product');
+    });
+}
 
  document.getElementById('editProductForm').addEventListener('submit', function(e) {
     e.preventDefault();
@@ -1915,6 +1943,7 @@ document.addEventListener('DOMContentLoaded', function() {
     formData.append('name', document.getElementById('editProductName').value);
     formData.append('price', document.getElementById('editProductPrice').value);
     formData.append('description', document.getElementById('editProductDescription').value);
+    formData.append('stock', document.getElementById('editProductStock').value); // ADD THIS LINE
     formData.append('image_path', document.getElementById('editProductImage').value);
     
     fetch('admin_actions.php', {
@@ -1924,9 +1953,7 @@ document.addEventListener('DOMContentLoaded', function() {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            // Close edit modal
             closeModal('editProductModal');
-            // Show edit success modal
             document.getElementById('editSuccessModal').classList.add('active');
         } else {
             alert('Error: ' + data.message);
@@ -2157,6 +2184,23 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+// Stock adjustment functions for Edit Product
+function adjustEditStock(amount) {
+    const input = document.getElementById('editProductStock');
+    const currentValue = parseInt(input.value) || 0;
+    const newValue = Math.max(0, currentValue + amount);
+    input.value = newValue;
+}
+
+// Stock adjustment functions for Add Product
+function adjustAddStock(amount) {
+    const input = document.getElementById('addProductStock');
+    const currentValue = parseInt(input.value) || 0;
+    const newValue = Math.max(0, currentValue + amount);
+    input.value = newValue;
+}
+
     </script>
 </body>
 </html>
