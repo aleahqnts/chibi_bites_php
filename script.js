@@ -99,34 +99,113 @@ document.addEventListener('DOMContentLoaded', function() {
 let currentQuantity = 1;
 let currentProduct = {};
 
-function openModal(name, price, img, description) {
-    currentProduct = { name, price, img, description };
-    currentQuantity = 1;
+let currentStock = 0;
+
+function openModal(name, price, image, description, stock) {
+    currentProductName = name;
+    currentProductPrice = price;
+    currentProductImage = image;
+    currentStock = stock;
     
     document.getElementById('modalProductName').textContent = name;
     document.getElementById('modalProductPrice').textContent = price;
-    document.getElementById('modalProductImg').src = img;
+    document.getElementById('modalProductImg').src = image;
     document.getElementById('modalProductDescription').textContent = description;
+    
+    // Reset quantity
+    currentQuantity = 1;
     document.getElementById('quantityDisplay').textContent = currentQuantity;
     
+    // Update button states
+    updateQuantityButtons(); // ADD THIS LINE
+    
+    // Show modal
     document.getElementById('productModal').classList.add('active');
     document.body.style.overflow = 'hidden';
 }
 
+function increaseQuantity() {
+    if (currentQuantity < currentStock) { // CHECK AGAINST STOCK
+        currentQuantity++;
+        document.getElementById('quantityDisplay').textContent = currentQuantity;
+    } else {
+        alert(`Maximum available stock is ${currentStock} pieces`);
+    }
+}
+
 function closeModal() {
     document.getElementById('productModal').classList.remove('active');
-    document.body.style.overflow = 'auto';
+    document.body.style.overflow = '';
+    
+    // Remove max stock message if exists
+    const maxStockMsg = document.getElementById('maxStockMessage');
+    if (maxStockMsg) {
+        maxStockMsg.remove();
+    }
 }
 
 function increaseQuantity() {
-    currentQuantity++;
-    document.getElementById('quantityDisplay').textContent = currentQuantity;
+    if (currentQuantity < currentStock) {
+        currentQuantity++;
+        document.getElementById('quantityDisplay').textContent = currentQuantity;
+        updateQuantityButtons(); // Add this
+    }
 }
 
 function decreaseQuantity() {
     if (currentQuantity > 1) {
         currentQuantity--;
         document.getElementById('quantityDisplay').textContent = currentQuantity;
+        updateQuantityButtons(); // Add this
+    }
+}
+
+// ADD THIS NEW FUNCTION
+function updateQuantityButtons() {
+    const increaseBtn = document.querySelector('.quantity-selector .quantity-btn:last-child');
+    const decreaseBtn = document.querySelector('.quantity-selector .quantity-btn:first-child');
+    const addToCartBtn = document.querySelector('.add-to-cart-btn');
+    
+    // Disable increase button if at max stock
+    if (currentQuantity >= currentStock) {
+        increaseBtn.disabled = true;
+        increaseBtn.style.opacity = '0.5';
+        increaseBtn.style.cursor = 'not-allowed';
+        
+       
+        // Show max stock message BELOW quantity selector
+            let maxStockMsg = document.getElementById('maxStockMessage');
+            if (!maxStockMsg) {
+                maxStockMsg = document.createElement('p');
+                maxStockMsg.id = 'maxStockMessage';
+                maxStockMsg.style.cssText = 'color: #d32f2f; font-size: 13px; margin-top: 0px; text-align: center; font-weight: 600; display: block; width: 100%;';
+                maxStockMsg.textContent = `Maximum available: ${currentStock} pcs`;
+                
+                // Insert AFTER the quantity selector, not inside it
+                const quantitySelector = document.querySelector('.quantity-selector');
+                quantitySelector.parentNode.insertBefore(maxStockMsg, quantitySelector.nextSibling);
+                }
+    } else {
+        increaseBtn.disabled = false;
+        increaseBtn.style.opacity = '1';
+        increaseBtn.style.cursor = 'pointer';
+        
+        // Remove max stock message
+        const maxStockMsg = document.getElementById('maxStockMessage');
+        if (maxStockMsg) {
+            maxStockMsg.remove();
+        }
+    }
+    
+    // Disable decrease button if at 1
+    if (currentQuantity <= 1) {
+        decreaseBtn.disabled = true;
+        decreaseBtn.style.opacity = '0.5';
+        decreaseBtn.style.cursor = 'not-allowed';
+    } else {
+        decreaseBtn.disabled = false;
+        decreaseBtn.style.opacity = '1';
+        decreaseBtn.style.cursor = 'pointer';
     }
 }
 
@@ -909,4 +988,49 @@ function openSuccessModal() {
 function closeSuccessModal() {
     document.getElementById('successModal').classList.remove('active');
     closeEditModal(); // Also close the edit modal
+}
+
+// Check stock availability before checkout
+function checkUserAuthentication() {
+    // First verify stock availability
+    const formData = new FormData();
+    formData.append('action', 'get');
+    
+    fetch('cart.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success && data.cart) {
+            // Validate stock for each item
+            let hasStockIssue = false;
+            
+            data.cart.forEach(item => {
+                // You'd need to add an endpoint to check current stock
+                // For now, this assumes stock is managed correctly
+            });
+            
+            // Proceed with authentication check
+            proceedToCheckout();
+        }
+    });
+}
+
+function proceedToCheckout() {
+    const authFormData = new FormData();
+    authFormData.append('action', 'check');
+    
+    fetch('auth.php', {
+        method: 'POST',
+        body: authFormData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success && data.logged_in) {
+            window.location.href = 'checkout.php';
+        } else {
+            document.getElementById('authModal').classList.add('active');
+        }
+    });
 }

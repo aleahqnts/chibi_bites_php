@@ -57,6 +57,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $conn->begin_transaction();
         
         try {
+            // CHECK STOCK AVAILABILITY FIRST
+            foreach ($cart as $item) {
+                $product_name = mysqli_real_escape_string($conn, $item['name']);
+                $quantity = intval($item['quantity']);
+                
+                // Check if enough stock available
+                $stock_check = $conn->query("SELECT stock FROM products WHERE name = '$product_name'");
+                if ($stock_check && $stock_check->num_rows > 0) {
+                    $product = $stock_check->fetch_assoc();
+                    $available_stock = intval($product['stock']);
+                    
+                    if ($available_stock < $quantity) {
+                        throw new Exception("Insufficient stock for {$product_name}. Only {$available_stock} available.");
+                    }
+                } else {
+                    throw new Exception("Product {$product_name} not found.");
+                }
+            }
+            
             // Create order
             $stmt = $conn->prepare("INSERT INTO orders (user_id, total_amount, delivery_address, payment_method, payment_proof, status, created_at) VALUES (?, ?, ?, ?, ?, 'pending', NOW())");
             $stmt->bind_param("idsss", $user_id, $total, $delivery_address, $payment_method, $payment_proof);
@@ -64,20 +83,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $order_id = $stmt->insert_id;
             $stmt->close();
             
-            // Add order items
+            // Add order items AND DEDUCT STOCK
             foreach ($cart as $item) {
                 $product_name = mysqli_real_escape_string($conn, $item['name']);
                 $quantity = intval($item['quantity']);
                 $price = floatval(str_replace(['₱', ','], '', $item['price']));
                 
+                // Insert order item
                 $stmt = $conn->prepare("INSERT INTO order_items (order_id, product_name, quantity, price) VALUES (?, ?, ?, ?)");
                 $stmt->bind_param("isid", $order_id, $product_name, $quantity, $price);
                 
                 if (!$stmt->execute()) {
                     throw new Exception('Error adding order item: ' . $stmt->error);
                 }
-                
                 $stmt->close();
+                
+                // DEDUCT STOCK - ADD THIS SECTION
+                $update_stock = $conn->prepare("UPDATE products SET stock = stock - ? WHERE name = ? AND stock >= ?");
+                $update_stock->bind_param("isi", $quantity, $product_name, $quantity);
+                
+                if (!$update_stock->execute()) {
+                    throw new Exception('Error updating stock for ' . $product_name);
+                }
+                
+                // Verify stock was actually updated
+                if ($update_stock->affected_rows === 0) {
+                    throw new Exception("Failed to deduct stock for {$product_name}. Stock may have changed.");
+                }
+                
+                $update_stock->close();
             }
             
             // Commit transaction

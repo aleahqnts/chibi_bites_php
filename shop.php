@@ -94,14 +94,23 @@ if ($result && $result->num_rows > 0) {
                                         <h1><?php echo htmlspecialchars($product['name']); ?></h1>
                                         <p class="edu-school">₱<?php echo number_format($product['price'], 2); ?></p>
                                         
-                                        <button onclick="openModal(
-                                            '<?php echo addslashes($product['name']); ?>', 
-                                            '₱<?php echo number_format($product['price'], 2); ?>', 
-                                            '<?php echo $product['image_path']; ?>', 
-                                            '<?php echo addslashes($product['description']); ?>'
-                                        )">
-                                            <p>ORDER</p>
-                                        </button>
+
+                                            
+                                        <?php if ($product['stock'] > 0): ?>
+                                            <button onclick="openModal(
+                                                '<?php echo addslashes($product['name']); ?>', 
+                                                '₱<?php echo number_format($product['price'], 2); ?>', 
+                                                '<?php echo $product['image_path']; ?>', 
+                                                '<?php echo addslashes($product['description']); ?>',
+                                                <?php echo $product['stock']; ?>
+                                            )">
+                                                <p>ORDER</p>
+                                            </button>
+                                        <?php else: ?>
+                                            <button disabled style="background: #ccc; cursor: not-allowed; opacity: 0.6;">
+                                                <p>SOLD OUT</p>
+                                            </button>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             <?php endforeach; ?>
