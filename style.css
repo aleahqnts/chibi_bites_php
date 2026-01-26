@@ -2326,3 +2326,442 @@ button:hover {
         display: block;
     }
 }
+
+/* ============================================
+   MEDIA QUERIES - SHOP PAGE
+   ============================================ */
+
+/* Tablets and smaller (768px and below) */
+@media screen and (max-width: 768px) {
+    
+    /* NAVBAR MOBILE - HAMBURGER MENU */
+    .navbar {
+        padding: 10px 15px;
+        height: 60px;
+    }
+    
+    .logo-img {
+        height: 28px;
+    }
+    
+    .title-img {
+        height: 15px;
+    }
+    
+    /* Hide desktop nav links */
+    .nav-links {
+        position: fixed;
+        top: 60px;
+        right: -100%;
+        width: 250px;
+        height: calc(100vh - 60px);
+        background: white;
+        flex-direction: column;
+        padding: 30px 20px;
+        gap: 0;
+        box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+        transition: right 0.3s ease;
+        z-index: 999;
+        border-left: 2px solid var(--primary-pink);
+    }
+    
+    .nav-links.active {
+        right: 0;
+    }
+    
+    .nav-links li {
+        width: 100%;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .nav-links li a {
+        display: block;
+        padding: 15px 10px;
+        width: 100%;
+        text-align: left;
+    }
+    
+    /* Hamburger Icon */
+    .hamburger {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        cursor: pointer;
+        z-index: 1001;
+    }
+    
+    .hamburger span {
+        width: 25px;
+        height: 3px;
+        background-color: var(--primary-brown);
+        transition: all 0.3s;
+        border-radius: 3px;
+    }
+    
+    .hamburger.active span:nth-child(1) {
+        transform: rotate(45deg) translate(8px, 8px);
+    }
+    
+    .hamburger.active span:nth-child(2) {
+        opacity: 0;
+    }
+    
+    .hamburger.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(7px, -7px);
+    }
+    
+    .nav-icons {
+        gap: 15px;
+    }
+    
+    .icon {
+        height: 24px;
+    }
+    
+    /* SHOP PAGE SPECIFIC */
+    .sectionshop {
+        padding: 80px 20px 40px 20px;
+    }
+    
+    .sectionshop h1 {
+        font-size: 32px;
+    }
+    
+    .mixmatch {
+        width: 90%;
+        padding: 12px 15px;
+        margin: 20px auto;
+    }
+    
+    .mixmatch p {
+        font-size: 14px;
+    }
+    
+    /* Search section */
+    .product-filter-section {
+        padding: 15px 20px;
+    }
+    
+    .search-container {
+        max-width: 100%;
+    }
+    
+    .search-input {
+        font-size: 14px;
+        padding: 10px 15px;
+    }
+    
+    /* Product Grid */
+    .shop-container {
+        padding: 20px 10px;
+    }
+    
+    .product-container {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .product-column {
+        width: 100%;
+        max-width: 350px;
+        margin: 0 auto;
+    }
+    
+    .product-card {
+        padding: 15px;
+    }
+    
+    .product-card h1 {
+        font-size: 18px;
+    }
+    
+    .product-card .edu-school {
+        font-size: 16px;
+    }
+    
+    .product-card button {
+        padding: 10px 25px;
+        font-size: 14px;
+    }
+    
+    /* Product Modal */
+    .modal-content {
+        width: 90%;
+        max-width: 450px;
+        padding: 25px 20px;
+        margin: 20px;
+    }
+    
+    .modal-content h2 {
+        font-size: 24px;
+    }
+    
+    .modal-product-img {
+        max-height: 250px;
+    }
+    
+    .modal-price {
+        font-size: 22px;
+    }
+    
+    .modal-description {
+        font-size: 14px;
+    }
+    
+    .quantity-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 20px;
+    }
+    
+    .quantity-display {
+        font-size: 18px;
+        min-width: 50px;
+    }
+    
+    .add-to-cart-btn {
+        padding: 12px 30px;
+        font-size: 14px;
+    }
+    
+    /* Cart Sidebar */
+    .cart-sidebar {
+        width: 85%;
+        max-width: 350px;
+    }
+    
+    .cart-header h2 {
+        font-size: 22px;
+    }
+    
+    .cart-close {
+        font-size: 32px;
+    }
+    
+    /* Auth Modal */
+    .auth-modal-content {
+        width: 90%;
+        max-width: 400px;
+        padding: 30px 20px;
+    }
+    
+    .auth-modal-content h2 {
+        font-size: 24px;
+    }
+    
+    .auth-modal-content p {
+        font-size: 14px;
+    }
+    
+    .auth-btn {
+        padding: 12px 30px;
+        font-size: 14px;
+    }
+    
+    /* FOOTER MOBILE */
+    .site-footer {
+        padding: 30px 20px;
+    }
+    
+    .footer-container {
+        flex-direction: column;
+        gap: 25px;
+        align-items: center;
+    }
+    
+    .footer-column {
+        text-align: center;
+    }
+    
+    .footer-column h3 {
+        font-size: 20px;
+        text-align: center;
+    }
+    
+    .footer-column p {
+        margin-left: 0;
+        font-size: 14px;
+        text-align: center;
+    }
+    
+    .footer-links {
+        text-align: center;
+    }
+    
+    .footer-links li {
+        margin: 8px 0;
+    }
+    
+    .footer-links a {
+        font-size: 14px;
+    }
+    
+    .footer-logo-column {
+        align-items: center;
+    }
+    
+    .footer-logo-column p {
+        font-size: 12px;
+        margin-left: 0;
+        text-align: center;
+    }
+    
+    .footer-logo-circle {
+        height: 36px;
+    }
+    
+    .footer-logo-text {
+        height: 22px;
+    }
+    
+    .social-icons {
+        gap: 12px;
+    }
+    
+    /* Mobile menu overlay */
+    .mobile-menu-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        z-index: 998;
+    }
+    
+    .mobile-menu-overlay.active {
+        display: block;
+    }
+}
+
+/* Mobile phones (480px and below) */
+@media screen and (max-width: 480px) {
+    
+    /* NAVBAR EXTRA SMALL */
+    .navbar {
+        padding: 8px 12px;
+        height: 55px;
+    }
+    
+    .logo-img {
+        height: 24px;
+    }
+    
+    .title-img {
+        height: 13px;
+    }
+    
+    .nav-links {
+        top: 55px;
+        height: calc(100vh - 55px);
+        width: 220px;
+    }
+    
+    .nav-icons {
+        gap: 10px;
+    }
+    
+    .icon {
+        height: 22px;
+    }
+    
+    .hamburger span {
+        width: 22px;
+        height: 2.5px;
+    }
+    
+    /* SHOP PAGE */
+    .sectionshop {
+        padding: 70px 15px 30px 15px;
+    }
+    
+    .sectionshop h1 {
+        font-size: 28px;
+    }
+    
+    .mixmatch {
+        width: 95%;
+        padding: 10px 12px;
+    }
+    
+    .mixmatch p {
+        font-size: 13px;
+    }
+    
+    .search-input {
+        font-size: 13px;
+        padding: 8px 12px;
+    }
+    
+    .product-column {
+        max-width: 100%;
+    }
+    
+    .product-card h1 {
+        font-size: 16px;
+    }
+    
+    .product-card .edu-school {
+        font-size: 15px;
+    }
+    
+    .product-card button {
+        padding: 8px 20px;
+        font-size: 13px;
+    }
+    
+    /* Modal adjustments */
+    .modal-content {
+        width: 95%;
+        padding: 20px 15px;
+    }
+    
+    .modal-content h2 {
+        font-size: 20px;
+    }
+    
+    .modal-product-img {
+        max-height: 200px;
+    }
+    
+    .modal-price {
+        font-size: 20px;
+    }
+    
+    .modal-description {
+        font-size: 13px;
+    }
+    
+    .cart-sidebar {
+        width: 90%;
+    }
+    
+    /* FOOTER */
+    .site-footer {
+        padding: 25px 15px;
+    }
+    
+    .footer-column h3 {
+        font-size: 18px;
+    }
+    
+    .footer-column p {
+        font-size: 13px;
+    }
+    
+    .footer-links a {
+        font-size: 13px;
+    }
+}
+
+/* Desktop - hide hamburger by default */
+@media screen and (min-width: 769px) {
+    .hamburger {
+        display: none;
+    }
+    
+    .mobile-menu-overlay {
+        display: none !important;
+    }
+}

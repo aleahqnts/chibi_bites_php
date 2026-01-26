@@ -9,144 +9,235 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     
-    <style>
-        :root {
-            --text-brown: #5E4B43;
-            --header-bg: #f5f5dc; /* Cream color for Header */
-            --body-bg: #ffffff;
-            --footer-green: #9AA559; /* Olive Green for Footer */
-            --white: #ffffff;
-            --pink-accent: #F8A8C6;
-        }
+ <style>
+    :root {
+        --text-brown: #5E4B43;
+        --header-bg: #f5f5dc;
+        --body-bg: #ffffff;
+        --footer-green: #9AA559;
+        --white: #ffffff;
+        --pink-accent: #F8A8C6;
+    }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: var(--body-bg);
-            color: var(--text-brown);
-        }
+    body {
+        font-family: 'Montserrat', sans-serif;
+        background-color: var(--body-bg);
+        color: var(--text-brown);
+    }
 
-        /* MAIN CONTENT */
-        main {
-            padding: 50px 5%;
-            min-height: 60vh;
-            max-width: 900px;
-            margin: 0 auto;
-        }
+    /* MAIN CONTENT */
+    main {
+        padding: 50px 5%;
+        min-height: 60vh;
+        max-width: 900px;
+        margin: 0 auto;
+    }
 
-        h1 {
-            text-align: center;
-            font-family: 'Coiny', cursive;
-            font-size: 42px;
-            color: var(--text-brown);
-            margin-bottom: 10px;
-            margin-top: 80px;
-            
-        }
+    h1 {
+        text-align: center;
+        font-family: 'Coiny', cursive;
+        font-size: 42px;
+        color: var(--text-brown);
+        margin-bottom: 10px;
+        margin-top: 80px;
+    }
 
-
-       .fade-in {
-    opacity: 0;
-    animation: fadeInUp 0.6s ease forwards;
-    animation-delay: 0.2s;
-}
-
-@keyframes fadeInUp {
-    from {
+    .fade-in {
         opacity: 0;
-        transform: translateY(15px);
+        animation: fadeInUp 0.6s ease forwards;
+        animation-delay: 0.2s;
     }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
 
-
-        .faq-container {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(15px);
         }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
 
-        .faq-item {
-            background-color: var(--white);
-            border: 1px solid var(--text-brown);
-            border-radius: 10px;
-            transition: transform 0.3s;
-            color: var(--text-brown);
-            
-            }
 
-            .faq-item:hover {
-                transform: scale(1.05);
-            }
+    .faq-container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .faq-item {
+        background-color: var(--white);
+        border: 1px solid var(--text-brown);
+        border-radius: 10px;
+        transition: transform 0.3s;
+        color: var(--text-brown);
+    }
+
+    .faq-item:hover {
+        transform: scale(1.05);
+    }
+
+    .faq-question {
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        user-select: none;
+        transition: transform 0.3s;
+    }
+
+    .faq-answer {
+        max-height: 0;
+        overflow: hidden;
+        padding: 0 20px;
+        transition: max-height 0.3s ease, padding 0.3s ease;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        color: gray;
+    }
+
+    .faq-item.active .faq-answer {
+        max-height: 200px;
+        padding-bottom: 20px;
+    }
+
+    .arrow {
+        border: solid var(--pink-accent);
+        border-width: 0 3px 3px 0;
+        display: inline-block;
+        padding: 5px;
+        transform: rotate(45deg);
+        transition: transform 0.3s ease;
+        margin-bottom: 4px;
+    }
+
+    .faq-item.active .arrow {
+        transform: rotate(-135deg);
+        margin-bottom: -4px;
+    }
+
+    /* ============================================
+       MOBILE RESPONSIVE STYLES
+       ============================================ */
+
+    /* Tablets and smaller (768px and below) */
+    @media screen and (max-width: 768px) {
         
-
+        /* FAQS PAGE SPECIFIC */
+        main {
+            padding: 30px 5%;
+            min-height: 50vh;
+        }
+        
+        h1 {
+            font-size: 32px;
+            margin-top: 70px;
+            margin-bottom: 8px;
+        }
+        
+        .mixmatch-faqs {
+            width: 90%;
+            margin: 15px auto 25px auto;
+            padding: 12px 15px;
+        }
+        
+        .mixmatch-faqs p {
+            font-size: 14px;
+        }
+        
+        .faq-container {
+            gap: 15px;
+        }
+        
+        .faq-item {
+            border-radius: 8px;
+        }
+        
+        .faq-item:hover {
+            transform: scale(1.02);
+        }
+        
         .faq-question {
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            user-select: none;
-            transition: transform 0.3s;
-        }
-
-        .faq-answer {
-            max-height: 0;
-            overflow: hidden;
-            padding: 0 20px;
-            transition: max-height 0.3s ease, padding 0.3s ease;
+            padding: 15px;
             font-size: 0.95rem;
-            line-height: 1.6;
-            color:gray;
+            line-height: 1.4;
         }
-
+        
+        .faq-answer {
+            font-size: 0.9rem;
+            padding: 0 15px;
+            line-height: 1.5;
+        }
+        
         .faq-item.active .faq-answer {
-            max-height: 200px;
-            padding-bottom: 20px;
+            max-height: 300px;
+            padding-bottom: 15px;
         }
-
+        
         .arrow {
-            border: solid var(--pink-accent);
-            border-width: 0 3px 3px 0;
-            display: inline-block;
-            padding: 5px;
-            transform: rotate(45deg);
-            transition: transform 0.3s ease;
-            margin-bottom: 4px;
+            border-width: 0 2.5px 2.5px 0;
+            padding: 4px;
         }
+    }
 
-        .faq-item.active .arrow {
-            transform: rotate(-135deg);
-            margin-bottom: -4px;
+    /* Mobile phones (480px and below) */
+    @media screen and (max-width: 480px) {
+        
+        /* FAQS PAGE */
+        main {
+            padding: 25px 4%;
         }
-
-
-        /* Responsive Design */
-        @media (max-width: 900px) {
-            header, footer {
-                flex-direction: column;
-                gap: 30px;
-                text-align: center;
-            }
-            .header-right, .footer-center, .footer-right {
-                align-items: center;
-                width: 100%;
-            }
-            .footer-left {
-                width: 100%;
-            }
+        
+        h1 {
+            font-size: 28px;
+            margin-top: 65px;
         }
-    </style>
+        
+        .mixmatch-faqs {
+            width: 95%;
+            padding: 10px 12px;
+            margin: 12px auto 20px auto;
+        }
+        
+        .mixmatch-faqs p {
+            font-size: 13px;
+        }
+        
+        .faq-container {
+            gap: 12px;
+        }
+        
+        .faq-question {
+            padding: 12px;
+            font-size: 0.9rem;
+        }
+        
+        .faq-answer {
+            font-size: 0.85rem;
+            padding: 0 12px;
+        }
+        
+        .faq-item.active .faq-answer {
+            max-height: 350px;
+            padding-bottom: 12px;
+        }
+        
+        .arrow {
+            border-width: 0 2px 2px 0;
+            padding: 3.5px;
+        }
+    }
+</style>
 </head>
 <body>
 
@@ -170,34 +261,39 @@
 		</div>
 	</div>
 
-    <nav class="navbar">
-
+ <nav class="navbar">
     <!-- LOGO + TITLE IMAGE -->
     <div class="brand">
         <a href="index.html"><img src="images/logo.png" alt="Logo" class="logo-img"></a>
         <a href="index.html"><img src="images/title.png" alt="Website Title" class="title-img"></a>
     </div>
 
-	<div class="nav-right">
-    <ul class="nav-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="shop.php">Shop</a></li>
-        <li><a href="faqs.html">FAQs</a></li>
-        <li><a href="contact.html">Contact</a></li>
-    </ul>
-	
-	
-	<div class="nav-icons">
-        <a href="cart.html">
-            <img src="images/cart.png" alt="Cart" class="icon">
-        </a>
-        <a href="account.html">
-            <img src="images/acc.png" alt="Account" class="icon">
-        </a>
+    <div class="nav-right">
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="shop.php">Shop</a></li>
+            <li><a href="faqs.html">FAQs</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+        
+        <div class="nav-icons">
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <a href="cart.html">
+                <img src="images/cart.png" alt="Cart" class="icon">
+            </a>
+            <a href="account.html">
+                <img src="images/acc.png" alt="Account" class="icon">
+            </a>
+        </div>
     </div>
-	</div>
-
 </nav>
+
+<!-- Mobile menu overlay -->
+<div class="mobile-menu-overlay"></div>
  
 
     <main>

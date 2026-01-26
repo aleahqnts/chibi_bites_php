@@ -46,30 +46,38 @@ if ($result && $result->num_rows > 0) {
         </div>
     </div>
 
-    <nav class="navbar">
-        <div class="brand">
-            <a href="index.html"><img src="images/logo.png" alt="Logo" class="logo-img"></a>
-            <a href="index.html"><img src="images/title.png" alt="Website Title" class="title-img"></a>
-        </div>
+ <nav class="navbar">
+    <div class="brand">
+        <a href="index.html"><img src="images/logo.png" alt="Logo" class="logo-img"></a>
+        <a href="index.html"><img src="images/title.png" alt="Website Title" class="title-img"></a>
+    </div>
 
-        <div class="nav-right">
-            <ul class="nav-links">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="shop.php">Shop</a></li>
-                <li><a href="faqs.html">FAQs</a></li>
-                <li><a href="contact.html">Contact</a></li>
-            </ul>
-            
-            <div class="nav-icons">
-                <a href="cart.html">
-                    <img src="images/cart.png" alt="Cart" class="icon">
-                </a>
-                <a href="account.html">
-                    <img src="images/acc.png" alt="Account" class="icon">
-                </a>
+    <div class="nav-right">
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="shop.php">Shop</a></li>
+            <li><a href="faqs.html">FAQs</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+        
+        <div class="nav-icons">
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
+            <a href="cart.html">
+                <img src="images/cart.png" alt="Cart" class="icon">
+            </a>
+            <a href="account.html">
+                <img src="images/acc.png" alt="Account" class="icon">
+            </a>
         </div>
-    </nav>
+    </div>
+</nav>
+
+<!-- Mobile menu overlay -->
+<div class="mobile-menu-overlay"></div>
 
     <section>
         <div class="sectionshop">
