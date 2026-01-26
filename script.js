@@ -261,6 +261,10 @@ document.addEventListener('keydown', function(event) {
     if (event.key === 'Escape') {
         closeModal();
         closeAuthModal();
+        const passwordSuccessModal = document.getElementById('passwordSuccessModal');
+        if (passwordSuccessModal && passwordSuccessModal.classList.contains('active')) {
+            closePasswordSuccessModal();
+        }
     }
 });
 
@@ -1204,4 +1208,96 @@ function proceedToCheckout() {
             document.getElementById('authModal').classList.add('active');
         }
     });
+}
+
+// Password Visibility Toggle
+function togglePasswordVisibility(inputId, button) {
+    const input = document.getElementById(inputId);
+    if (input.type === 'password') {
+        input.type = 'text';
+        button.textContent = 'Hide';
+    } else {
+        input.type = 'password';
+        button.textContent = 'Show';
+    }
+}
+
+// Change Password Modal Functions
+function openChangePasswordModal() {
+    document.getElementById('changePasswordModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeChangePasswordModal() {
+    document.getElementById('changePasswordModal').classList.remove('active');
+    document.getElementById('changePasswordForm').reset();
+    document.body.style.overflow = 'auto';
+}
+
+// Handle Change Password Form Submission
+document.addEventListener('DOMContentLoaded', function() {
+    const changePasswordForm = document.getElementById('changePasswordForm');
+    if (changePasswordForm) {
+        changePasswordForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            // Validation
+            if (newPassword.length < 6) {
+                alert('New password must be at least 6 characters long.');
+                return;
+            }
+            
+            if (newPassword !== confirmPassword) {
+                alert('New passwords do not match. Please try again.');
+                return;
+            }
+            
+            if (currentPassword === newPassword) {
+                alert('New password must be different from current password.');
+                return;
+            }
+            
+            // Send request to change password
+            const formData = new FormData();
+            formData.append('action', 'change_password');
+            formData.append('current_password', currentPassword);
+            formData.append('new_password', newPassword);
+            
+            fetch('auth.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    
+                    openPasswordSuccessModal(); // Instead of alert
+                    // Reset form
+                    changePasswordForm.reset();
+                } else {
+                    alert(data.message || 'Error changing password. Please try again.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error changing password. Please try again.');
+            });
+        });
+    }
+});
+
+
+function openPasswordSuccessModal() {
+    document.getElementById('changePasswordModal').classList.remove('active'); // Hide change password modal
+    document.getElementById('passwordSuccessModal').classList.add('active'); // Show success modal
+}
+
+function closePasswordSuccessModal() {
+    document.getElementById('passwordSuccessModal').classList.remove('active');
+    document.getElementById('changePasswordModal').classList.remove('active'); // Close change password modal
+    document.body.style.overflow = 'auto';
 }

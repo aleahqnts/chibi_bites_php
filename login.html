@@ -8,6 +8,265 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Coiny&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Forgot Password Link */
+        .forgot-password-link {
+            text-align: right;
+            margin-top: 0px;
+            margin-bottom: 0px;
+        }
+
+        .forgot-password-link a {
+            color: var(--primary-brown);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .forgot-password-link a:hover {
+            color: var(--primary-pink);
+            text-decoration: underline;
+        }
+
+        /* Password Toggle Styles - Match Signup */
+        .password-toggle {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .password-toggle input {
+            flex: 1;
+            padding-right: 70px;
+        }
+
+        .password-toggle-btn {
+            position: absolute;
+            right: 15px;
+            background: none;
+            border: none;
+            color: var(--primary-brown);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 5px 10px;
+            font-family: 'Montserrat', sans-serif;
+            transition: all 0.3s;
+        }
+
+        .password-toggle-btn:hover {
+            color: var(--primary-pink);
+        }
+
+        /* Forgot Password Modal */
+        .forgot-password-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .forgot-password-overlay.active {
+            display: flex;
+        }
+
+        .forgot-password-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .forgot-password-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            font-size: 28px;
+            color: var(--primary-brown);
+            cursor: pointer;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s;
+            opacity: 0.6;
+            border: none;
+        }
+
+        .forgot-password-close:hover {
+            background-color: var(--light-pink);
+            opacity: 1;
+        }
+
+        .forgot-password-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, var(--light-pink) 0%, var(--primary-pink) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .forgot-password-icon svg {
+            width: 35px;
+            height: 35px;
+            fill: var(--primary-brown);
+        }
+
+        .forgot-password-title {
+            font-family: 'Coiny', cursive;
+            color: var(--primary-brown);
+            font-size: 38px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .forgot-password-text {
+            font-family: 'Montserrat', sans-serif;
+            color: black;
+            text-align: center;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            opacity: 0.8;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .step-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #e0e0e0;
+            transition: all 0.3s;
+        }
+
+        .step-dot.active {
+            background-color: var(--primary-pink);
+            width: 30px;
+            border-radius: 5px;
+        }
+
+        .forgot-step {
+            display: none;
+        }
+
+        .forgot-step.active {
+            display: block;
+        }
+
+
+        .modal-btn {
+            width: 100%;
+            padding: 15px;
+            font-size: 15px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid var(--primary-pink);
+            background-color: var(--primary-pink);
+            color: var(--primary-brown);
+        }
+
+        .modal-btn:hover {
+            background-color: #9aa559;
+            border-color: #9aa559;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .modal-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .password-requirements {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+            line-height: 1.5;
+        }
+
+        .success-icon {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .success-icon svg {
+            width: 80px;
+            height: 80px;
+            fill: #4caf50;
+        }
+
+        /* Update password toggle in modal */
+        .forgot-password-content .password-toggle {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .forgot-password-content .password-toggle input {
+            flex: 1;
+            padding-right: 70px;
+        }
+
+        .forgot-password-content .password-toggle-btn {
+            position: absolute;
+            right: 15px;
+            background: none;
+            border: none;
+            color: var(--primary-brown);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 5px 10px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .forgot-password-content .password-toggle-btn:hover {
+            color: var(--primary-pink);
+        }
+
+        /* Invalid Password Modal - Red Icon */
+        #invalidPasswordModal .forgot-password-icon svg {
+            fill: #d32f2f;
+}
+    </style>
 </head>
 
 <body>
@@ -42,17 +301,21 @@
             <form class="auth-form" id="loginForm">
                 <div class="form-group">
                     <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" required placeholder="your@email.com">
+                    <input type="email" id="email" name="email" required placeholder="your@email.com" class="form-input">
                     <span class="form-error" id="emailError">Please enter a valid email</span>
                 </div>
 
                 <div class="form-group">
                     <label for="password">Password</label>
                     <div class="password-toggle">
-                        <input type="password" id="password" name="password" required placeholder="Enter your password">
+                        <input type="password" id="password" name="password" required placeholder="Enter your password" class="form-input">
                         <button type="button" class="password-toggle-btn" onclick="togglePassword()">Show</button>
                     </div>
                     <span class="form-error" id="passwordError">Password is required</span>
+                </div>
+
+                <div class="forgot-password-link">
+                    <a href="#" onclick="openForgotPasswordModal(); return false;">Forgot Password?</a>
                 </div>
 
                 <button type="submit" class="submit-btn">LOGIN</button>
@@ -68,6 +331,101 @@
         </div>
     </div>
 
+    <!-- Forgot Password Modal -->
+    <div id="forgotPasswordModal" class="forgot-password-overlay">
+        <div class="forgot-password-content">
+            <button class="forgot-password-close" onclick="closeForgotPasswordModal()">&times;</button>
+            
+            <div class="forgot-password-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+                </svg>
+            </div>
+
+            <h2 class="forgot-password-title">Reset Password</h2>
+            
+            <div class="step-indicator">
+                <div class="step-dot active" id="step1Dot"></div>
+                <div class="step-dot" id="step2Dot"></div>
+                <div class="step-dot" id="step3Dot"></div>
+            </div>
+
+            <!-- Step 1: Email Verification -->
+            <div class="forgot-step active" id="step1">
+                <p class="forgot-password-text">Enter your email address and we'll help you reset your password.</p>
+                <form id="forgotEmailForm">
+                    <div class="form-group">
+                        <label for="forgotEmail">Email Address</label>
+                        <input type="email" id="forgotEmail" required placeholder="your@email.com">
+                    </div>
+                    <button type="submit" class="modal-btn">CONTINUE</button>
+                </form>
+            </div>
+
+            <!-- Step 2: New Password -->
+            <div class="forgot-step" id="step2">
+                <p class="forgot-password-text">Email verified! Now create a new password for your account.</p>
+                <form id="resetPasswordForm">
+                    <div class="form-group">
+                        <label for="newPasswordForgot">New Password</label>
+                        <div class="password-toggle">
+                            <input type="password" id="newPasswordForgot" required minlength="6">
+                            <button type="button" class="password-toggle-btn" onclick="togglePasswordField('newPasswordForgot', this)">Show</button>
+                        </div>
+                        <div class="password-requirements">Minimum 6 characters</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confirmPasswordForgot">Confirm New Password</label>
+                        <div class="password-toggle">
+                            <input type="password" id="confirmPasswordForgot" required>
+                            <button type="button" class="password-toggle-btn" onclick="togglePasswordField('confirmPasswordForgot', this)">Show</button>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="modal-btn">RESET PASSWORD</button>
+                </form>
+            </div>
+
+            <!-- Step 3: Success -->
+            <div class="forgot-step" id="step3">
+                <div class="success-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                    </svg>
+                </div>
+                <p class="forgot-password-text" style="font-size: 16px; font-weight: 600;">Password Reset Successful!</p>
+                <p class="forgot-password-text">You can now login with your new password.</p>
+                <button class="modal-btn" onclick="closeForgotPasswordModalAndLogin()">GO TO LOGIN</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Invalid Password Modal -->
+<div id="invalidPasswordModal" class="forgot-password-overlay">
+    <div class="forgot-password-content" style="max-width: 450px;">
+        <button class="forgot-password-close" onclick="closeInvalidPasswordModal()">&times;</button>
+        
+        <div class="forgot-password-icon" style="background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);">
+            <svg viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+            </svg>
+        </div>
+
+        <h2 class="forgot-password-title" style="color: #6b4b50; font-size: 38px;">Login Failed</h2>
+        <p class="forgot-password-text" id="invalidPasswordMessage" style="color: #6b4b50; font-size: 15px; margin:0px;">Invalid email or password. Please try again.</p>
+        
+        <button class="modal-btn" onclick="closeInvalidPasswordModal()" style="margin-top:20px;">TRY AGAIN</button>
+        
+        <div style="text-align: center; margin-top: 15px;">
+            <a href="#" onclick="closeInvalidPasswordModal(); openForgotPasswordModal(); return false;" 
+               style="color: var(--primary-brown); text-decoration: none; font-size: 14px; font-weight: 500;">
+                Forgot your password?
+            </a>
+        </div>
+    </div>
+</div>
+
     <script>
         function togglePassword() {
             const passwordInput = document.getElementById('password');
@@ -82,17 +440,27 @@
             }
         }
 
+        function togglePasswordField(fieldId, btn) {
+            const passwordInput = document.getElementById(fieldId);
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                btn.textContent = 'Hide';
+            } else {
+                passwordInput.type = 'password';
+                btn.textContent = 'Show';
+            }
+        }
+
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             
-            // Reset errors
             document.getElementById('emailError').classList.remove('active');
             document.getElementById('passwordError').classList.remove('active');
             
-            // Basic validation
             let isValid = true;
             
             if (!email || !email.includes('@')) {
@@ -106,7 +474,6 @@
             }
             
             if (isValid) {
-                // Send to PHP for authentication
                 const formData = new FormData();
                 formData.append('action', 'login');
                 formData.append('email', email);
@@ -119,18 +486,175 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        // Redirect to shop or checkout
                         window.location.href = 'account.html';
                     } else {
-                        alert(data.message || 'Invalid email or password');
+                        openInvalidPasswordModal(data.message);
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('Login error. Please try again.');
+                    openInvalidPasswordModal(data.message);
                 });
             }
         });
+
+        // Forgot Password Modal Functions
+        let verifiedEmail = '';
+
+        function openForgotPasswordModal() {
+            document.getElementById('forgotPasswordModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            resetForgotPasswordModal();
+        }
+
+        function closeForgotPasswordModal() {
+            document.getElementById('forgotPasswordModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+            resetForgotPasswordModal();
+        }
+
+        function closeForgotPasswordModalAndLogin() {
+            closeForgotPasswordModal();
+        }
+
+        function resetForgotPasswordModal() {
+            // Reset to step 1
+            document.querySelectorAll('.forgot-step').forEach(step => step.classList.remove('active'));
+            document.getElementById('step1').classList.add('active');
+            
+            document.querySelectorAll('.step-dot').forEach(dot => dot.classList.remove('active'));
+            document.getElementById('step1Dot').classList.add('active');
+            
+            // Clear forms
+            document.getElementById('forgotEmailForm').reset();
+            document.getElementById('resetPasswordForm').reset();
+            verifiedEmail = '';
+        }
+
+        function goToStep(stepNumber) {
+            document.querySelectorAll('.forgot-step').forEach(step => step.classList.remove('active'));
+            document.getElementById('step' + stepNumber).classList.add('active');
+            
+            document.querySelectorAll('.step-dot').forEach(dot => dot.classList.remove('active'));
+            document.getElementById('step' + stepNumber + 'Dot').classList.add('active');
+        }
+
+        // Step 1: Verify Email
+        document.getElementById('forgotEmailForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('forgotEmail').value;
+            const formData = new FormData();
+            formData.append('action', 'check_email');
+            formData.append('email', email);
+            
+            fetch('auth.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    verifiedEmail = email;
+                    goToStep(2);
+                } else {
+                    alert('Email not found. Please check and try again.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error checking email. Please try again.');
+            });
+        });
+
+        // Step 2: Reset Password
+        document.getElementById('resetPasswordForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const newPassword = document.getElementById('newPasswordForgot').value;
+            const confirmPassword = document.getElementById('confirmPasswordForgot').value;
+            
+            if (newPassword.length < 6) {
+                alert('Password must be at least 6 characters long.');
+                return;
+            }
+            
+            if (newPassword !== confirmPassword) {
+                alert('Passwords do not match. Please try again.');
+                return;
+            }
+            
+            const formData = new FormData();
+            formData.append('action', 'reset_password');
+            formData.append('email', verifiedEmail);
+            formData.append('new_password', newPassword);
+            
+            fetch('auth.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    goToStep(3);
+                } else {
+                    alert('Error resetting password. Please try again.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error resetting password. Please try again.');
+            });
+        });
+
+        // Close modal on escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeForgotPasswordModal();
+            }
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('forgotPasswordModal').addEventListener('click', function(event) {
+            if (event.target === this) {
+                closeForgotPasswordModal();
+            }
+        });
+
+        // Invalid Password Modal Functions
+function openInvalidPasswordModal(message) {
+    const modal = document.getElementById('invalidPasswordModal');
+    const messageElement = document.getElementById('invalidPasswordMessage');
+    
+    if (message) {
+        messageElement.textContent = message;
+    } else {
+        messageElement.textContent = 'Invalid email or password. Please try again.';
+    }
+    
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeInvalidPasswordModal() {
+    document.getElementById('invalidPasswordModal').classList.remove('active');
+    document.body.style.overflow = 'auto';
+}
+
+// Close modal on escape key (add to existing keydown listener)
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        closeForgotPasswordModal();
+        closeInvalidPasswordModal(); // Add this line
+    }
+});
+
+// Close modal when clicking outside (add this)
+document.getElementById('invalidPasswordModal')?.addEventListener('click', function(event) {
+    if (event.target === this) {
+        closeInvalidPasswordModal();
+    }
+});
     </script>
 
     <script src="script.js"></script>

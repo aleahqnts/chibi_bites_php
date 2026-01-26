@@ -566,6 +566,55 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
         }
+
+        .change-password-btn {
+            width: 100%;
+            padding: 12px;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background-color: white;
+            color: var(--primary-brown);
+            border: 2px solid var(--primary-brown);
+        }
+
+        .change-password-btn:hover {
+            background-color: var(--primary-brown);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .password-toggle {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .password-toggle input {
+            flex: 1;
+            padding-right: 60px;
+        }
+
+        .password-toggle-btn {
+            position: absolute;
+            right: 10px;
+            background: none;
+            border: none;
+            color: var(--primary-brown);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 5px 10px;
+        }
+
+        .password-toggle-btn:hover {
+            color: var(--primary-pink);
+        }
     </style>
 </head>
 
@@ -722,67 +771,68 @@
                         </div>
                     </div>
                 </div>
-                <!-- Edit Profile Modal -->
-                <div id="editModal" class="history-modal-overlay">
-                    <div class="history-modal-content">
-                        <div class="history-header">
-                            <h2>Edit Profile</h2>
-                            <button class="close-history" onclick="closeEditModal()">&times;</button>
-                        </div>
-                        <div class="history-body">
-                            <form id="editProfileForm" class="edit-profile-form">
-                                <div class="form-group">
-                                    <label>Full Name</label>
-                                    <input type="text" id="editFullname" required>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label>Phone Number</label>
-                                    <input type="tel" id="editPhone" required>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label>Street Address</label>
-                                    <input type="text" id="editStreet" required>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label>City</label>
-                                    <select id="editCity" required>
-                                        <option value="">Select your city...</option>
-                                        <option value="Caloocan">Caloocan</option>
-                                        <option value="Antipolo">Antipolo</option>
-                                        <option value="Las Piñas">Las Piñas</option>
-                                        <option value="Makati">Makati</option>
-                                        <option value="Malabon">Malabon</option>
-                                        <option value="Mandaluyong">Mandaluyong</option>
-                                        <option value="Manila">Manila</option>
-                                        <option value="Marikina">Marikina</option>
-                                        <option value="Muntinlupa">Muntinlupa</option>
-                                        <option value="Navotas">Navotas</option>
-                                        <option value="Parañaque">Parañaque</option>
-                                        <option value="Pasay">Pasay</option>
-                                        <option value="Pasig">Pasig</option>
-                                        <option value="Quezon City">Quezon City</option>
-                                        <option value="San Juan">San Juan</option>
-                                        <option value="Taguig">Taguig</option>
-                                        <option value="Valenzuela">Valenzuela</option>
-                                        <option value="Pateros">Pateros</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label>Zip Code</label>
-                                    <input type="text" id="editZipcode" maxlength="4" required>
-                                </div>
-                                
-                                <button type="submit" class="submit-btn">SAVE CHANGES</button>
-                            </form>
-                        </div>
-                    </div>
+             <!-- Edit Profile Modal -->
+<div id="editModal" class="history-modal-overlay">
+    <div class="history-modal-content">
+        <div class="history-header">
+            <h2>Edit Profile</h2>
+            <button class="close-history" onclick="closeEditModal()">&times;</button>
+        </div>
+        <div class="history-body">
+            <form id="editProfileForm" class="edit-profile-form">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="editFullname" required>
                 </div>
-            </div>
+                
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" id="editPhone" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Street Address</label>
+                    <input type="text" id="editStreet" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>City</label>
+                    <select id="editCity" required>
+                        <option value="">Select your city...</option>
+                        <option value="Caloocan">Caloocan</option>
+                        <option value="Antipolo">Antipolo</option>
+                        <option value="Las Piñas">Las Piñas</option>
+                        <option value="Makati">Makati</option>
+                        <option value="Malabon">Malabon</option>
+                        <option value="Mandaluyong">Mandaluyong</option>
+                        <option value="Manila">Manila</option>
+                        <option value="Marikina">Marikina</option>
+                        <option value="Muntinlupa">Muntinlupa</option>
+                        <option value="Navotas">Navotas</option>
+                        <option value="Parañaque">Parañaque</option>
+                        <option value="Pasay">Pasay</option>
+                        <option value="Pasig">Pasig</option>
+                        <option value="Quezon City">Quezon City</option>
+                        <option value="San Juan">San Juan</option>
+                        <option value="Taguig">Taguig</option>
+                        <option value="Valenzuela">Valenzuela</option>
+                        <option value="Pateros">Pateros</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Zip Code</label>
+                    <input type="text" id="editZipcode" maxlength="4" required>
+                </div>
+                <button type="button" class="change-password-btn" onclick="openChangePasswordModal()">CHANGE PASSWORD</button>
+                <button type="submit" class="submit-btn">SAVE CHANGES</button>
+            </form>
+        </div>
+    </div>
+</div>
 
+
+</div> <!-- ← This closes the profile-section div -->
 
             <!-- Login Section (shown when not logged in) -->
             <div class="login-section" id="loginSection">
@@ -886,6 +936,63 @@
         <p class="success-modal-text">Your profile has been updated successfully.</p>
         
         <button class="success-modal-btn" onclick="closeSuccessModal()">OK</button>
+    </div>
+</div>
+<!-- ✅ PUT THE CHANGE PASSWORD MODAL HERE ✅ -->
+<!-- Change Password Modal -->
+<div id="changePasswordModal" class="history-modal-overlay">
+    <div class="history-modal-content">
+        <div class="history-header">
+            <h2>Change Password</h2>
+            <button class="close-history" onclick="closeChangePasswordModal()">&times;</button>
+        </div>
+        <div class="history-body">
+            <form id="changePasswordForm" class="edit-profile-form">
+                <div class="form-group">
+                    <label>Current Password</label>
+                    <div class="password-toggle">
+                        <input type="password" id="currentPassword" required>
+                        <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('currentPassword', this)">Show</button>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>New Password</label>
+                    <div class="password-toggle">
+                        <input type="password" id="newPassword" required minlength="6">
+                        <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('newPassword', this)">Show</button>
+                    </div>
+                    <small style="color: #666; font-size: 12px;">Minimum 6 characters</small>
+                </div>
+                
+                <div class="form-group">
+                    <label>Confirm New Password</label>
+                    <div class="password-toggle">
+                        <input type="password" id="confirmPassword" required>
+                        <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('confirmPassword', this)">Show</button>
+                    </div>
+                </div>
+                
+                <button type="submit" class="submit-btn">CHANGE PASSWORD</button>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Change Password Success Modal -->
+<div id="passwordSuccessModal" class="success-modal-overlay">
+    <div class="success-modal-content">
+        <button class="success-modal-close" onclick="closePasswordSuccessModal()">&times;</button>
+        
+        <div class="success-modal-icon">
+            <svg viewBox="0 0 24 24">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+            </svg>
+        </div>
+        
+        <h2 class="success-modal-title">Password Changed!</h2>
+        <p class="success-modal-text">Your password has been successfully updated.</p>
+        
+        <button class="success-modal-btn" onclick="closePasswordSuccessModal()">OK</button>
     </div>
 </div>
 

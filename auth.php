@@ -153,7 +153,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // UPDATE PROFILE (CONVERTED FROM STORED PROCEDURE)
+    // UPDATE PROFILE
     if ($action === 'update_profile') {
         if (!isset($_SESSION['user_id'])) {
             echo json_encode(['success' => false, 'message' => 'Not logged in']);
@@ -167,7 +167,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $city = mysqli_real_escape_string($conn, $_POST['city']);
         $zipcode = mysqli_real_escape_string($conn, $_POST['zipcode']);
         
-        // Regular UPDATE query instead of stored procedure
         $sql = "UPDATE users 
                 SET fullname = '$fullname', 
                     phone = '$phone', 
@@ -187,6 +186,74 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo json_encode(['success' => true, 'message' => 'Profile updated successfully']);
         } else {
             echo json_encode(['success' => false, 'message' => 'Error updating profile: ' . $conn->error]);
+        }
+        exit;
+    }
+
+    // CHANGE PASSWORD (for logged-in users in edit profile)
+    if ($action === 'change_password') {
+        if (!isset($_SESSION['user_id'])) {
+            echo json_encode(['success' => false, 'message' => 'Not logged in']);
+            exit;
+        }
+        
+        $user_id = $_SESSION['user_id'];
+        $current_password = $_POST['current_password'];
+        $new_password = $_POST['new_password'];
+        
+        // Verify current password
+        $sql = "SELECT password FROM users WHERE id = $user_id";
+        $result = $conn->query($sql);
+        $user = $result->fetch_assoc();
+        
+        if (password_verify($current_password, $user['password'])) {
+            // Hash new password
+            $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
+            
+            // Update password
+            $update_sql = "UPDATE users SET password = '$hashed_password' WHERE id = $user_id";
+            
+            if ($conn->query($update_sql) === TRUE) {
+                echo json_encode(['success' => true, 'message' => 'Password changed successfully']);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Error updating password']);
+            }
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Current password is incorrect']);
+        }
+        exit;
+    }
+
+    // FORGOT PASSWORD - Check if email exists
+    if ($action === 'check_email') {
+        $email = mysqli_real_escape_string($conn, $_POST['email']);
+        
+        $sql = "SELECT id FROM users WHERE email = '$email'";
+        $result = $conn->query($sql);
+        
+        if ($result->num_rows > 0) {
+            echo json_encode(['success' => true, 'message' => 'Email found']);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Email not found']);
+        }
+        exit;
+    }
+
+    // RESET PASSWORD (for forgot password flow)
+    if ($action === 'reset_password') {
+        $email = mysqli_real_escape_string($conn, $_POST['email']);
+        $new_password = $_POST['new_password'];
+        
+        // Hash new password
+        $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
+        
+        // Update password
+        $sql = "UPDATE users SET password = '$hashed_password' WHERE email = '$email'";
+        
+        if ($conn->query($sql) === TRUE) {
+            echo json_encode(['success' => true, 'message' => 'Password reset successfully']);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Error resetting password']);
         }
         exit;
     }
