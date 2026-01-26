@@ -78,7 +78,7 @@ if ($result && $result->num_rows > 0) {
 
             <!-- Add this search/filter section -->
 <!-- Search section only -->
-<div class="product-filter-section">
+<div class="product-filter-section reveal">
     <div class="search-container">
         <input type="text" id="productSearch" placeholder="Search products..." class="search-input">
         <button class="search-btn" onclick="filterProducts()">
