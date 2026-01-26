@@ -964,14 +964,14 @@ $products_result = $conn->query($products_query);
         }
 
         .toggle-modal-btn-confirm {
-            background-color: #856404;
-            color: white;
-            border-color: #856404;
+            background-color: #ffeaa7;
+            color: #6b4b50;
+            border-color: #ffeaa7;
         }
 
         .toggle-modal-btn-confirm:hover {
-            background-color: #6c5003;
-            border-color: #6c5003;
+            background-color: #fbde80;
+            border-color: #fbde80;
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(133, 100, 4, 0.3);
         }
@@ -1447,6 +1447,7 @@ $products_result = $conn->query($products_query);
                             <button class="action-btn" onclick="toggleAdminStatus(<?php echo $user['id']; ?>, <?php echo isset($user['is_admin']) ? $user['is_admin'] : 0; ?>)" id="admin-btn-<?php echo $user['id']; ?>">
                                 <?php echo (isset($user['is_admin']) && $user['is_admin']) ? 'Revoke Admin' : 'Grant Admin'; ?>
                             </button>
+                            <span style="display: inline-block; width: 10px;"></span>
                             <button class="action-btn delete" onclick="deleteUser(<?php echo $user['id']; ?>, '<?php echo htmlspecialchars($user['fullname']); ?>')">Delete User</button>
                         </td>
                     </tr>
@@ -1772,6 +1773,84 @@ $products_result = $conn->query($products_query);
             <button class="delete-modal-btn delete-modal-btn-cancel" onclick="closeDeleteModal()">Cancel</button>
             <button class="delete-modal-btn delete-modal-btn-confirm" onclick="confirmDeleteProduct()">Yes, Delete</button>
         </div>
+    </div>
+</div>
+
+<!-- Grant Admin Confirmation Modal -->
+<div id="grantAdminModal" class="toggle-modal-overlay">
+    <div class="toggle-modal-content">
+        <button class="toggle-modal-close" onclick="closeGrantAdminModal()">&times;</button>
+        
+        <div class="toggle-modal-icon" style="background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);">
+            <svg viewBox="0 0 24 24">
+                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+            </svg>
+        </div>
+        
+        <h2 class="toggle-modal-title">Grant Admin Access?</h2>
+        <p class="toggle-modal-text" id="grantAdminText">Are you sure you want to grant admin access to this user?</p>
+        
+        <div class="toggle-modal-buttons">
+            <button class="toggle-modal-btn toggle-modal-btn-cancel" onclick="closeGrantAdminModal()">Cancel</button>
+            <button class="toggle-modal-btn toggle-modal-btn-confirm" style="background-color: #bee5eb; border-color: #bee5eb; color: #6b4b50;" onclick="confirmGrantAdmin()">Yes</button>
+        </div>
+    </div>
+</div>
+
+<!-- Revoke Admin Confirmation Modal -->
+<div id="revokeAdminModal" class="delete-modal-overlay">
+    <div class="delete-modal-content">
+        <button class="delete-modal-close" onclick="closeRevokeAdminModal()">&times;</button>
+        
+        <div class="delete-modal-icon" style="background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);">
+            <svg viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" fill="#856404"/>
+            </svg>
+        </div>
+        
+        <h2 class="delete-modal-title">Revoke Admin Access?</h2>
+        <p class="delete-modal-text" id="revokeAdminText">Are you sure you want to revoke admin access from this user?</p>
+        
+        <div class="delete-modal-buttons">
+            <button class="delete-modal-btn delete-modal-btn-cancel" onclick="closeRevokeAdminModal()">Cancel</button>
+            <button class="delete-modal-btn delete-modal-btn-confirm" style="background-color: #ffeaa7; border-color: #ffeaa7; color: #6b4b50;" onclick="confirmRevokeAdmin()">Yes</button>
+        </div>
+    </div>
+</div>
+
+<!-- Delete User Confirmation Modal -->
+<div id="deleteUserModal" class="delete-modal-overlay">
+    <div class="delete-modal-content">
+        <button class="delete-modal-close" onclick="closeDeleteUserModal()">&times;</button>
+        
+        <div class="delete-modal-icon">
+            <svg viewBox="0 0 24 24">
+                <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+            </svg>
+        </div>
+        
+        <h2 class="delete-modal-title">Delete User?</h2>
+        <p class="delete-modal-text" id="deleteUserText">Are you sure you want to permanently delete this user? This will also delete all their orders and order items. This action cannot be undone.</p>
+        
+        <div class="delete-modal-buttons">
+            <button class="delete-modal-btn delete-modal-btn-cancel" onclick="closeDeleteUserModal()">Cancel</button>
+            <button class="delete-modal-btn delete-modal-btn-confirm" onclick="confirmDeleteUser()">Yes, Delete</button>
+        </div>
+    </div>
+</div>
+
+<!-- User Action Success Modal -->
+<div id="userSuccessModal" class="success-modal-overlay">
+    <div class="success-modal-content">
+        <button class="success-modal-close" onclick="closeUserSuccessModal()">&times;</button>
+        <div class="success-modal-icon">
+            <svg viewBox="0 0 24 24">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+            </svg>
+        </div>
+        <h2 class="success-modal-title" id="userSuccessTitle">Success!</h2>
+        <p class="success-modal-text" id="userSuccessText">The action was completed successfully.</p>
+        <button class="success-modal-btn" onclick="closeUserSuccessModal()">OK</button>
     </div>
 </div>
 
@@ -2299,16 +2378,16 @@ $products_result = $conn->query($products_query);
             });
         }
 
-        // Close modal on outside click
-        window.onclick = function(event) {
-            if (event.target.classList.contains('modal') || 
-                event.target.classList.contains('success-modal-overlay') ||
-                event.target.classList.contains('logout-modal-overlay') ||
-                event.target.classList.contains('toggle-modal-overlay') ||
-                event.target.classList.contains('delete-modal-overlay')) {
-                event.target.classList.remove('active');
-            }
-        };
+ // Close modal on outside click
+window.onclick = function(event) {
+    if (event.target.classList.contains('modal') || 
+        event.target.classList.contains('success-modal-overlay') ||
+        event.target.classList.contains('logout-modal-overlay') ||
+        event.target.classList.contains('toggle-modal-overlay') ||
+        event.target.classList.contains('delete-modal-overlay')) {
+        event.target.classList.remove('active');
+    }
+};
     });
 
     // Toggle Date Filter
@@ -2381,67 +2460,155 @@ $products_result = $conn->query($products_query);
             alert('Error deleting user. Please try again.');
         });
     }
+
+let currentUserId = null;
+let currentUserName = null;
+let currentAdminStatus = null;
+
+// Toggle Admin Status - Opens Modal
+function toggleAdminStatus(userId, currentStatus) {
+    currentUserId = userId;
+    currentAdminStatus = currentStatus;
     
-    // Toggle Admin Status
-    function toggleAdminStatus(userId, currentStatus) {
-        const action = currentStatus == 1 ? 'revoke admin access from' : 'grant admin access to';
-        
-        if (!confirm(`Are you sure you want to ${action} this user?`)) {
-            return;
+    // Get user name from the table
+    const allRows = document.querySelectorAll('tr.user-row');
+    allRows.forEach(row => {
+        if (row.cells[0].textContent == userId) {
+            currentUserName = row.cells[1].textContent;
         }
-        
-        const formData = new FormData();
-        formData.append('action', 'toggle_admin');
-        formData.append('user_id', userId);
-        formData.append('is_admin', currentStatus);
-        
-        fetch('admin_actions.php', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                // Update the badge
-                const badge = document.getElementById(`admin-badge-${userId}`);
-                const button = document.getElementById(`admin-btn-${userId}`);
-                
-                if (badge && button) {
-                    if (data.new_status == 1) {
-                        // User is now admin
-                        badge.textContent = 'Admin';
-                        badge.className = 'status-badge status-confirmed';
-                        button.textContent = 'Revoke Admin';
-                        button.onclick = function() { toggleAdminStatus(userId, 1); };
-                    } else {
-                        // User is now regular user
-                        badge.textContent = 'User';
-                        badge.className = 'status-badge status-pending';
-                        button.textContent = 'Grant Admin';
-                        button.onclick = function() { toggleAdminStatus(userId, 0); };
-                    }
-                    
-                    // Show success message
-                    alert('✓ ' + data.message);
-                } else {
-                    console.error('Could not find badge or button elements');
-                    alert('✓ ' + data.message + '\n\nPage will reload to show changes.');
-                    location.reload();
-                }
-            } else {
-                alert('Error: ' + data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Error updating admin status. Please try again.');
-        });
+    });
+    
+    if (currentStatus == 1) {
+        // Revoke admin
+        document.getElementById('revokeAdminText').textContent = 
+            `Are you sure you want to revoke admin access from "${currentUserName}"?`;
+        document.getElementById('revokeAdminModal').classList.add('active');
+    } else {
+        // Grant admin
+        document.getElementById('grantAdminText').textContent = 
+            `Are you sure you want to grant admin access to "${currentUserName}"?`;
+        document.getElementById('grantAdminModal').classList.add('active');
     }
+}
+
+function closeGrantAdminModal() {
+    document.getElementById('grantAdminModal').classList.remove('active');
+    currentUserId = null;
+    currentUserName = null;
+    currentAdminStatus = null;
+}
+
+function closeRevokeAdminModal() {
+    document.getElementById('revokeAdminModal').classList.remove('active');
+    currentUserId = null;
+    currentUserName = null;
+    currentAdminStatus = null;
+}
+
+function confirmGrantAdmin() {
+    performAdminToggle();
+}
+
+function confirmRevokeAdmin() {
+    performAdminToggle();
+}
+
+function performAdminToggle() {
+    if (currentUserId === null) return;
+    
+    const formData = new FormData();
+    formData.append('action', 'toggle_admin');
+    formData.append('user_id', currentUserId);
+    formData.append('is_admin', currentAdminStatus);
+    
+    fetch('admin_actions.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        closeGrantAdminModal();
+        closeRevokeAdminModal();
+        
+        if (data.success) {
+            // Set active tab to users before reload
+            sessionStorage.setItem('activeTab', 'users');
+            location.reload();
+        } else {
+            alert('Error: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        closeGrantAdminModal();
+        closeRevokeAdminModal();
+        alert('Error updating admin status. Please try again.');
+    });
+}
+
+// Delete User - Opens Modal
+function deleteUser(userId, userName) {
+    currentUserId = userId;
+    currentUserName = userName;
+    
+    document.getElementById('deleteUserText').textContent = 
+        `Are you sure you want to permanently delete "${userName}"? This will also delete all their orders and order items. This action cannot be undone.`;
+    document.getElementById('deleteUserModal').classList.add('active');
+}
+
+function closeDeleteUserModal() {
+    document.getElementById('deleteUserModal').classList.remove('active');
+    currentUserId = null;
+    currentUserName = null;
+}
+
+function confirmDeleteUser() {
+    if (currentUserId === null) return;
+    
+    const formData = new FormData();
+    formData.append('action', 'delete_user');
+    formData.append('user_id', currentUserId);
+    
+    fetch('admin_actions.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        closeDeleteUserModal();
+        
+        if (data.success) {
+            // Set active tab to users before reload
+            sessionStorage.setItem('activeTab', 'users');
+            location.reload();
+        } else {
+            alert('Error: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        closeDeleteUserModal();
+        alert('Error deleting user. Please try again.');
+    });
+}
+
+// DELETE THIS FUNCTION - No longer needed
+function closeUserSuccessModal() {
+    document.getElementById('userSuccessModal').classList.remove('active');
+    currentUserId = null;
+    currentUserName = null;
+    currentAdminStatus = null;
+}
 
 </script>
 </body>
