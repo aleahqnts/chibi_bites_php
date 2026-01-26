@@ -381,6 +381,11 @@ function addToCart() {
 }
 
 function loadCart() {
+    const cartItems = document.getElementById('cartItems');
+    
+    // Show loading state
+    cartItems.innerHTML = '<div class="cart-empty">Loading cart...</div>';
+    
     const formData = new FormData();
     formData.append('action', 'get');
     
@@ -397,18 +402,19 @@ function loadCart() {
     .then(data => {
         if (data.success && data.cart && data.cart.length > 0) {
             // Validate each cart item against current stock
-            validateCartItems(data.cart);
+            validateAndDisplayCart(data.cart);
         } else {
             displayCart(data.cart);
         }
     })
     .catch(error => {
         console.error('Error loading cart:', error);
+        cartItems.innerHTML = '<div class="cart-empty">Error loading cart. Please try again.</div>';
     });
 }
 
-// New function to validate cart items
-function validateCartItems(cart) {
+// New helper function to validate and display cart
+function validateAndDisplayCart(cart) {
     let promises = [];
     
     cart.forEach((item, index) => {
@@ -422,10 +428,8 @@ function validateCartItems(cart) {
         .then(response => response.json())
         .then(stockData => {
             if (stockData.product_deleted) {
-                // Product was deleted, mark for removal (SILENT)
                 return { index, action: 'remove' };
             } else if (!stockData.available) {
-                // Not enough stock, adjust quantity
                 if (stockData.available_stock > 0) {
                     return { index, action: 'update', quantity: stockData.available_stock };
                 } else {
@@ -439,7 +443,6 @@ function validateCartItems(cart) {
     });
     
     Promise.all(promises).then(results => {
-        // Process all validation results
         let updatePromises = [];
         
         results.forEach(result => {
@@ -467,22 +470,86 @@ function validateCartItems(cart) {
             }
         });
         
-        // After all updates, reload cart SILENTLY (no alert)
-        Promise.all(updatePromises).then(() => {
-            // Reload cart with updated data
-            const formData = new FormData();
-            formData.append('action', 'get');
-            
-            fetch('cart.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                displayCart(data.cart);
-                updateCartBadge();
+        // Wait for all updates to complete
+        if (updatePromises.length > 0) {
+            Promise.all(updatePromises).then(() => {
+                // Reload cart with updated data
+                const formData = new FormData();
+                formData.append('action', 'get');
+                
+                fetch('cart.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    displayCartWithStock(data.cart);
+                    updateCartBadge();
+                });
             });
+        } else {
+            // No updates needed, display as is
+            displayCartWithStock(cart);
+        }
+    });
+}
+
+// Updated displayCart to work with pre-validated data
+function displayCartWithStock(cart) {
+    const cartItems = document.getElementById('cartItems');
+    const cartFooter = document.getElementById('cartFooter');
+    const cartTotal = document.getElementById('cartTotal');
+    
+    if (!cart || cart.length === 0) {
+        cartItems.innerHTML = '<div class="cart-empty">Your cart is empty</div>';
+        cartFooter.style.display = 'none';
+        return;
+    }
+    
+    // Fetch stock for display purposes
+    let stockPromises = cart.map(item => 
+        fetch('check_stock.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `product_name=${encodeURIComponent(item.name)}&quantity=${item.quantity}`
+        }).then(r => r.json())
+    );
+    
+    Promise.all(stockPromises).then(stockData => {
+        let html = '';
+        
+        cart.forEach((item, index) => {
+            const stock = stockData[index];
+            const maxStock = stock.available_stock || 0;
+            const disablePlus = item.quantity >= maxStock ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : '';
+            const disableMinus = item.quantity <= 1 ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : '';
+            
+            html += `
+                <div class="cart-item">
+                    <img src="${item.image}" alt="${item.name}" class="cart-item-img">
+                    <div class="cart-item-info">
+                        <div class="cart-item-name">${item.name}</div>
+                        <div class="cart-item-price">${item.price}</div>
+                        ${maxStock < 10 ? `<div style="color: #ff6b6b; font-size: 12px;">Only ${maxStock} left</div>` : ''}
+                    </div>
+                    <div class="cart-item-controls">
+                        <button class="cart-qty-btn" onclick="updateCartQuantity(${index}, ${item.quantity - 1})" ${disableMinus}>−</button>
+                        <span class="cart-qty">${item.quantity}</span>
+                        <button class="cart-qty-btn" onclick="updateCartQuantity(${index}, ${item.quantity + 1})" ${disablePlus}>+</button>
+                        <button class="cart-remove" onclick="removeFromCart(${index})">×</button>
+                    </div>
+                </div>
+            `;
         });
+        
+        cartItems.innerHTML = html;
+        
+        const total = calculateTotal(cart);
+        
+        cartTotal.textContent = '₱' + total.toFixed(2);
+        cartFooter.style.display = 'block';
     });
 }
 

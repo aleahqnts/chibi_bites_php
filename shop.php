@@ -215,6 +215,6 @@ if ($result && $result->num_rows > 0) {
     </div>
 </footer>
     
-    <script src="script.js"></script>
+    <script src="script.js?v=99"></script>
 </body>
 </html>
