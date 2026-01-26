@@ -1224,6 +1224,9 @@ function togglePasswordVisibility(inputId, button) {
 
 // Change Password Modal Functions
 function openChangePasswordModal() {
+    // Close edit modal temporarily
+    document.getElementById('editModal').classList.remove('active');
+    // Open change password modal
     document.getElementById('changePasswordModal').classList.add('active');
     document.body.style.overflow = 'hidden';
 }
@@ -1231,7 +1234,9 @@ function openChangePasswordModal() {
 function closeChangePasswordModal() {
     document.getElementById('changePasswordModal').classList.remove('active');
     document.getElementById('changePasswordForm').reset();
-    document.body.style.overflow = 'auto';
+    // Reopen edit modal
+    document.getElementById('editModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
 }
 
 // Handle Change Password Form Submission
@@ -1245,19 +1250,16 @@ document.addEventListener('DOMContentLoaded', function() {
             const newPassword = document.getElementById('newPassword').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
             
-            // Validation
+            // Validation with modals
             if (newPassword.length < 6) {
-                alert('New password must be at least 6 characters long.');
+                document.getElementById('changePasswordModal').classList.remove('active');
+                document.getElementById('passwordTooShortModal').classList.add('active');
                 return;
             }
             
             if (newPassword !== confirmPassword) {
-                alert('New passwords do not match. Please try again.');
-                return;
-            }
-            
-            if (currentPassword === newPassword) {
-                alert('New password must be different from current password.');
+                document.getElementById('changePasswordModal').classList.remove('active');
+                document.getElementById('passwordMismatchModal').classList.add('active');
                 return;
             }
             
@@ -1274,12 +1276,19 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    
-                    openPasswordSuccessModal(); // Instead of alert
-                    // Reset form
+                    openPasswordSuccessModal();
                     changePasswordForm.reset();
                 } else {
-                    alert(data.message || 'Error changing password. Please try again.');
+                    // Handle specific error messages
+                    if (data.message === 'Current password is incorrect') {
+                        document.getElementById('changePasswordModal').classList.remove('active');
+                        document.getElementById('wrongPasswordModal').classList.add('active');
+                    } else if (data.message === 'New password must be different from current password') {
+                        document.getElementById('changePasswordModal').classList.remove('active');
+                        document.getElementById('samePasswordModal').classList.add('active');
+                    } else {
+                        alert(data.message || 'Error changing password. Please try again.');
+                    }
                 }
             })
             .catch(error => {
@@ -1291,13 +1300,42 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
+// Update the openPasswordSuccessModal function
 function openPasswordSuccessModal() {
-    document.getElementById('changePasswordModal').classList.remove('active'); // Hide change password modal
-    document.getElementById('passwordSuccessModal').classList.add('active'); // Show success modal
+    document.getElementById('changePasswordModal').classList.remove('active');
+    document.getElementById('passwordSuccessModal').classList.add('active');
 }
 
+// Update the closePasswordSuccessModal function
 function closePasswordSuccessModal() {
     document.getElementById('passwordSuccessModal').classList.remove('active');
-    document.getElementById('changePasswordModal').classList.remove('active'); // Close change password modal
-    document.body.style.overflow = 'auto';
+    // Reopen edit modal after password success
+    document.getElementById('editModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+// Add these new functions for the error modals
+function closeWrongPasswordModal() {
+    document.getElementById('wrongPasswordModal').classList.remove('active');
+    document.getElementById('changePasswordModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeSamePasswordModal() {
+    document.getElementById('samePasswordModal').classList.remove('active');
+    document.getElementById('changePasswordModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+// Add these new modal close functions
+function closePasswordTooShortModal() {
+    document.getElementById('passwordTooShortModal').classList.remove('active');
+    document.getElementById('changePasswordModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closePasswordMismatchModal() {
+    document.getElementById('passwordMismatchModal').classList.remove('active');
+    document.getElementById('changePasswordModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
 }
