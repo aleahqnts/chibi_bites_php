@@ -208,6 +208,87 @@ if ($action === 'delete_product') {
         }
         exit;
     }
+    
+    // DELETE USER (with cascade delete of orders and order_items)
+    if ($action === 'delete_user') {
+        $user_id = intval($_POST['user_id']);
+        
+        // Check if trying to delete yourself
+        if (isset($_SESSION['admin_user_id']) && $_SESSION['admin_user_id'] == $user_id) {
+            echo json_encode(['success' => false, 'message' => 'Cannot delete your own account']);
+            exit;
+        }
+        
+        // Get user info before deleting
+        $user_query = "SELECT fullname, email FROM users WHERE id = $user_id";
+        $user_result = $conn->query($user_query);
+        
+        if (!$user_result || $user_result->num_rows === 0) {
+            echo json_encode(['success' => false, 'message' => 'User not found']);
+            exit;
+        }
+        
+        $user = $user_result->fetch_assoc();
+        
+        // Delete user (this will cascade delete orders and order_items if properly configured)
+        $delete_sql = "DELETE FROM users WHERE id = $user_id";
+        
+        if ($conn->query($delete_sql)) {
+            echo json_encode([
+                'success' => true, 
+                'message' => "User '{$user['fullname']}' and all associated data deleted successfully"
+            ]);
+        } else {
+            echo json_encode([
+                'success' => false, 
+                'message' => 'Error deleting user: ' . $conn->error
+            ]);
+        }
+        exit;
+    }
+    
+    // TOGGLE ADMIN STATUS
+    if ($action === 'toggle_admin') {
+        $user_id = intval($_POST['user_id']);
+        $current_status = intval($_POST['is_admin']);
+        
+        // Check if trying to remove your own admin access
+        if (isset($_SESSION['admin_user_id']) && $_SESSION['admin_user_id'] == $user_id && $current_status == 1) {
+            echo json_encode(['success' => false, 'message' => 'Cannot remove your own admin access']);
+            exit;
+        }
+        
+        $new_status = $current_status == 1 ? 0 : 1;
+        
+        // Get user info
+        $user_query = "SELECT fullname, email FROM users WHERE id = $user_id";
+        $user_result = $conn->query($user_query);
+        
+        if (!$user_result || $user_result->num_rows === 0) {
+            echo json_encode(['success' => false, 'message' => 'User not found']);
+            exit;
+        }
+        
+        $user = $user_result->fetch_assoc();
+        
+        // Update admin status
+        $update_sql = "UPDATE users SET is_admin = $new_status WHERE id = $user_id";
+        
+        if ($conn->query($update_sql)) {
+            $action_word = $new_status == 1 ? 'granted' : 'revoked';
+            echo json_encode([
+                'success' => true, 
+                'message' => "Admin access {$action_word} for {$user['fullname']}",
+                'new_status' => $new_status
+            ]);
+        } else {
+            echo json_encode([
+                'success' => false, 
+                'message' => 'Error updating admin status: ' . $conn->error
+            ]);
+        }
+        exit;
+    }
 }
 
 // GET requests

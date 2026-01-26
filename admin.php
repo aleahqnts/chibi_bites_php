@@ -1424,8 +1424,9 @@ $products_result = $conn->query($products_query);
                         <th>Email</th>
                         <th>Phone</th>
                         <th>Address</th>
+                        <th>Admin Status</th>
                         <th>Joined</th>
-                        
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -1436,8 +1437,18 @@ $products_result = $conn->query($products_query);
                         <td><?php echo htmlspecialchars($user['email']); ?></td>
                         <td><?php echo htmlspecialchars($user['phone']); ?></td>
                         <td><?php echo htmlspecialchars($user['street'] . ', ' . $user['city']); ?></td>
+                        <td>
+                            <span class="status-badge <?php echo (isset($user['is_admin']) && $user['is_admin']) ? 'status-confirmed' : 'status-pending'; ?>" id="admin-badge-<?php echo $user['id']; ?>">
+                                <?php echo (isset($user['is_admin']) && $user['is_admin']) ? 'Admin' : 'User'; ?>
+                            </span>
+                        </td>
                         <td><?php echo date('M d, Y', strtotime($user['created_at'])); ?></td>
-                        
+                        <td>
+                            <button class="action-btn" onclick="toggleAdminStatus(<?php echo $user['id']; ?>, <?php echo isset($user['is_admin']) ? $user['is_admin'] : 0; ?>)" id="admin-btn-<?php echo $user['id']; ?>">
+                                <?php echo (isset($user['is_admin']) && $user['is_admin']) ? 'Revoke Admin' : 'Grant Admin'; ?>
+                            </button>
+                            <button class="action-btn delete" onclick="deleteUser(<?php echo $user['id']; ?>, '<?php echo htmlspecialchars($user['fullname']); ?>')">Delete User</button>
+                        </td>
                     </tr>
                     <?php endwhile; ?>
                 </tbody>
@@ -2323,6 +2334,101 @@ $products_result = $conn->query($products_query);
             dateFilter.classList.remove('open');
         }
     });
+
+    // ==========================================
+    // USER MANAGEMENT FUNCTIONS
+    // ==========================================
+    
+    // Delete User
+    function deleteUser(userId, userName) {
+        if (!confirm(`Are you sure you want to delete user "${userName}"?\n\nWARNING: This will also delete:\n• All orders placed by this user\n• All order items\n\nThis action cannot be undone!`)) {
+            return;
+        }
+        
+        const formData = new FormData();
+        formData.append('action', 'delete_user');
+        formData.append('user_id', userId);
+        
+        fetch('admin_actions.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showSuccessModal(data.message);
+                // Remove the row from the table
+                const row = document.querySelector(`tr.user-row`);
+                if (row) {
+                    // Find and remove the specific user row
+                    const allRows = document.querySelectorAll('tr.user-row');
+                    allRows.forEach(r => {
+                        if (r.cells[0].textContent == userId) {
+                            r.style.transition = 'opacity 0.3s';
+                            r.style.opacity = '0';
+                            setTimeout(() => r.remove(), 300);
+                        }
+                    });
+                }
+            } else {
+                alert('Error: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error deleting user');
+        });
+    }
+    
+    // Toggle Admin Status
+    function toggleAdminStatus(userId, currentStatus) {
+        const action = currentStatus == 1 ? 'revoke admin access from' : 'grant admin access to';
+        const userName = document.querySelector(`tr.user-row`).cells[1].textContent;
+        
+        if (!confirm(`Are you sure you want to ${action} this user?`)) {
+            return;
+        }
+        
+        const formData = new FormData();
+        formData.append('action', 'toggle_admin');
+        formData.append('user_id', userId);
+        formData.append('is_admin', currentStatus);
+        
+        fetch('admin_actions.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showSuccessModal(data.message);
+                
+                // Update the badge
+                const badge = document.getElementById(`admin-badge-${userId}`);
+                const button = document.getElementById(`admin-btn-${userId}`);
+                
+                if (data.new_status == 1) {
+                    // User is now admin
+                    badge.textContent = 'Admin';
+                    badge.className = 'status-badge status-confirmed';
+                    button.textContent = 'Revoke Admin';
+                    button.onclick = function() { toggleAdminStatus(userId, 1); };
+                } else {
+                    // User is now regular user
+                    badge.textContent = 'User';
+                    badge.className = 'status-badge status-pending';
+                    button.textContent = 'Grant Admin';
+                    button.onclick = function() { toggleAdminStatus(userId, 0); };
+                }
+            } else {
+                alert('Error: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error updating admin status');
+        });
+    }
 </script>
 </body>
 </html>
