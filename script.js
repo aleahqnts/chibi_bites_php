@@ -391,12 +391,94 @@ function loadCart() {
         return response.json();
     })
     .then(data => {
-        if (data.success) {
+        if (data.success && data.cart && data.cart.length > 0) {
+            // Validate each cart item against current stock
+            validateCartItems(data.cart);
+        } else {
             displayCart(data.cart);
         }
     })
     .catch(error => {
         console.error('Error loading cart:', error);
+    });
+}
+
+// New function to validate cart items
+function validateCartItems(cart) {
+    let promises = [];
+    
+    cart.forEach((item, index) => {
+        const promise = fetch('check_stock.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `product_name=${encodeURIComponent(item.name)}&quantity=${item.quantity}`
+        })
+        .then(response => response.json())
+        .then(stockData => {
+            if (stockData.product_deleted) {
+                // Product was deleted, mark for removal (SILENT)
+                return { index, action: 'remove' };
+            } else if (!stockData.available) {
+                // Not enough stock, adjust quantity
+                if (stockData.available_stock > 0) {
+                    return { index, action: 'update', quantity: stockData.available_stock };
+                } else {
+                    return { index, action: 'remove' };
+                }
+            }
+            return { index, action: 'keep' };
+        });
+        
+        promises.push(promise);
+    });
+    
+    Promise.all(promises).then(results => {
+        // Process all validation results
+        let updatePromises = [];
+        
+        results.forEach(result => {
+            if (result.action === 'remove') {
+                const removeFormData = new FormData();
+                removeFormData.append('action', 'remove');
+                removeFormData.append('index', result.index);
+                updatePromises.push(
+                    fetch('cart.php', {
+                        method: 'POST',
+                        body: removeFormData
+                    }).then(r => r.json())
+                );
+            } else if (result.action === 'update') {
+                const updateFormData = new FormData();
+                updateFormData.append('action', 'update');
+                updateFormData.append('index', result.index);
+                updateFormData.append('quantity', result.quantity);
+                updatePromises.push(
+                    fetch('cart.php', {
+                        method: 'POST',
+                        body: updateFormData
+                    }).then(r => r.json())
+                );
+            }
+        });
+        
+        // After all updates, reload cart SILENTLY (no alert)
+        Promise.all(updatePromises).then(() => {
+            // Reload cart with updated data
+            const formData = new FormData();
+            formData.append('action', 'get');
+            
+            fetch('cart.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                displayCart(data.cart);
+                updateCartBadge();
+            });
+        });
     });
 }
 
@@ -440,32 +522,51 @@ function displayCart(cart) {
         return;
     }
     
-    let html = '';
+    // Fetch stock for all products
+    let stockPromises = cart.map(item => 
+        fetch('check_stock.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `product_name=${encodeURIComponent(item.name)}&quantity=${item.quantity}`
+        }).then(r => r.json())
+    );
     
-    cart.forEach((item, index) => {
-        html += `
-            <div class="cart-item">
-                <img src="${item.image}" alt="${item.name}" class="cart-item-img">
-                <div class="cart-item-info">
-                    <div class="cart-item-name">${item.name}</div>
-                    <div class="cart-item-price">${item.price}</div>
+    Promise.all(stockPromises).then(stockData => {
+        let html = '';
+        
+        cart.forEach((item, index) => {
+            const stock = stockData[index];
+            const maxStock = stock.available_stock || 0;
+            const disablePlus = item.quantity >= maxStock ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : '';
+            const disableMinus = item.quantity <= 1 ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : '';
+            
+            html += `
+                <div class="cart-item">
+                    <img src="${item.image}" alt="${item.name}" class="cart-item-img">
+                    <div class="cart-item-info">
+                        <div class="cart-item-name">${item.name}</div>
+                        <div class="cart-item-price">${item.price}</div>
+                        ${maxStock < 10 ? `<div style="color: #ff6b6b; font-size: 12px;">Only ${maxStock} left</div>` : ''}
+                    </div>
+                    <div class="cart-item-controls">
+                        <button class="cart-qty-btn" onclick="updateCartQuantity(${index}, ${item.quantity - 1})" ${disableMinus}>−</button>
+                        <span class="cart-qty">${item.quantity}</span>
+                        <button class="cart-qty-btn" onclick="updateCartQuantity(${index}, ${item.quantity + 1})" ${disablePlus}>+</button>
+                        <button class="cart-remove" onclick="removeFromCart(${index})">×</button>
+                    </div>
                 </div>
-                <div class="cart-item-controls">
-                    <button class="cart-qty-btn" onclick="updateCartQuantity(${index}, ${item.quantity - 1})">−</button>
-                    <span class="cart-qty">${item.quantity}</span>
-                    <button class="cart-qty-btn" onclick="updateCartQuantity(${index}, ${item.quantity + 1})">+</button>
-                    <button class="cart-remove" onclick="removeFromCart(${index})">×</button>
-                </div>
-            </div>
-        `;
+            `;
+        });
+        
+        cartItems.innerHTML = html;
+        
+        const total = calculateTotal(cart);
+        
+        cartTotal.textContent = '₱' + total.toFixed(2);
+        cartFooter.style.display = 'block';
     });
-    
-    cartItems.innerHTML = html;
-    
-    const total = calculateTotal(cart);
-    
-    cartTotal.textContent = '₱' + total.toFixed(2);
-    cartFooter.style.display = 'block';
 }
 
 function updateCartQuantity(index, quantity) {
@@ -474,10 +575,9 @@ function updateCartQuantity(index, quantity) {
         return;
     }
     
+    // Get cart to check product name
     const formData = new FormData();
-    formData.append('action', 'update');
-    formData.append('index', index);
-    formData.append('quantity', quantity);
+    formData.append('action', 'get');
     
     fetch('cart.php', {
         method: 'POST',
@@ -485,9 +585,47 @@ function updateCartQuantity(index, quantity) {
     })
     .then(response => response.json())
     .then(data => {
-        if (data.success) {
-            displayCart(data.cart);
-            updateCartBadge();
+        if (data.success && data.cart[index]) {
+            const productName = data.cart[index].name;
+            
+            // Check stock availability
+            fetch('check_stock.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `product_name=${encodeURIComponent(productName)}&quantity=${quantity}`
+            })
+            .then(response => response.json())
+            .then(stockData => {
+                if (stockData.success && stockData.available) {
+                    // Stock is available, update quantity
+                    const updateFormData = new FormData();
+                    updateFormData.append('action', 'update');
+                    updateFormData.append('index', index);
+                    updateFormData.append('quantity', quantity);
+                    
+                    fetch('cart.php', {
+                        method: 'POST',
+                        body: updateFormData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            displayCart(data.cart);
+                            updateCartBadge();
+                        }
+                    });
+                } else {
+                    // Not enough stock
+                    alert(`Sorry, only ${stockData.available_stock} items available in stock.`);
+                    // Reload cart to show correct quantity
+                    loadCart();
+                }
+            })
+            .catch(error => {
+                console.error('Error checking stock:', error);
+            });
         }
     })
     .catch(error => {
