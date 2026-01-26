@@ -495,7 +495,7 @@ function placeOrder() {
     // Disable button to prevent double submission
     const placeOrderBtn = document.querySelector('.place-order-btn');
     placeOrderBtn.disabled = true;
-    placeOrderBtn.textContent = 'PROCESSING...';
+    placeOrderBtn.textContent = 'VALIDATING...';
     
     // Get cart data
     const formData = new FormData();
@@ -508,23 +508,63 @@ function placeOrder() {
     .then(response => response.json())
     .then(data => {
         if (data.success && data.cart && data.cart.length > 0) {
-            // Calculate totals with dynamic delivery fee
-            const subtotal = calculateTotal(data.cart);
-            const total = subtotal + currentDeliveryFee; // Use dynamic fee
+            // Validate stock for all items
+            let stockPromises = data.cart.map(item => 
+                fetch('check_stock.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `product_name=${encodeURIComponent(item.name)}&quantity=${item.quantity}`
+                }).then(r => r.json())
+            );
             
-            // Store order data for later
-            currentOrderData = {
-                cart: data.cart,
-                total: total,
-                paymentMethod: selectedPaymentMethod
-            };
-            
-            // Show payment modal
-            showPaymentModal(total, selectedPaymentMethod);
-            
-            // Re-enable button
-            placeOrderBtn.disabled = false;
-            placeOrderBtn.textContent = 'PLACE ORDER';
+            Promise.all(stockPromises).then(stockResults => {
+                let stockIssues = [];
+                let hasDeletedProducts = false;
+                
+                stockResults.forEach((stock, index) => {
+                    if (stock.product_deleted) {
+                        // Mark that we have deleted products (will silently remove)
+                        hasDeletedProducts = true;
+                    } else if (!stock.available) {
+                        // Only show alert for stock quantity issues
+                        stockIssues.push(`${data.cart[index].name}: Only ${stock.available_stock} available (you have ${data.cart[index].quantity} in cart)`);
+                    }
+                });
+                
+                // If deleted products found, silently reload
+                if (hasDeletedProducts) {
+                    placeOrderBtn.disabled = false;
+                    placeOrderBtn.textContent = 'PLACE ORDER';
+                    window.location.reload();
+                    return;
+                }
+                
+                // Only show alert for stock quantity issues (not deleted products)
+                if (stockIssues.length > 0) {
+                    alert('Stock issues detected:\n\n' + stockIssues.join('\n') + '\n\nPlease update your cart.');
+                    placeOrderBtn.disabled = false;
+                    placeOrderBtn.textContent = 'PLACE ORDER';
+                    window.location.reload();
+                    return;
+                }
+                
+                // All stock validated, proceed with order
+                const subtotal = calculateTotal(data.cart);
+                const total = subtotal + currentDeliveryFee;
+                
+                currentOrderData = {
+                    cart: data.cart,
+                    total: total,
+                    paymentMethod: selectedPaymentMethod
+                };
+                
+                showPaymentModal(total, selectedPaymentMethod);
+                
+                placeOrderBtn.disabled = false;
+                placeOrderBtn.textContent = 'PLACE ORDER';
+            });
         } else {
             alert('Your cart is empty!');
             placeOrderBtn.disabled = false;
