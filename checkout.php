@@ -402,7 +402,7 @@
             border-radius: 20px;
             max-width: 500px;
             width: 90%;
-            max-height: 100vh;
+            max-height: 90vh;
             overflow-y: auto;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             animation: slideUp 0.3s ease;

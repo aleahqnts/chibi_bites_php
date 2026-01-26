@@ -320,7 +320,7 @@ if ($action === 'get_order') {
                 SUM(total_amount) as revenue
             FROM orders
             WHERE DATE(created_at) BETWEEN '$start_date' AND '$end_date'
-            AND status != 'cancelled'
+            AND status NOT IN ('cancelled', 'refunded')
             GROUP BY DATE(created_at)
             ORDER BY date DESC
         ";
@@ -335,7 +335,47 @@ if ($action === 'get_order') {
         echo json_encode(['success' => true, 'report' => $report]);
         exit;
     }
-}
 
-echo json_encode(['success' => false, 'message' => 'Invalid action']);
+    // GET FILTERED STATS
+    if ($action === 'get_filtered_stats') {
+        $start_date = mysqli_real_escape_string($conn, $_GET['start_date']);
+        $end_date = mysqli_real_escape_string($conn, $_GET['end_date']);
+        
+        // Get statistics (excluding cancelled and refunded from revenue)
+        $stats_query = "
+            SELECT 
+                COUNT(*) as total_orders,
+                SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending_orders,
+                SUM(CASE WHEN status = 'delivered' THEN 1 ELSE 0 END) as delivered_orders,
+                SUM(CASE WHEN status NOT IN ('cancelled', 'refunded') THEN total_amount ELSE 0 END) as total_revenue,
+                COUNT(DISTINCT user_id) as total_customers
+            FROM orders
+            WHERE DATE(created_at) BETWEEN '$start_date' AND '$end_date'
+        ";
+        $stats_result = $conn->query($stats_query);
+        $stats = $stats_result->fetch_assoc();
+        
+        // Get orders within date range
+        $orders_query = "
+            SELECT o.*, u.fullname, u.email, u.phone 
+            FROM orders o 
+            JOIN users u ON o.user_id = u.id 
+            WHERE DATE(o.created_at) BETWEEN '$start_date' AND '$end_date'
+            ORDER BY o.created_at DESC
+        ";
+        $orders_result = $conn->query($orders_query);
+        
+        $orders = [];
+        while ($order = $orders_result->fetch_assoc()) {
+            $orders[] = $order;
+        }
+        
+        echo json_encode([
+            'success' => true, 
+            'stats' => $stats,
+            'orders' => $orders
+        ]);
+        exit;
+    }
+}
 ?>

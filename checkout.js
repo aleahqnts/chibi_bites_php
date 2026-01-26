@@ -634,9 +634,9 @@ function showPaymentModal(total, paymentMethod) {
     // Set QR code based on payment method
     const qrImage = document.getElementById('qrCodeImage');
     if (paymentMethod === 'gcash') {
-        qrImage.src = 'images/gcash-qr.jpg';
+        qrImage.src = 'images/gcash_qrcode.png';
     } else if (paymentMethod === 'bank_transfer') {
-        qrImage.src = 'images/bank-qr.jpg';
+        qrImage.src = 'images/maribank_qrcode.png';
     }
     
     // Show modal

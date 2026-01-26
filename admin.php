@@ -9,24 +9,30 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
 
 require_once 'db_connect.php';
 
-// Get all orders with user information
+// Get date range from query parameters or use defaults
+$start_date = isset($_GET['start_date']) ? $_GET['start_date'] : date('Y-m-01');
+$end_date = isset($_GET['end_date']) ? $_GET['end_date'] : date('Y-m-d');
+
+// Get all orders with user information within date range
 $orders_query = "
     SELECT o.*, u.fullname, u.email, u.phone 
     FROM orders o 
     JOIN users u ON o.user_id = u.id 
+    WHERE DATE(o.created_at) BETWEEN '$start_date' AND '$end_date'
     ORDER BY o.created_at DESC
 ";
 $orders_result = $conn->query($orders_query);
 
-// Get statistics
+// Get statistics (excluding cancelled and refunded from revenue)
 $stats_query = "
     SELECT 
         COUNT(*) as total_orders,
-        SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending_orders,
+        SUM(CASE WHEN status IN ('pending', 'confirmed', 'processing', 'ready', 'out_for_delivery') THEN 1 ELSE 0 END) as pending_orders,
         SUM(CASE WHEN status = 'delivered' THEN 1 ELSE 0 END) as delivered_orders,
-        SUM(total_amount) as total_revenue,
+        SUM(CASE WHEN status NOT IN ('cancelled', 'refunded') THEN total_amount ELSE 0 END) as total_revenue,
         COUNT(DISTINCT user_id) as total_customers
     FROM orders
+    WHERE DATE(created_at) BETWEEN '$start_date' AND '$end_date'
 ";
 $stats_result = $conn->query($stats_query);
 $stats = $stats_result->fetch_assoc();
@@ -1145,7 +1151,145 @@ $products_result = $conn->query($products_query);
             background: #856404;
             color: white;
         }
+        
+        /* Date Range Filter Styles */
+        .date-range-filter {
+            position: fixed;
+            right: -320px;
+            top: 120px;
+            width: 320px;
+            background: white;
+            padding: 25px;
+            border-radius: 15px 0 0 15px;
+            box-shadow: -2px 2px 15px rgba(0,0,0,0.15);
+            transition: right 0.3s ease;
+            z-index: 999;
+            border-left: 4px solid var(--primary-pink);
+        }
 
+        .date-range-filter.open {
+            right: 0;
+        }
+
+        .date-range-toggle {
+            position: absolute;
+            left: -100px;
+            top: 20px;
+            background: var(--primary-brown);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px 0 0 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            box-shadow: -2px 2px 10px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+        }
+
+        .date-range-toggle:hover {
+            background: var(--accent-green);
+            transform: translateX(-3px);
+        }
+
+        .date-range-filter h3 {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--primary-brown);
+            font-size: 18px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .date-inputs {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .date-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .date-group label {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            color: var(--primary-brown);
+            font-size: 14px;
+        }
+
+        .date-group input[type="date"] {
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            color: var(--primary-brown);
+            transition: border-color 0.3s;
+            width: 100%;
+        }
+
+        .date-group input[type="date"]:focus {
+            outline: none;
+            border-color: var(--primary-pink);
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .filter-apply-btn,
+        .filter-reset-btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 20px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-apply-btn {
+            background: var(--accent-green);
+            color: white;
+        }
+
+        .filter-apply-btn:hover {
+            background: #8a9549;
+            transform: translateY(-2px);
+        }
+
+        .filter-reset-btn {
+            background: #f5f5f5;
+            color: #666;
+            border: 2px solid #e0e0e0;
+        }
+
+        .filter-reset-btn:hover {
+            background: #e0e0e0;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .date-range-filter {
+                right: -280px;
+                width: 280px;
+                padding: 20px;
+                top: 100px;
+            }
+            
+            .date-range-toggle {
+                left: -90px;
+                padding: 10px 15px;
+                font-size: 12px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1160,26 +1304,46 @@ $products_result = $conn->query($products_query);
     </nav>
 
     <div class="admin-container">
+        <!-- Date Range Filter -->
+        <div class="date-range-filter" id="dateRangeFilter">
+            <button class="date-range-toggle" onclick="toggleDateFilter()">Date Filter    </button>
+            <h3>Filter by Date Range</h3>
+            <div class="date-inputs">
+                <div class="date-group">
+                    <label>From:</label>
+                    <input type="date" id="startDate" value="<?php echo $start_date; ?>">
+                </div>
+                <div class="date-group">
+                    <label>To:</label>
+                    <input type="date" id="endDate" value="<?php echo $end_date; ?>">
+                </div>
+                <div class="filter-buttons">
+                    <button class="filter-apply-btn" onclick="applyDateFilter()">Apply</button>
+                    <button class="filter-reset-btn" onclick="resetDateFilter()">Reset</button>
+                </div>
+            </div>
+        </div>
+
         <!-- Statistics -->
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-number"><?php echo $stats['total_orders']; ?></div>
+                <div class="stat-number" id="statTotalOrders"><?php echo $stats['total_orders']; ?></div>
                 <div class="stat-label">Total Orders</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number"><?php echo $stats['pending_orders']; ?></div>
-                <div class="stat-label">Pending Orders</div>
+                <div class="stat-number" id="statPendingOrders"><?php echo $stats['pending_orders']; ?></div>
+                <div class="stat-label">Orders in Progress</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number"><?php echo $stats['delivered_orders']; ?></div>
+                <div class="stat-number" id="statDeliveredOrders"><?php echo $stats['delivered_orders']; ?></div>
                 <div class="stat-label">Delivered Orders</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number">₱<?php echo number_format($stats['total_revenue'], 2); ?></div>
+                <div class="stat-number" id="statTotalRevenue">₱<?php echo number_format($stats['total_revenue'], 2); ?></div>
                 <div class="stat-label">Total Revenue</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number"><?php echo $stats['total_customers']; ?></div>
+                <div class="stat-number" id="statTotalCustomers"><?php echo $stats['total_customers']; ?></div>
                 <div class="stat-label">Total Customers</div>
             </div>
         </div>
@@ -1599,608 +1763,565 @@ $products_result = $conn->query($products_query);
     </div>
 </div>
 
-    <script>
+<script>
+    let lastUpdatedOrderId = null;
 
-        let lastUpdatedOrderId = null;
+    // Date Filter Functions
+    function applyDateFilter() {
+        const startDate = document.getElementById('startDate').value;
+        const endDate = document.getElementById('endDate').value;
 
-        // Check if we need to switch to a specific tab on page load
-document.addEventListener('DOMContentLoaded', function() {
-    const activeTab = sessionStorage.getItem('activeTab');
-    if (activeTab) {
-        // Switch to the saved tab
+        if (!startDate || !endDate) {
+            alert('Please select both start and end dates');
+            return;
+        }
+
+        if (new Date(startDate) > new Date(endDate)) {
+            alert('Start date cannot be after end date');
+            return;
+        }
+
+        // Redirect with date parameters
+        window.location.href = `admin.php?start_date=${startDate}&end_date=${endDate}`;
+    }
+
+    function resetDateFilter() {
+        // Redirect to admin.php without parameters (uses PHP defaults)
+        window.location.href = 'admin.php';
+    }
+
+    // Tab Switching
+    function switchTab(tabName) {
         document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
         
-        document.getElementById(activeTab + '-tab').classList.add('active');
-        
-        // Activate the correct tab button
-        const tabButtons = document.querySelectorAll('.tab-btn');
-        if (activeTab === 'orders') tabButtons[0].classList.add('active');
-        if (activeTab === 'users') tabButtons[1].classList.add('active');
-        if (activeTab === 'products') tabButtons[2].classList.add('active');
-        
-        // Clear the storage
-        sessionStorage.removeItem('activeTab');
+        document.getElementById(tabName + '-tab').classList.add('active');
+        event.target.classList.add('active');
     }
-});
-        // Tab Switching
-        function switchTab(tabName) {
+
+    // Filter Orders by Status
+    let currentFilter = 'all';
+    function filterByStatus(status) {
+        currentFilter = status;
+        document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+        
+        const rows = document.querySelectorAll('.order-row');
+        rows.forEach(row => {
+            if (status === 'all' || row.dataset.status === status) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
+
+    // Search Orders
+    function filterOrders() {
+        const searchTerm = document.getElementById('orderSearch').value.toLowerCase();
+        const rows = document.querySelectorAll('.order-row');
+        
+        rows.forEach(row => {
+            const text = row.textContent.toLowerCase();
+            const matchesSearch = text.includes(searchTerm);
+            const matchesFilter = currentFilter === 'all' || row.dataset.status === currentFilter;
+            
+            if (matchesSearch && matchesFilter) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
+
+    // Search Users
+    function filterUsers() {
+        const searchTerm = document.getElementById('userSearch').value.toLowerCase();
+        const rows = document.querySelectorAll('.user-row');
+        
+        rows.forEach(row => {
+            const text = row.textContent.toLowerCase();
+            if (text.includes(searchTerm)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
+
+    // Update Order Status
+    function updateOrderStatus(orderId) {
+        lastUpdatedOrderId = orderId;
+        document.getElementById('statusOrderId').value = orderId;
+        document.getElementById('displayOrderId').value = '#' + orderId;
+        document.getElementById('statusModal').classList.add('active');
+    }
+
+    // View Order Details
+    function viewOrder(orderId) {
+        fetch('admin_actions.php?action=get_order&order_id=' + orderId)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const order = data.order;
+                const items = data.items;
+
+                let html = `
+                    <div class="order-items">
+                        <h4>Order Items:</h4>
+                `;
+
+                items.forEach(item => {
+                    html += `
+                        <div class="order-item">
+                            <span>${item.product_name} x${item.quantity}</span>
+                            <span>₱${parseFloat(item.price).toFixed(2)}</span>
+                        </div>
+                    `;
+                });
+
+                html += `</div><br>`;
+
+                html += `
+                    <p><strong>Order ID:</strong> #${order.id}</p>
+                    <p><strong>Customer:</strong> ${order.fullname}</p>
+                    <p><strong>Email:</strong> ${order.email}</p>
+                    <p><strong>Phone:</strong> ${order.phone}</p>
+                    <p><strong>Address:</strong> ${order.delivery_address}</p>
+                    <p><strong>Payment Method:</strong> ${order.payment_method.toUpperCase()}</p>
+                    <p><strong>Status:</strong> 
+                        <span class="status-badge status-${order.status}">
+                            ${order.status}
+                        </span>
+                    </p>
+                    <p><strong>Total:</strong> ₱${parseFloat(order.total_amount).toFixed(2)}</p>
+                    <p><strong>Date:</strong> ${new Date(order.created_at).toLocaleString()}</p>
+                `;
+
+                if (order.payment_proof) {
+                    html += `
+                        <div style="margin-top: 20px;">
+                            <p><strong>Payment Proof:</strong></p>
+                            <img 
+                                src="${order.payment_proof}" 
+                                alt="Payment Proof" 
+                                style="max-width: 100%; max-height: 400px; border-radius: 10px; margin-top: 10px;"
+                            >
+                        </div>
+                    `;
+                }
+
+                document.getElementById('orderDetails').innerHTML = html;
+                document.getElementById('viewOrderModal').classList.add('active');
+            }
+        });
+    }
+
+    function toggleDateFilter() {
+        document.getElementById('dateRangeFilter').classList.toggle('open');
+    }
+
+    // Close Modal
+    function closeModal(modalId) {
+        document.getElementById(modalId).classList.remove('active');
+    }
+
+    // Add Product Function
+    function addProduct() {
+        document.getElementById('addProductModal').classList.add('active');
+    }
+
+    // Close Add Success Modal
+    function closeAddSuccessModal() {
+        document.getElementById('addSuccessModal').classList.remove('active');
+        sessionStorage.setItem('activeTab', 'products');
+        location.reload();
+    }
+
+    // Edit Product
+    function editProduct(productId) {
+        fetch('admin_actions.php?action=get_product&product_id=' + productId)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const product = data.product;
+                
+                document.getElementById('editProductId').value = product.id;
+                document.getElementById('editProductName').value = product.name;
+                document.getElementById('editProductPrice').value = product.price;
+                document.getElementById('editProductDescription').value = product.description;
+                document.getElementById('editProductStock').value = product.stock || 0;
+                document.getElementById('editProductImage').value = product.image_path;
+                
+                document.getElementById('editProductModal').classList.add('active');
+            } else {
+                alert('Error loading product: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error loading product');
+        });
+    }
+
+    // Toggle Product Status
+    let toggleProductId = null;
+    let toggleCurrentStatus = null;
+
+    function toggleProductStatus(productId, currentStatus) {
+        toggleProductId = productId;
+        toggleCurrentStatus = parseInt(currentStatus);
+        
+        const modal = document.getElementById('toggleModal');
+        const title = document.getElementById('toggleModalTitle');
+        const text = document.getElementById('toggleModalText');
+        const confirmBtn = document.getElementById('toggleConfirmBtn');
+        
+        if (toggleCurrentStatus === 1) {
+            title.textContent = 'Deactivate Product?';
+            text.textContent = 'Are you sure you want to deactivate this product? It will be hidden from customers.';
+            confirmBtn.textContent = 'Yes, Deactivate';
+        } else {
+            title.textContent = 'Activate Product?';
+            text.textContent = 'Are you sure you want to activate this product? It will be visible to customers.';
+            confirmBtn.textContent = 'Yes, Activate';
+        }
+        
+        modal.classList.add('active');
+    }
+
+    function closeToggleModal() {
+        document.getElementById('toggleModal').classList.remove('active');
+        toggleProductId = null;
+        toggleCurrentStatus = null;
+    }
+
+    function confirmToggleProduct() {
+        if (toggleProductId === null) return;
+        
+        const formData = new FormData();
+        formData.append('action', 'toggle_product');
+        formData.append('id', toggleProductId);
+        formData.append('is_active', toggleCurrentStatus);
+        
+        fetch('admin_actions.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            closeToggleModal();
+            
+            if (data.success) {
+                sessionStorage.setItem('activeTab', 'products');
+                location.reload();
+            } else {
+                alert('Error: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            closeToggleModal();
+            alert('Error updating product status');
+        });
+    }
+
+    // Delete Product
+    let deleteProductId = null;
+
+    function deleteProduct(productId, productName) {
+        deleteProductId = productId;
+        document.getElementById('deleteProductText').textContent = 
+            `Are you sure you want to permanently delete "${productName}"? This action cannot be undone.`;
+        document.getElementById('deleteProductModal').classList.add('active');
+    }
+
+    function closeDeleteModal() {
+        document.getElementById('deleteProductModal').classList.remove('active');
+        deleteProductId = null;
+    }
+
+    function confirmDeleteProduct() {
+        if (deleteProductId === null) return;
+        
+        const formData = new FormData();
+        formData.append('action', 'delete_product');
+        formData.append('id', deleteProductId);
+        
+        fetch('admin_actions.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            closeDeleteModal();
+            
+            if (data.success) {
+                sessionStorage.setItem('activeTab', 'products');
+                location.reload();
+            } else {
+                alert('Error: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            closeDeleteModal();
+            alert('Error deleting product');
+        });
+    }
+
+    // Success Modal Functions
+    function closeSuccessModal() {
+        document.getElementById('successModal').classList.remove('active');
+        location.reload();
+    }
+
+    function updateAnotherOrder() {
+        document.getElementById('successModal').classList.remove('active');
+        if (lastUpdatedOrderId) {
+            updateOrderStatus(lastUpdatedOrderId);
+        }
+    }
+
+    // Logout Functions
+    function openLogoutModal() {
+        document.getElementById('logoutModal').classList.add('active');
+    }
+
+    function closeLogoutModalAdmin() {
+        document.getElementById('logoutModal').classList.remove('active');
+    }
+
+    function confirmLogoutAdmin() {
+        window.location.href = 'admin_logout.php';
+    }
+
+    // Edit Success Modal Functions
+    function closeEditSuccessModal() {
+        document.getElementById('editSuccessModal').classList.remove('active');
+    }
+
+    function closeEditSuccessModalAndRedirect() {
+        closeEditSuccessModal();
+        sessionStorage.setItem('activeTab', 'products');
+        location.reload();
+    }
+
+    // Stock Adjustment Functions
+    function adjustEditStock(amount) {
+        const input = document.getElementById('editProductStock');
+        const currentValue = parseInt(input.value) || 0;
+        const newValue = Math.max(0, currentValue + amount);
+        input.value = newValue;
+    }
+
+    function adjustAddStock(amount) {
+        const input = document.getElementById('addProductStock');
+        const currentValue = parseInt(input.value) || 0;
+        const newValue = Math.max(0, currentValue + amount);
+        input.value = newValue;
+    }
+
+    // DOMContentLoaded Event - ALL EVENT LISTENERS GO HERE
+    document.addEventListener('DOMContentLoaded', function() {
+        // Check if we need to switch to a specific tab on page load
+        const activeTab = sessionStorage.getItem('activeTab');
+        if (activeTab) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             
-            document.getElementById(tabName + '-tab').classList.add('active');
-            event.target.classList.add('active');
+            document.getElementById(activeTab + '-tab').classList.add('active');
+            
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            if (activeTab === 'orders') tabButtons[0].classList.add('active');
+            if (activeTab === 'users') tabButtons[1].classList.add('active');
+            if (activeTab === 'products') tabButtons[2].classList.add('active');
+            
+            sessionStorage.removeItem('activeTab');
         }
 
-        // Filter Orders by Status
-        let currentFilter = 'all';
-        function filterByStatus(status) {
-            currentFilter = status;
-            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            
-            const rows = document.querySelectorAll('.order-row');
-            rows.forEach(row => {
-                if (status === 'all' || row.dataset.status === status) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-        }
-
-        // Search Orders
-        function filterOrders() {
-            const searchTerm = document.getElementById('orderSearch').value.toLowerCase();
-            const rows = document.querySelectorAll('.order-row');
-            
-            rows.forEach(row => {
-                const text = row.textContent.toLowerCase();
-                const matchesSearch = text.includes(searchTerm);
-                const matchesFilter = currentFilter === 'all' || row.dataset.status === currentFilter;
+        // Status Form Submit
+        const statusForm = document.getElementById('statusForm');
+        if (statusForm) {
+            statusForm.addEventListener('submit', function(e) {
+                e.preventDefault();
                 
-                if (matchesSearch && matchesFilter) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
+                const orderId = document.getElementById('statusOrderId').value;
+                const newStatus = document.getElementById('newStatus').value;
+                
+                const formData = new FormData();
+                formData.append('action', 'update_status');
+                formData.append('order_id', orderId);
+                formData.append('status', newStatus);
+                
+                fetch('admin_actions.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        closeModal('statusModal');
+                        document.getElementById('successModal').classList.add('active');
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error updating status');
+                });
+            });
+        }
+
+        // Add Product Image Preview
+        const addProductImage = document.getElementById('addProductImage');
+        if (addProductImage) {
+            addProductImage.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    document.getElementById('uploadText').textContent = file.name;
+                    
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.getElementById('previewImg').src = e.target.result;
+                        document.getElementById('imagePreview').style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
                 }
             });
         }
 
-        // Search Users
-        function filterUsers() {
-            const searchTerm = document.getElementById('userSearch').value.toLowerCase();
-            const rows = document.querySelectorAll('.user-row');
-            
-            rows.forEach(row => {
-                const text = row.textContent.toLowerCase();
-                if (text.includes(searchTerm)) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
+        // Add Product Form Submit
+        const addProductForm = document.getElementById('addProductForm');
+        if (addProductForm) {
+            addProductForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const fileInput = document.getElementById('addProductImage');
+                const file = fileInput.files[0];
+                
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('Image size must be less than 5MB');
+                    return;
                 }
-            });
-        }
-
-
-        // Update Order Status
-        function updateOrderStatus(orderId) {
-            lastUpdatedOrderId = orderId;
-            document.getElementById('statusOrderId').value = orderId;
-            document.getElementById('displayOrderId').value = '#' + orderId;
-            document.getElementById('statusModal').classList.add('active');
-        }
-
-        document.getElementById('statusForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const orderId = document.getElementById('statusOrderId').value;
-            const newStatus = document.getElementById('newStatus').value;
-            
-            const formData = new FormData();
-            formData.append('action', 'update_status');
-            formData.append('order_id', orderId);
-            formData.append('status', newStatus);
-            
-            fetch('admin_actions.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Close the status modal
-                    closeModal('statusModal');
-                    // Show success modal
-                    document.getElementById('successModal').classList.add('active');
-                } else {
-                    alert('Error: ' + data.message);
+                
+                const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+                if (!allowedTypes.includes(file.type)) {
+                    alert('Only JPG, JPEG, PNG, and GIF images are allowed');
+                    return;
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Error updating status');
+                
+                const formData = new FormData();
+                formData.append('action', 'add_product');
+                formData.append('name', document.getElementById('addProductName').value);
+                formData.append('price', document.getElementById('addProductPrice').value);
+                formData.append('description', document.getElementById('addProductDescription').value);
+                formData.append('stock', document.getElementById('addProductStock').value);
+                formData.append('product_image', file);
+                
+                const submitBtn = e.target.querySelector('.submit-btn');
+                const originalText = submitBtn.textContent;
+                submitBtn.textContent = 'Uploading...';
+                submitBtn.disabled = true;
+                
+                fetch('admin_actions.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                    
+                    if (data.success) {
+                        closeModal('addProductModal');
+                        document.getElementById('addProductForm').reset();
+                        document.getElementById('imagePreview').style.display = 'none';
+                        document.getElementById('addSuccessModal').classList.add('active');
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                    alert('Error adding product');
+                });
             });
-        });
-
-        // View Order Details
-function viewOrder(orderId) {
-    fetch('admin_actions.php?action=get_order&order_id=' + orderId)
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            const order = data.order;
-            const items = data.items;
-
-            let html = `
-                <div class="order-items">
-                    <h4>Order Items:</h4>
-            `;
-
-            items.forEach(item => {
-                html += `
-                    <div class="order-item">
-                        <span>${item.product_name} x${item.quantity}</span>
-                        <span>₱${parseFloat(item.price).toFixed(2)}</span>
-                    </div>
-                `;
-            });
-
-            html += `</div><br>`;
-
-            // Order details AFTER items
-            html += `
-                <p><strong>Order ID:</strong> #${order.id}</p>
-                <p><strong>Customer:</strong> ${order.fullname}</p>
-                <p><strong>Email:</strong> ${order.email}</p>
-                <p><strong>Phone:</strong> ${order.phone}</p>
-                <p><strong>Address:</strong> ${order.delivery_address}</p>
-                <p><strong>Payment Method:</strong> ${order.payment_method.toUpperCase()}</p>
-                <p><strong>Status:</strong> 
-                    <span class="status-badge status-${order.status}">
-                        ${order.status}
-                    </span>
-                </p>
-                <p><strong>Total:</strong> ₱${parseFloat(order.total_amount).toFixed(2)}</p>
-                <p><strong>Date:</strong> ${new Date(order.created_at).toLocaleString()}</p>
-            `;
-
-            // Payment proof (still after details)
-            if (order.payment_proof) {
-                html += `
-                    <div style="margin-top: 20px;">
-                        <p><strong>Payment Proof:</strong></p>
-                        <img 
-                            src="${order.payment_proof}" 
-                            alt="Payment Proof" 
-                            style="max-width: 100%; max-height: 400px; border-radius: 10px; margin-top: 10px;"
-                        >
-                    </div>
-                `;
-            }
-
-            document.getElementById('orderDetails').innerHTML = html;
-            document.getElementById('viewOrderModal').classList.add('active');
-        }
-    });
-}
-
-
-        // View User Details
-        function viewUser(userId) {
-            alert('View user details for ID: ' + userId);
-            // Implement user details modal similar to order details
         }
 
-        // Close Modal
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.remove('active');
+        // Edit Product Form Submit
+        const editProductForm = document.getElementById('editProductForm');
+        if (editProductForm) {
+            editProductForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData();
+                formData.append('action', 'update_product');
+                formData.append('id', document.getElementById('editProductId').value);
+                formData.append('name', document.getElementById('editProductName').value);
+                formData.append('price', document.getElementById('editProductPrice').value);
+                formData.append('description', document.getElementById('editProductDescription').value);
+                formData.append('stock', document.getElementById('editProductStock').value);
+                formData.append('image_path', document.getElementById('editProductImage').value);
+                
+                fetch('admin_actions.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        closeModal('editProductModal');
+                        document.getElementById('editSuccessModal').classList.add('active');
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error updating product');
+                });
+            });
         }
 
         // Close modal on outside click
         window.onclick = function(event) {
-            if (event.target.classList.contains('modal')) {
+            if (event.target.classList.contains('modal') || 
+                event.target.classList.contains('success-modal-overlay') ||
+                event.target.classList.contains('logout-modal-overlay') ||
+                event.target.classList.contains('toggle-modal-overlay') ||
+                event.target.classList.contains('delete-modal-overlay')) {
                 event.target.classList.remove('active');
             }
-        }
-
- // Add Product Function
-function addProduct() {
-    document.getElementById('addProductModal').classList.add('active');
-}
-
-// Image Preview
-document.getElementById('addProductImage').addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (file) {
-        // Update button text
-        document.getElementById('uploadText').textContent = file.name;
-        
-        // Show preview
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            document.getElementById('previewImg').src = e.target.result;
-            document.getElementById('imagePreview').style.display = 'block';
         };
-        reader.readAsDataURL(file);
-    }
-});
+    });
 
-// Handle Add Product Form Submission
-document.getElementById('addProductForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    const fileInput = document.getElementById('addProductImage');
-    const file = fileInput.files[0];
-    
-    // Validate file size (5MB max)
-    if (file.size > 5 * 1024 * 1024) {
-        alert('Image size must be less than 5MB');
-        return;
+    // Toggle Date Filter
+    function toggleDateFilter() {
+        document.getElementById('dateRangeFilter').classList.toggle('open');
     }
-    
-    // Validate file type
-    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
-    if (!allowedTypes.includes(file.type)) {
-        alert('Only JPG, JPEG, PNG, and GIF images are allowed');
-        return;
-    }
-    
-    const formData = new FormData();
-    formData.append('action', 'add_product');
-    formData.append('name', document.getElementById('addProductName').value);
-    formData.append('price', document.getElementById('addProductPrice').value); // ADD THIS LINE
-    formData.append('description', document.getElementById('addProductDescription').value);
-    formData.append('stock', document.getElementById('addProductStock').value);
-    formData.append('product_image', file);
-    
-    // Show loading state
-    const submitBtn = e.target.querySelector('.submit-btn');
-    const originalText = submitBtn.textContent;
-    submitBtn.textContent = 'Uploading...';
-    submitBtn.disabled = true;
-    
-    fetch('admin_actions.php', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        submitBtn.textContent = originalText;
-        submitBtn.disabled = false;
+
+    // Close date filter when clicking outside
+    document.addEventListener('click', function(event) {
+        const dateFilter = document.getElementById('dateRangeFilter');
+        const isClickInside = dateFilter.contains(event.target);
         
-        if (data.success) {
-            // Close add modal
-            closeModal('addProductModal');
-            // Clear form and preview
-            document.getElementById('addProductForm').reset();
-            document.getElementById('imagePreview').style.display = 'none';
-            // Show success modal
-            document.getElementById('addSuccessModal').classList.add('active');
-        } else {
-            alert('Error: ' + data.message);
+        if (!isClickInside && dateFilter.classList.contains('open')) {
+            dateFilter.classList.remove('open');
         }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        submitBtn.textContent = originalText;
-        submitBtn.disabled = false;
-        alert('Error adding product');
     });
-});
 
-// Close Add Success Modal
-function closeAddSuccessModal() {
-    document.getElementById('addSuccessModal').classList.remove('active');
-    // Switch to products tab and reload
-    sessionStorage.setItem('activeTab', 'products');
-    location.reload();
-}
-
-// Close modal when clicking outside
-document.addEventListener('DOMContentLoaded', function() {
-    const addSuccessModal = document.getElementById('addSuccessModal');
-    if (addSuccessModal) {
-        addSuccessModal.addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeAddSuccessModal();
-            }
-        });
-    }
-});
-
- function editProduct(productId) {
-    fetch('admin_actions.php?action=get_product&product_id=' + productId)
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            const product = data.product;
-            
-            document.getElementById('editProductId').value = product.id;
-            document.getElementById('editProductName').value = product.name;
-            document.getElementById('editProductPrice').value = product.price; // ADD THIS LINE
-            document.getElementById('editProductDescription').value = product.description;
-            document.getElementById('editProductStock').value = product.stock || 0;
-            document.getElementById('editProductImage').value = product.image_path;
-            
-            document.getElementById('editProductModal').classList.add('active');
-        } else {
-            alert('Error loading product: ' + data.message);
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Error loading product');
-    });
-}
-
- document.getElementById('editProductForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    const formData = new FormData();
-    formData.append('action', 'update_product');
-    formData.append('id', document.getElementById('editProductId').value);
-    formData.append('name', document.getElementById('editProductName').value);
-    formData.append('price', document.getElementById('editProductPrice').value);
-    formData.append('description', document.getElementById('editProductDescription').value);
-    formData.append('stock', document.getElementById('editProductStock').value); // ADD THIS LINE
-    formData.append('image_path', document.getElementById('editProductImage').value);
-    
-    fetch('admin_actions.php', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            closeModal('editProductModal');
-            document.getElementById('editSuccessModal').classList.add('active');
-        } else {
-            alert('Error: ' + data.message);
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Error updating product');
-    });
-});
-
- function toggleProductStatus(productId, currentStatus) {
-    openToggleModal(productId, currentStatus);
-}
-
-        // Logout
-        function logout() {
-            if (confirm('Are you sure you want to logout?')) {
-                window.location.href = 'admin_logout.php';
-            }
-        }
-
-       function closeSuccessModal() {
-            document.getElementById('successModal').classList.remove('active');
-            location.reload();
-        }
-
-        function updateAnotherOrder() {
-            document.getElementById('successModal').classList.remove('active');
-            if (lastUpdatedOrderId) {
-                updateOrderStatus(lastUpdatedOrderId);
-            }
-        }
-
-        // Open logout modal
-function openLogoutModal() {
-    document.getElementById('logoutModal').classList.add('active');
-}
-
-// Close logout modal
-function closeLogoutModalAdmin() {
-    document.getElementById('logoutModal').classList.remove('active');
-}
-
-// Confirm logout
-function confirmLogoutAdmin() {
-    window.location.href = 'admin_logout.php';
-}
-
-// Close modal when clicking outside
-document.addEventListener('DOMContentLoaded', function() {
-    const logoutModal = document.getElementById('logoutModal');
-    if (logoutModal) {
-        logoutModal.addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeLogoutModalAdmin();
-            }
-        });
-    }
-});
-
-// Edit Product Success Modal Functions
-function closeEditSuccessModal() {
-    document.getElementById('editSuccessModal').classList.remove('active');
-}
-
-function closeEditSuccessModalAndRedirect() {
-    closeEditSuccessModal();
-    
-    // Switch to products tab BEFORE reloading
-    sessionStorage.setItem('activeTab', 'products');
-    
-    // Reload to show updated data
-    location.reload();
-}
-
-// Toggle Product Status Variables
-let toggleProductId = null;
-let toggleCurrentStatus = null;
-
-function openToggleModal(productId, currentStatus) {
-    toggleProductId = productId;
-    toggleCurrentStatus = parseInt(currentStatus); // ADD parseInt HERE
-    
-    console.log('Product ID:', productId, 'Current Status:', toggleCurrentStatus, 'Type:', typeof toggleCurrentStatus);
-    
-    const modal = document.getElementById('toggleModal');
-    const title = document.getElementById('toggleModalTitle');
-    const text = document.getElementById('toggleModalText');
-    const confirmBtn = document.getElementById('toggleConfirmBtn');
-    
-    if (toggleCurrentStatus === 1) {
-        // Deactivating
-        title.textContent = 'Deactivate Product?';
-        text.textContent = 'Are you sure you want to deactivate this product? It will be hidden from customers.';
-        confirmBtn.textContent = 'Yes, Deactivate';
-    } else {
-        // Activating
-        title.textContent = 'Activate Product?';
-        text.textContent = 'Are you sure you want to activate this product? It will be visible to customers.';
-        confirmBtn.textContent = 'Yes, Activate';
-    }
-    
-    modal.classList.add('active');
-}
-
-// Close toggle modal
-function closeToggleModal() {
-    document.getElementById('toggleModal').classList.remove('active');
-    toggleProductId = null;
-    toggleCurrentStatus = null;
-}
-
-function confirmToggleProduct() {
-    if (toggleProductId === null) return;
-    
-    const formData = new FormData();
-    formData.append('action', 'toggle_product');
-    formData.append('id', toggleProductId);
-    formData.append('is_active', toggleCurrentStatus);
-    
-    fetch('admin_actions.php', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        closeToggleModal();
+    // Close date filter when pressing ESC key
+    document.addEventListener('keydown', function(event) {
+        const dateFilter = document.getElementById('dateRangeFilter');
         
-        if (data.success) {
-            // Just reload to show updated status - no success modal
-            sessionStorage.setItem('activeTab', 'products');
-            location.reload();
-        } else {
-            alert('Error: ' + data.message);
+        if (event.key === 'Escape' && dateFilter.classList.contains('open')) {
+            dateFilter.classList.remove('open');
         }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        closeToggleModal();
-        alert('Error updating product status');
     });
-}
-
-// Close toggle success modal
-function closeToggleSuccessModal() {
-    document.getElementById('toggleSuccessModal').classList.remove('active');
-    // Switch to products tab and reload
-    sessionStorage.setItem('activeTab', 'products');
-    location.reload();
-}
-
-// Close modal when clicking outside
-document.addEventListener('DOMContentLoaded', function() {
-    const toggleModal = document.getElementById('toggleModal');
-    if (toggleModal) {
-        toggleModal.addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeToggleModal();
-            }
-        });
-    }
-    
-    const toggleSuccessModal = document.getElementById('toggleSuccessModal');
-    if (toggleSuccessModal) {
-        toggleSuccessModal.addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeToggleSuccessModal();
-            }
-        });
-    }
-});
-
-let deleteProductId = null;
-
-// Open delete modal
-function deleteProduct(productId, productName) {
-    deleteProductId = productId;
-    document.getElementById('deleteProductText').textContent = 
-        `Are you sure you want to permanently delete "${productName}"? This action cannot be undone.`;
-    document.getElementById('deleteProductModal').classList.add('active');
-}
-
-// Close delete modal
-function closeDeleteModal() {
-    document.getElementById('deleteProductModal').classList.remove('active');
-    deleteProductId = null;
-}
-
-// Confirm delete product
-function confirmDeleteProduct() {
-    if (deleteProductId === null) return;
-    
-    const formData = new FormData();
-    formData.append('action', 'delete_product');
-    formData.append('id', deleteProductId);
-    
-    fetch('admin_actions.php', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        closeDeleteModal();
-        
-        if (data.success) {
-            sessionStorage.setItem('activeTab', 'products');
-            location.reload();
-        } else {
-            alert('Error: ' + data.message);
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        closeDeleteModal();
-        alert('Error deleting product');
-    });
-}
-
-// Close modal when clicking outside
-document.addEventListener('DOMContentLoaded', function() {
-    const deleteModal = document.getElementById('deleteProductModal');
-    if (deleteModal) {
-        deleteModal.addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeDeleteModal();
-            }
-        });
-    }
-});
-
-// Stock adjustment functions for Edit Product
-function adjustEditStock(amount) {
-    const input = document.getElementById('editProductStock');
-    const currentValue = parseInt(input.value) || 0;
-    const newValue = Math.max(0, currentValue + amount);
-    input.value = newValue;
-}
-
-// Stock adjustment functions for Add Product
-function adjustAddStock(amount) {
-    const input = document.getElementById('addProductStock');
-    const currentValue = parseInt(input.value) || 0;
-    const newValue = Math.max(0, currentValue + amount);
-    input.value = newValue;
-}
-
-    </script>
+</script>
 </body>
 </html>
