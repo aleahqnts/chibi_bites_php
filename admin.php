@@ -270,18 +270,27 @@ $products_result = $conn->query($products_query);
         .status-refunded { background: #e2e3e5; color: #383d41; }
 
         #usersTable td:last-child {
-            white-space: normal; /* Allow wrapping */
+            white-space: normal; /* Allow wrapping for the cell */
+            min-width: 150px; /* Ensure minimum width for buttons */
         }
 
         #usersTable .action-btn {
-            display: block; /* Make buttons stack vertically */
-            width: 100%; /* Full width of the cell */
+            display: block; /* Stack buttons vertically */
+            width: 100%; /* Full width of cell */
             margin-bottom: 8px; /* Space between buttons */
             margin-right: 0; /* Remove horizontal margin */
+            white-space: nowrap; /* Prevent text wrapping inside button */
+            min-width: 130px; /* Minimum width for button text */
+            padding: 8px 20px; /* Add more horizontal padding */
         }
 
         #usersTable .action-btn:last-child {
             margin-bottom: 0; /* No margin on last button */
+        }
+
+        /* Ensure button text doesn't wrap */
+        #usersTable .action-btn.delete {
+            white-space: nowrap;
         }
 
         .action-btn {
