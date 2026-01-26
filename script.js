@@ -1457,3 +1457,40 @@ document.addEventListener('DOMContentLoaded', function() {
         searchInput.addEventListener('input', filterProducts);
     }
 });
+
+function handleCheckout() {
+    // 1. Check if the cart has items in the session
+    const cartData = new FormData();
+    cartData.append('action', 'get');
+
+    fetch('cart.php', { method: 'POST', body: cartData })
+    .then(res => res.json())
+    .then(data => {
+        if (!data.cart || data.cart.length === 0) {
+            alert("Your cart is empty!");
+            return;
+        }
+
+        // 2. Check if the user is actually logged in
+        const authData = new FormData();
+        authData.append('action', 'check');
+        return fetch('auth.php', { method: 'POST', body: authData });
+    })
+    .then(res => res ? res.json() : null)
+    .then(auth => {
+        if (auth && auth.logged_in) {
+            // Use absolute-style path if you are in a subfolder, 
+            // otherwise 'checkout.php' is fine.
+            window.location.href = 'checkout.php'; 
+        } else if (auth) {
+            // Show that modal we talked about earlier!
+            if (typeof showAuthModal === "function") {
+                showAuthModal();
+            } else {
+                alert("Please login to proceed.");
+                window.location.href = 'login.html';
+            }
+        }
+    })
+    .catch(err => console.error("Checkout Error:", err));
+}

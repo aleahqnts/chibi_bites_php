@@ -623,7 +623,6 @@
     <!-- Cart Overlay -->
     <div class="cart-overlay" id="cartOverlay"></div>
 
-    <!-- Cart Sidebar -->
     <div class="cart-sidebar" id="cartSidebar">
         <div class="cart-header">
             <h2>My Cart</h2>
@@ -637,7 +636,7 @@
                 <span>Total</span>
                 <span class="cart-total-amount" id="cartTotal">₱0.00</span>
             </div>
-            <button class="checkout-btn" onclick="checkUserAuthenticationA()">CHECKOUT</button>
+            <button class="checkout-btn" onclick="handleCheckout()">CHECKOUT</button>
         </div>
     </div>
 
@@ -1078,7 +1077,17 @@
     </div>
 </div>
 
-    <script src="script.js"></script>
     <script src="checkout.js"></script>
+    <script src="script.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize the cart logic for this page
+            if (typeof loadCart === 'function') {
+                loadCart();
+            }
+        });
+    </script>
+
 </body>
 </html>
