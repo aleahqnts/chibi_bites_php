@@ -269,6 +269,21 @@ $products_result = $conn->query($products_query);
         .status-cancelled { background: #f8d7da; color: #721c24; }
         .status-refunded { background: #e2e3e5; color: #383d41; }
 
+        #usersTable td:last-child {
+            white-space: normal; /* Allow wrapping */
+        }
+
+        #usersTable .action-btn {
+            display: block; /* Make buttons stack vertically */
+            width: 100%; /* Full width of the cell */
+            margin-bottom: 8px; /* Space between buttons */
+            margin-right: 0; /* Remove horizontal margin */
+        }
+
+        #usersTable .action-btn:last-child {
+            margin-bottom: 0; /* No margin on last button */
+        }
+
         .action-btn {
             background: var(--primary-pink);
             color: var(--primary-brown);
