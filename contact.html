@@ -167,6 +167,233 @@
 				padding: 40px 30px;
 			}
 		}
+
+		/* ============================================
+   MOBILE RESPONSIVE STYLES - CONTACT PAGE
+   ============================================ */
+
+/* Tablets and smaller (968px and below) */
+@media (max-width: 968px) {
+    .contact-container {
+        flex-direction: column;
+        padding: 100px 30px 40px 30px;
+        gap: 25px;
+    }
+    
+    .contact-box,
+    .location-box {
+        max-width: 100%;
+        width: 100%;
+        height: auto;
+        padding: 40px 30px;
+        margin-top: 0;
+    }
+    
+    .contact-box h2,
+    .location-box h2 {
+        font-size: 38px;
+        margin-top: 0;
+        margin-bottom: 18px;
+    }
+    
+    .contact-intro,
+    .location-text {
+        font-size: 16px;
+        margin-left: 0;
+        text-align: center;
+    }
+    
+    .social-links {
+        margin-left: 0;
+        align-items: center;
+        gap: 18px;
+    }
+    
+    .social-item {
+        justify-content: center;
+        margin-left: 0;
+    }
+    
+    .social-item span,
+    .fb-link {
+        font-size: 16px;
+    }
+    
+    .location-address {
+        margin-left: 0;
+        justify-content: center;
+        text-align: center;
+        font-size: 15px;
+        padding: 0 10px;
+    }
+    
+    .map-container {
+        max-width: 100%;
+        margin: 15px auto 0;
+        padding: 0 10px;
+    }
+    
+    .map-placeholder {
+        border-radius: 10px;
+    }
+}
+
+/* Tablets (768px and below) */
+@media screen and (max-width: 768px) {
+    .contact-container {
+        padding: 90px 25px 35px 25px;
+        gap: 20px;
+    }
+    
+    .contact-box,
+    .location-box {
+        padding: 35px 25px;
+        border-radius: 15px;
+    }
+    
+    .contact-box h2,
+    .location-box h2 {
+        font-size: 34px;
+    }
+    
+    .contact-intro,
+    .location-text {
+        font-size: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .social-links {
+        gap: 16px;
+    }
+    
+    .social-item svg {
+        width: 26px;
+        height: 26px;
+    }
+    
+    .social-item span,
+    .fb-link {
+        font-size: 15px;
+    }
+    
+    .location-address {
+        font-size: 14px;
+    }
+    
+    .location-address svg {
+        width: 18px;
+        height: 18px;
+    }
+}
+
+/* Mobile phones (480px and below) */
+@media screen and (max-width: 480px) {
+    .contact-container {
+        padding: 80px 15px 30px 15px;
+        gap: 18px;
+        margin: 5px auto;
+    }
+    
+    .contact-box,
+    .location-box {
+        padding: 30px 20px;
+        border-radius: 12px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+    }
+    
+    .contact-box:hover,
+    .location-box:hover {
+        transform: scale(1.01);
+    }
+    
+    .contact-box h2,
+    .location-box h2 {
+        font-size: 30px;
+        margin-bottom: 15px;
+    }
+    
+    .contact-intro {
+        font-size: 14px;
+        margin-bottom: 18px;
+        line-height: 1.6;
+    }
+    
+    .location-text {
+        font-size: 14px;
+        margin-bottom: 15px;
+    }
+    
+    .social-links {
+        gap: 14px;
+    }
+    
+    .social-item {
+        gap: 12px;
+    }
+    
+    .social-item svg {
+        width: 24px;
+        height: 24px;
+        flex-shrink: 0;
+    }
+    
+    .social-item span,
+    .fb-link {
+        font-size: 14px;
+    }
+    
+    .location-address {
+        font-size: 13px;
+        flex-direction: column;
+        gap: 8px;
+        padding: 0 5px;
+    }
+    
+    .location-address svg {
+        width: 20px;
+        height: 20px;
+    }
+    
+    .map-container {
+        margin: 12px auto 0;
+        padding: 0;
+    }
+    
+    .map-placeholder {
+        border-radius: 8px;
+    }
+}
+
+/* Extra small phones (375px and below) */
+@media screen and (max-width: 375px) {
+    .contact-container {
+        padding: 75px 12px 25px 12px;
+    }
+    
+    .contact-box,
+    .location-box {
+        padding: 25px 15px;
+    }
+    
+    .contact-box h2,
+    .location-box h2 {
+        font-size: 26px;
+    }
+    
+    .contact-intro,
+    .location-text {
+        font-size: 13px;
+    }
+    
+    .social-item span,
+    .fb-link {
+        font-size: 13px;
+    }
+    
+    .location-address {
+        font-size: 12px;
+    }
+}
 	</style>
 </head>
 
@@ -192,26 +419,34 @@
 		</div>
 	</div>
 
-	<nav class="navbar">
-		<div class="brand">
-			<a href="index.html"><img src="images/logo.png" class="logo-img"></a>
-			<a href="index.html"><img src="images/title.png" class="title-img"></a>
-		</div>
+<nav class="navbar">
+    <div class="brand">
+        <a href="index.html"><img src="images/logo.png" alt="Logo" class="logo-img"></a>
+        <a href="index.html"><img src="images/title.png" alt="Website Title" class="title-img"></a>
+    </div>
 
-		<div class="nav-right">
-			<ul class="nav-links">
-				<li><a href="index.html">Home</a></li>
-				<li><a href="shop.php">Shop</a></li>
-				<li><a href="faqs.html">FAQs</a></li>
-				<li><a href="contact.html">Contact</a></li>
-			</ul>
+    <div class="nav-right">
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="shop.php">Shop</a></li>
+            <li><a href="faqs.html">FAQs</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
 
-			<div class="nav-icons">
-				<a href="cart.html"><img src="images/cart.png" class="icon"></a>
-				<a href="account.html"><img src="images/acc.png" class="icon"></a>
-			</div>
-		</div>
-	</nav>
+        <div class="nav-icons">
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <a href="cart.html"><img src="images/cart.png" alt="Cart" class="icon"></a>
+            <a href="account.html"><img src="images/acc.png" alt="Account" class="icon"></a>
+        </div>
+    </div>
+</nav>
+
+<!-- Mobile menu overlay -->
+<div class="mobile-menu-overlay"></div>
 
 	<section class="section section-1">
 		<div class="contact-container">

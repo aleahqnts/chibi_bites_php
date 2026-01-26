@@ -268,6 +268,260 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 font-size: 28px;
             }
         }
+
+        /* ============================================
+   MOBILE RESPONSIVE STYLES - ADMIN LOGIN PAGE
+   ============================================ */
+
+/* Tablets and smaller (768px and below) */
+@media screen and (max-width: 768px) {
+    body {
+        padding: 15px;
+    }
+    
+    .login-container {
+        padding: 40px 30px;
+        max-width: 100%;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+    }
+    
+    .logo-section {
+        margin-bottom: 25px;
+    }
+    
+    .logo-section img {
+        width: 70px;
+        height: 70px;
+        margin-bottom: 12px;
+    }
+    
+    .logo-section h1 {
+        font-size: 32px;
+        margin-bottom: 4px;
+    }
+    
+    .logo-section p {
+        font-size: 13px;
+    }
+    
+    .error-message,
+    .info-message {
+        padding: 11px;
+        font-size: 13px;
+        margin-bottom: 18px;
+    }
+    
+    .form-group {
+        margin-bottom: 22px;
+    }
+    
+    .form-group label {
+        font-size: 13px;
+        margin-bottom: 7px;
+    }
+    
+    .form-group input {
+        padding: 14px;
+        font-size: 15px;
+        border-radius: 10px;
+    }
+    
+    .password-toggle-btn {
+        right: 12px;
+        font-size: 11px;
+        padding: 4px 8px;
+    }
+    
+    .login-btn {
+        padding: 14px;
+        font-size: 15px;
+    }
+    
+    .back-link {
+        margin-top: 18px;
+    }
+    
+    .back-link a {
+        font-size: 13px;
+    }
+    
+    .security-note {
+        padding: 12px;
+        margin-top: 18px;
+        font-size: 11px;
+    }
+}
+
+/* Mobile phones (480px and below) */
+@media screen and (max-width: 480px) {
+    body {
+        padding: 12px;
+        align-items: flex-start;
+        padding-top: 40px;
+    }
+    
+    .login-container {
+        padding: 35px 25px;
+        border-radius: 18px;
+    }
+    
+    .logo-section {
+        margin-bottom: 22px;
+    }
+    
+    .logo-section img {
+        width: 65px;
+        height: 65px;
+        margin-bottom: 10px;
+    }
+    
+    .logo-section h1 {
+        font-size: 28px;
+    }
+    
+    .logo-section p {
+        font-size: 12px;
+    }
+    
+    .error-message,
+    .info-message {
+        padding: 10px;
+        font-size: 12px;
+        margin-bottom: 16px;
+        border-radius: 8px;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-group label {
+        font-size: 12px;
+        margin-bottom: 6px;
+    }
+    
+    .form-group input {
+        padding: 13px 12px;
+        font-size: 14px;
+        border-radius: 10px;
+    }
+    
+    .password-toggle input {
+        padding-right: 60px;
+    }
+    
+    .password-toggle-btn {
+        right: 10px;
+        font-size: 11px;
+        padding: 4px 7px;
+    }
+    
+    .login-btn {
+        padding: 13px;
+        font-size: 14px;
+        border-radius: 20px;
+    }
+    
+    .back-link {
+        margin-top: 16px;
+    }
+    
+    .back-link a {
+        font-size: 12px;
+    }
+    
+    .security-note {
+        padding: 10px;
+        margin-top: 16px;
+        font-size: 10px;
+        border-radius: 8px;
+    }
+}
+
+/* Extra small phones (375px and below) */
+@media screen and (max-width: 375px) {
+    body {
+        padding: 10px;
+        padding-top: 30px;
+    }
+    
+    .login-container {
+        padding: 30px 20px;
+    }
+    
+    .logo-section img {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .logo-section h1 {
+        font-size: 26px;
+    }
+    
+    .logo-section p {
+        font-size: 11px;
+    }
+    
+    .error-message,
+    .info-message {
+        padding: 9px;
+        font-size: 11px;
+    }
+    
+    .form-group input {
+        padding: 12px 11px;
+        font-size: 13px;
+    }
+    
+    .login-btn {
+        padding: 12px;
+        font-size: 13px;
+    }
+}
+
+/* Landscape orientation for mobile devices */
+@media screen and (max-height: 600px) and (orientation: landscape) {
+    body {
+        padding: 20px 15px;
+        align-items: center;
+    }
+    
+    .login-container {
+        padding: 25px 30px;
+        max-height: 95vh;
+        overflow-y: auto;
+    }
+    
+    .logo-section {
+        margin-bottom: 15px;
+    }
+    
+    .logo-section img {
+        width: 50px;
+        height: 50px;
+        margin-bottom: 8px;
+    }
+    
+    .logo-section h1 {
+        font-size: 24px;
+    }
+    
+    .form-group {
+        margin-bottom: 15px;
+    }
+    
+    .form-group input {
+        padding: 10px 12px;
+    }
+    
+    .login-btn {
+        padding: 11px;
+    }
+    
+    .security-note {
+        display: none;
+    }
+}
     </style>
 </head>
 <body>

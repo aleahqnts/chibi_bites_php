@@ -1314,6 +1314,835 @@ $products_result = $conn->query($products_query);
                 font-size: 12px;
             }
         }
+
+        /* ============================================
+   MOBILE RESPONSIVE STYLES - ADMIN PAGE
+   ============================================ */
+
+/* Tablets and smaller (968px and below) */
+@media screen and (max-width: 968px) {
+    .admin-container {
+        margin-top: 100px;
+        padding: 0 15px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+    
+    .stat-card {
+        padding: 20px 15px;
+    }
+    
+    .stat-number {
+        font-size: 28px;
+    }
+    
+    .stat-label {
+        font-size: 12px;
+    }
+    
+    .tabs {
+        gap: 5px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+    
+    .tabs::-webkit-scrollbar {
+        display: none;
+    }
+    
+    .tab-btn {
+        padding: 12px 20px;
+        font-size: 13px;
+        white-space: nowrap;
+    }
+    
+    .tab-content {
+        padding: 20px 15px;
+        overflow-x: auto;
+    }
+    
+    table {
+        font-size: 11px;
+        min-width: 800px;
+    }
+    
+    th, td {
+        padding: 10px 8px;
+    }
+    
+    .action-btn {
+        padding: 6px 10px;
+        font-size: 11px;
+        margin-right: 3px;
+        margin-bottom: 5px;
+    }
+    
+    .search-box input {
+        font-size: 14px;
+        padding: 10px 15px;
+    }
+    
+    .filter-group {
+        gap: 8px;
+    }
+    
+    .filter-btn {
+        padding: 6px 15px;
+        font-size: 12px;
+    }
+    
+    .modal-content {
+        padding: 25px 20px;
+        max-height: 85vh;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        padding: 10px;
+        font-size: 14px;
+    }
+    
+    .submit-btn {
+        padding: 12px;
+        font-size: 14px;
+    }
+    
+    .date-range-filter {
+        width: 280px;
+        right: -280px;
+        padding: 20px;
+        top: 100px;
+    }
+    
+    .date-range-toggle {
+        left: -90px;
+        padding: 10px 15px;
+        font-size: 12px;
+    }
+    
+    .logout-modal-content,
+    .toggle-modal-content,
+    .delete-modal-content {
+        padding: 35px 25px;
+        width: 92%;
+    }
+    
+    .success-modal-content {
+        padding: 35px 25px;
+    }
+}
+
+/* Tablets (768px and below) */
+@media screen and (max-width: 768px) {
+    .navbar {
+        padding: 12px 20px;
+        height: 65px;
+        flex-direction: row;
+    }
+    
+    .navbar p {
+        font-size: 16px;
+    }
+    
+    .brand {
+        gap: 8px;
+    }
+    
+    .logo-img {
+        height: 30px;
+    }
+    
+    .title-img {
+        height: 18px;
+    }
+    
+    .logout-btn {
+        padding: 8px 20px;
+        font-size: 13px;
+    }
+    
+    .admin-container {
+        margin-top: 90px;
+        padding: 0 12px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+    
+    .stat-card {
+        padding: 18px 15px;
+    }
+    
+    .stat-number {
+        font-size: 26px;
+    }
+    
+    .stat-label {
+        font-size: 11px;
+    }
+    
+    .tabs {
+        gap: 5px;
+        margin-bottom: 15px;
+        border-bottom: 1px solid #e0e0e0;
+    }
+    
+    .tab-btn {
+        padding: 10px 15px;
+        font-size: 12px;
+        border-bottom-width: 2px;
+    }
+    
+    .tab-content {
+        padding: 18px 12px;
+        border-radius: 12px;
+    }
+    
+    .search-box {
+        margin-bottom: 15px;
+    }
+    
+    .search-box input {
+        padding: 10px 15px;
+        font-size: 13px;
+        border-radius: 20px;
+    }
+    
+    .filter-group {
+        gap: 6px;
+        margin-bottom: 15px;
+    }
+    
+    .filter-btn {
+        padding: 6px 12px;
+        font-size: 11px;
+    }
+    
+    table {
+        font-size: 10px;
+        min-width: 700px;
+    }
+    
+    th, td {
+        padding: 8px 6px;
+    }
+    
+    .status-badge {
+        padding: 4px 8px;
+        font-size: 9px;
+    }
+    
+    .action-btn {
+        padding: 5px 8px;
+        font-size: 10px;
+        border-radius: 12px;
+    }
+    
+    #usersTable .action-btn {
+        padding: 6px 12px;
+        font-size: 10px;
+        min-width: 100px;
+    }
+    
+    .modal-content {
+        padding: 25px 18px;
+        max-height: 80vh;
+        border-radius: 18px;
+    }
+    
+    .modal-header h2 {
+        font-size: 22px;
+    }
+    
+    .close-modal {
+        font-size: 26px;
+    }
+    
+    .form-group {
+        margin-bottom: 15px;
+    }
+    
+    .form-group label {
+        font-size: 13px;
+        margin-bottom: 6px;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        padding: 10px;
+        font-size: 13px;
+    }
+    
+    .submit-btn {
+        padding: 12px;
+        font-size: 13px;
+    }
+    
+    .date-range-filter {
+        width: 260px;
+        right: -260px;
+        padding: 18px;
+        top: 90px;
+    }
+    
+    .date-range-filter h3 {
+        font-size: 16px;
+        margin-bottom: 15px;
+    }
+    
+    .date-group label {
+        font-size: 13px;
+    }
+    
+    .date-group input[type="date"] {
+        padding: 10px 12px;
+        font-size: 13px;
+    }
+    
+    .filter-apply-btn,
+    .filter-reset-btn {
+        padding: 10px 15px;
+        font-size: 13px;
+    }
+    
+    .date-range-toggle {
+        left: -85px;
+        padding: 8px 12px;
+        font-size: 11px;
+    }
+    
+    .logout-modal-content,
+    .toggle-modal-content,
+    .delete-modal-content {
+        padding: 30px 20px;
+    }
+    
+    .logout-modal-icon,
+    .toggle-modal-icon,
+    .delete-modal-icon {
+        width: 65px;
+        height: 65px;
+    }
+    
+    .logout-modal-icon svg,
+    .toggle-modal-icon svg,
+    .delete-modal-icon svg {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .logout-modal-title,
+    .toggle-modal-title,
+    .delete-modal-title {
+        font-size: 24px;
+    }
+    
+    .logout-modal-text,
+    .toggle-modal-text,
+    .delete-modal-text {
+        font-size: 14px;
+        margin-bottom: 25px;
+    }
+    
+    .logout-modal-btn,
+    .toggle-modal-btn,
+    .delete-modal-btn {
+        padding: 12px;
+        font-size: 14px;
+    }
+    
+    .success-modal-content {
+        padding: 30px 20px;
+    }
+    
+    .success-icon {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .success-modal-content h2 {
+        font-size: 22px;
+    }
+    
+    .success-modal-content p {
+        font-size: 14px;
+        margin-bottom: 25px;
+    }
+    
+    .success-btn {
+        padding: 10px 20px;
+        font-size: 13px;
+    }
+    
+    .success-modal-icon {
+        width: 65px;
+        height: 65px;
+    }
+    
+    .success-modal-icon svg {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .success-modal-title {
+        font-size: 24px;
+    }
+    
+    .success-modal-text {
+        font-size: 14px;
+        margin-bottom: 25px;
+    }
+    
+    .success-modal-btn {
+        padding: 12px 18px;
+        font-size: 14px;
+    }
+    
+    .upload-label {
+        padding: 12px;
+        font-size: 14px;
+    }
+    
+    .order-items {
+        padding: 12px;
+    }
+    
+    .order-items h4 {
+        font-size: 14px;
+        margin-bottom: 8px;
+    }
+    
+    .order-item {
+        padding: 8px;
+        font-size: 12px;
+    }
+}
+
+/* Mobile phones (480px and below) */
+@media screen and (max-width: 480px) {
+    .navbar {
+        padding: 10px 15px;
+        height: 60px;
+    }
+    
+    .navbar p {
+        font-size: 14px;
+        display: none;
+    }
+    
+    .brand {
+        gap: 6px;
+    }
+    
+    .logo-img {
+        height: 28px;
+    }
+    
+    .title-img {
+        height: 16px;
+    }
+    
+    .logout-btn {
+        padding: 7px 15px;
+        font-size: 12px;
+    }
+    
+    .admin-container {
+        margin-top: 80px;
+        padding: 0 10px;
+    }
+    
+    .stats-grid {
+        gap: 10px;
+        margin-bottom: 18px;
+    }
+    
+    .stat-card {
+        padding: 15px 12px;
+    }
+    
+    .stat-number {
+        font-size: 24px;
+    }
+    
+    .stat-label {
+        font-size: 10px;
+    }
+    
+    .tabs {
+        gap: 3px;
+    }
+    
+    .tab-btn {
+        padding: 8px 12px;
+        font-size: 11px;
+    }
+    
+    .tab-content {
+        padding: 15px 10px;
+    }
+    
+    .search-box input {
+        padding: 9px 12px;
+        font-size: 12px;
+    }
+    
+    .filter-group {
+        gap: 5px;
+    }
+    
+    .filter-btn {
+        padding: 5px 10px;
+        font-size: 10px;
+    }
+    
+    table {
+        font-size: 9px;
+        min-width: 650px;
+    }
+    
+    th, td {
+        padding: 6px 4px;
+    }
+    
+    .status-badge {
+        padding: 3px 6px;
+        font-size: 8px;
+    }
+    
+    .action-btn {
+        padding: 4px 6px;
+        font-size: 9px;
+        margin-right: 2px;
+        margin-bottom: 4px;
+    }
+    
+    #usersTable .action-btn {
+        padding: 5px 10px;
+        font-size: 9px;
+        min-width: 90px;
+        margin-bottom: 6px;
+    }
+    
+    .modal-content {
+        padding: 20px 15px;
+        max-height: 75vh;
+        border-radius: 15px;
+    }
+    
+    .modal-header {
+        margin-bottom: 15px;
+    }
+    
+    .modal-header h2 {
+        font-size: 20px;
+    }
+    
+    .close-modal {
+        font-size: 24px;
+    }
+    
+    .form-group {
+        margin-bottom: 12px;
+    }
+    
+    .form-group label {
+        font-size: 12px;
+        margin-bottom: 5px;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        padding: 9px;
+        font-size: 12px;
+        border-radius: 8px;
+    }
+    
+    .submit-btn {
+        padding: 11px;
+        font-size: 12px;
+    }
+    
+    .date-range-filter {
+        width: 240px;
+        right: -240px;
+        padding: 15px;
+        top: 80px;
+    }
+    
+    .date-range-filter h3 {
+        font-size: 15px;
+        margin-bottom: 12px;
+    }
+    
+    .date-inputs {
+        gap: 12px;
+    }
+    
+    .date-group {
+        gap: 6px;
+    }
+    
+    .date-group label {
+        font-size: 12px;
+    }
+    
+    .date-group input[type="date"] {
+        padding: 9px 10px;
+        font-size: 12px;
+    }
+    
+    .filter-buttons {
+        gap: 8px;
+        margin-top: 8px;
+    }
+    
+    .filter-apply-btn,
+    .filter-reset-btn {
+        padding: 9px 12px;
+        font-size: 12px;
+    }
+    
+    .date-range-toggle {
+        left: -80px;
+        padding: 7px 10px;
+        font-size: 10px;
+    }
+    
+    .logout-modal-content,
+    .toggle-modal-content,
+    .delete-modal-content {
+        padding: 25px 18px;
+        width: 95%;
+    }
+    
+    .logout-modal-close,
+    .toggle-modal-close,
+    .delete-modal-close {
+        width: 32px;
+        height: 32px;
+        font-size: 24px;
+    }
+    
+    .logout-modal-icon,
+    .toggle-modal-icon,
+    .delete-modal-icon {
+        width: 60px;
+        height: 60px;
+        margin-bottom: 15px;
+    }
+    
+    .logout-modal-icon svg,
+    .toggle-modal-icon svg,
+    .delete-modal-icon svg {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .logout-modal-title,
+    .toggle-modal-title,
+    .delete-modal-title {
+        font-size: 22px;
+        margin-bottom: 12px;
+    }
+    
+    .logout-modal-text,
+    .toggle-modal-text,
+    .delete-modal-text {
+        font-size: 13px;
+        margin-bottom: 22px;
+        line-height: 1.5;
+    }
+    
+    .logout-modal-buttons,
+    .toggle-modal-buttons,
+    .delete-modal-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .logout-modal-btn,
+    .toggle-modal-btn,
+    .delete-modal-btn {
+        width: 100%;
+        padding: 11px;
+        font-size: 13px;
+    }
+    
+    .success-modal-content {
+        padding: 25px 18px;
+        width: 95%;
+    }
+    
+    .success-icon {
+        width: 65px;
+        height: 65px;
+        margin-bottom: 15px;
+    }
+    
+    .success-icon svg {
+        width: 44px;
+        height: 44px;
+    }
+    
+    .success-modal-content h2 {
+        font-size: 20px;
+        margin-bottom: 12px;
+    }
+    
+    .success-modal-content p {
+        font-size: 13px;
+        margin-bottom: 22px;
+    }
+    
+    .success-modal-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .success-btn {
+        width: 100%;
+        padding: 10px;
+        font-size: 12px;
+    }
+    
+    .success-modal-icon {
+        width: 60px;
+        height: 60px;
+        margin-bottom: 15px;
+    }
+    
+    .success-modal-icon svg {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .success-modal-close {
+        width: 32px;
+        height: 32px;
+        font-size: 24px;
+    }
+    
+    .success-modal-title {
+        font-size: 22px;
+        margin-bottom: 12px;
+    }
+    
+    .success-modal-text {
+        font-size: 13px;
+        margin-bottom: 22px;
+    }
+    
+    .success-modal-btn {
+        padding: 11px 16px;
+        font-size: 13px;
+    }
+    
+    .upload-label {
+        padding: 10px;
+        font-size: 13px;
+        gap: 8px;
+    }
+    
+    .upload-label svg {
+        width: 20px;
+        height: 20px;
+    }
+    
+    #imagePreview img {
+        max-width: 150px;
+    }
+    
+    .order-items {
+        padding: 10px;
+    }
+    
+    .order-items h4 {
+        font-size: 13px;
+    }
+    
+    .order-item {
+        padding: 6px;
+        font-size: 11px;
+    }
+}
+
+/* Extra small phones (375px and below) */
+@media screen and (max-width: 375px) {
+    .navbar {
+        padding: 8px 12px;
+        height: 55px;
+    }
+    
+    .logo-img {
+        height: 26px;
+    }
+    
+    .title-img {
+        height: 14px;
+    }
+    
+    .logout-btn {
+        padding: 6px 12px;
+        font-size: 11px;
+    }
+    
+    .admin-container {
+        margin-top: 75px;
+    }
+    
+    .stat-number {
+        font-size: 22px;
+    }
+    
+    .stat-label {
+        font-size: 9px;
+    }
+    
+    .tab-btn {
+        padding: 7px 10px;
+        font-size: 10px;
+    }
+    
+    table {
+        font-size: 8px;
+    }
+    
+    .date-range-filter {
+        width: 220px;
+        right: -220px;
+    }
+}
+
+/* Landscape orientation adjustments */
+@media screen and (max-height: 600px) and (orientation: landscape) {
+    .admin-container {
+        margin-top: 80px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .modal-content {
+        max-height: 90vh;
+    }
+    
+    .date-range-filter {
+        top: 70px;
+    }
+}
     </style>
 </head>
 <body>

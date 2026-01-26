@@ -596,6 +596,555 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
+
+        /* ============================================
+   MOBILE RESPONSIVE STYLES - CHECKOUT PAGE
+   ============================================ */
+
+/* Tablets and smaller (968px and below) */
+@media (max-width: 968px) {
+    .checkout-page {
+        padding: 90px 15px 40px;
+    }
+    
+    .checkout-container {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .section-title {
+        font-size: 32px;
+        margin-bottom: 15px;
+    }
+    
+    .checkout-section {
+        padding: 25px 20px;
+        max-height: none;
+        overflow: visible;
+    }
+    
+    .checkout-section h2 {
+        font-size: 24px;
+        margin-bottom: 15px;
+    }
+    
+    .order-summary {
+        position: static;
+        top: 0;
+    }
+    
+    .info-display {
+        padding: 18px;
+    }
+    
+    .info-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+        padding: 12px 0;
+    }
+    
+    .info-label,
+    .info-value {
+        font-size: 14px;
+    }
+    
+    .info-value {
+        text-align: left;
+    }
+    
+    .order-item {
+        padding: 12px;
+        gap: 12px;
+    }
+    
+    .order-item-img {
+        width: 55px;
+        height: 55px;
+    }
+    
+    .order-item-name {
+        font-size: 15px;
+    }
+    
+    .order-item-price,
+    .order-item-qty {
+        font-size: 13px;
+    }
+    
+    .payment-option {
+        padding: 12px;
+    }
+    
+    .payment-option label {
+        font-size: 15px;
+    }
+    
+    .summary-item {
+        padding: 10px 0;
+        font-size: 15px;
+    }
+    
+    .summary-item.total {
+        font-size: 18px;
+    }
+    
+    .place-order-btn {
+        padding: 16px;
+        font-size: 16px;
+    }
+    
+    /* Modals */
+    .payment-modal-content,
+    .order-success-content {
+        padding: 45px 30px 30px;
+        width: 92%;
+    }
+    
+    .payment-modal-content h2,
+    .order-success-content h2 {
+        font-size: 26px;
+    }
+    
+    .qr-code-img {
+        width: 250px;
+        height: 350px;
+    }
+    
+    .success-icon-large {
+        width: 70px;
+        height: 70px;
+        margin-bottom: 20px;
+    }
+    
+    .success-icon-large svg {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .order-id-display {
+        font-size: 18px;
+        padding: 12px;
+    }
+    
+    .order-success-content p {
+        font-size: 15px;
+        margin-bottom: 25px;
+    }
+    
+    .order-success-btn {
+        padding: 14px;
+        font-size: 15px;
+        max-width: 100%;
+    }
+    
+    .empty-cart h2 {
+        font-size: 28px;
+    }
+    
+    .empty-cart p {
+        font-size: 15px;
+    }
+}
+
+/* Tablets (768px and below) */
+@media screen and (max-width: 768px) {
+    .checkout-page {
+        padding: 80px 12px 35px;
+    }
+    
+    .checkout-container {
+        gap: 18px;
+    }
+    
+    .section-title {
+        font-size: 28px;
+    }
+    
+    .checkout-section {
+        padding: 20px 18px;
+        border-radius: 15px;
+    }
+    
+    .checkout-section h2 {
+        font-size: 22px;
+    }
+    
+    .info-display {
+        padding: 15px;
+        border-radius: 12px;
+    }
+    
+    .order-item {
+        padding: 10px;
+        border-radius: 10px;
+    }
+    
+    .order-item-img {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .order-item-name {
+        font-size: 14px;
+    }
+    
+    .order-item-price,
+    .order-item-qty {
+        font-size: 12px;
+    }
+    
+    .payment-methods {
+        gap: 12px;
+    }
+    
+    .payment-option {
+        padding: 12px;
+        border-radius: 10px;
+    }
+    
+    .payment-option input[type="radio"] {
+        width: 18px;
+        height: 18px;
+        margin-right: 12px;
+    }
+    
+    .payment-option label {
+        font-size: 14px;
+    }
+    
+    .summary-item {
+        font-size: 14px;
+    }
+    
+    .summary-item.total {
+        font-size: 17px;
+        padding-top: 12px;
+    }
+    
+    .place-order-btn {
+        padding: 15px;
+        font-size: 15px;
+        border-radius: 20px;
+    }
+    
+    .payment-modal-content,
+    .order-success-content {
+        padding: 40px 25px 25px;
+        width: 94%;
+        border-radius: 18px;
+    }
+    
+    .payment-modal-content h2,
+    .order-success-content h2 {
+        font-size: 24px;
+        margin-bottom: 18px;
+    }
+    
+    .payment-summary {
+        padding: 12px 30px;
+        margin-bottom: 20px;
+    }
+    
+    .summary-row {
+        font-size: 16px;
+    }
+    
+    .total-amount {
+        font-size: 18px;
+    }
+    
+    .qr-code-img {
+        width: 220px;
+        height: 310px;
+    }
+    
+    .upload-section {
+        margin-bottom: 20px;
+    }
+    
+    .upload-label {
+        padding: 12px;
+        font-size: 14px;
+    }
+    
+    .confirm-payment-btn {
+        padding: 14px;
+        font-size: 15px;
+    }
+    
+    .success-icon-large {
+        width: 65px;
+        height: 65px;
+    }
+    
+    .success-icon-large svg {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .order-id-display {
+        font-size: 17px;
+    }
+    
+    .order-success-content p {
+        font-size: 14px;
+    }
+    
+    .order-success-btn {
+        padding: 13px;
+        font-size: 14px;
+    }
+}
+
+/* Mobile phones (480px and below) */
+@media screen and (max-width: 480px) {
+    .checkout-page {
+        padding: 75px 10px 30px;
+    }
+    
+    .checkout-container {
+        gap: 15px;
+    }
+    
+    .section-title {
+        font-size: 26px;
+        margin-bottom: 12px;
+    }
+    
+    .checkout-section {
+        padding: 18px 15px;
+        border-radius: 12px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    }
+    
+    .checkout-section h2 {
+        font-size: 20px;
+        margin-bottom: 12px;
+    }
+    
+    .info-display {
+        padding: 12px;
+        margin-bottom: 15px;
+    }
+    
+    .info-item {
+        padding: 10px 0;
+    }
+    
+    .info-label,
+    .info-value {
+        font-size: 13px;
+    }
+    
+    .order-item {
+        padding: 10px;
+        gap: 10px;
+        margin-bottom: 8px;
+    }
+    
+    .order-item-img {
+        width: 45px;
+        height: 45px;
+        border-radius: 6px;
+    }
+    
+    .order-item-name {
+        font-size: 13px;
+        margin-bottom: 4px;
+    }
+    
+    .order-item-price,
+    .order-item-qty {
+        font-size: 12px;
+    }
+    
+    .payment-methods {
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+    
+    .payment-option {
+        padding: 10px;
+    }
+    
+    .payment-option input[type="radio"] {
+        width: 16px;
+        height: 16px;
+        margin-right: 10px;
+    }
+    
+    .payment-option label {
+        font-size: 13px;
+    }
+    
+    .summary-item {
+        padding: 8px 0;
+        font-size: 13px;
+    }
+    
+    .summary-item.total {
+        font-size: 16px;
+        padding-top: 10px;
+        margin-top: 8px;
+    }
+    
+    .place-order-btn {
+        padding: 14px;
+        font-size: 14px;
+        margin-top: 15px;
+    }
+    
+    .payment-modal-content,
+    .order-success-content {
+        padding: 35px 20px 20px;
+        width: 96%;
+        max-height: 85vh;
+    }
+    
+    .payment-modal-content .close-modal {
+        width: 32px;
+        height: 32px;
+        font-size: 24px;
+        top: 12px;
+        right: 12px;
+    }
+    
+    .payment-modal-content h2,
+    .order-success-content h2 {
+        font-size: 22px;
+        margin-bottom: 15px;
+    }
+    
+    .payment-summary {
+        padding: 10px 20px;
+        margin-bottom: 18px;
+    }
+    
+    .summary-row {
+        font-size: 15px;
+    }
+    
+    .total-amount {
+        font-size: 17px;
+    }
+    
+    .qr-code-img {
+        width: 200px;
+        height: 280px;
+        border-width: 2px;
+    }
+    
+    .payment-instruction {
+        font-size: 13px;
+        margin-bottom: 12px;
+    }
+    
+    .upload-section {
+        margin-bottom: 18px;
+    }
+    
+    .upload-label {
+        padding: 12px;
+        font-size: 13px;
+        gap: 8px;
+    }
+    
+    .upload-label svg {
+        width: 20px;
+        height: 20px;
+    }
+    
+    .file-name {
+        font-size: 12px;
+    }
+    
+    .file-preview img {
+        max-height: 150px;
+    }
+    
+    .confirm-payment-btn {
+        padding: 13px;
+        font-size: 14px;
+    }
+    
+    .success-icon-large {
+        width: 60px;
+        height: 60px;
+        margin-bottom: 18px;
+    }
+    
+    .success-icon-large svg {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .order-id-display {
+        font-size: 16px;
+        padding: 10px;
+        margin: 15px 0;
+    }
+    
+    .order-success-content p {
+        font-size: 13px;
+        margin-bottom: 20px;
+        line-height: 1.5;
+    }
+    
+    .order-success-btn {
+        padding: 12px;
+        font-size: 13px;
+        margin: 4px;
+    }
+    
+    .empty-cart {
+        padding: 50px 15px;
+    }
+    
+    .empty-cart h2 {
+        font-size: 24px;
+        margin-bottom: 12px;
+    }
+    
+    .empty-cart p {
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
+    
+    .empty-cart a {
+        padding: 12px 30px;
+        font-size: 14px;
+    }
+}
+
+/* Extra small phones (375px and below) */
+@media screen and (max-width: 375px) {
+    .checkout-page {
+        padding: 70px 8px 25px;
+    }
+    
+    .section-title {
+        font-size: 24px;
+    }
+    
+    .checkout-section {
+        padding: 15px 12px;
+    }
+    
+    .checkout-section h2 {
+        font-size: 18px;
+    }
+    
+    .qr-code-img {
+        width: 180px;
+        height: 250px;
+    }
+    
+    .order-success-btn {
+        font-size: 12px;
+        padding: 11px;
+    }
+}
     </style>
 </head>
 
@@ -621,30 +1170,38 @@
         </div>
     </div>
 
-    <nav class="navbar">
-        <div class="brand">
-            <a href="index.html"><img src="images/logo.png" alt="Logo" class="logo-img"></a>
-            <a href="index.html"><img src="images/title.png" alt="Website Title" class="title-img"></a>
-        </div>
+ <nav class="navbar">
+    <div class="brand">
+        <a href="index.html"><img src="images/logo.png" alt="Logo" class="logo-img"></a>
+        <a href="index.html"><img src="images/title.png" alt="Website Title" class="title-img"></a>
+    </div>
 
-        <div class="nav-right">
-            <ul class="nav-links">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="shop.php">Shop</a></li>
-                <li><a href="faqs.html">FAQs</a></li>
-                <li><a href="contact.html">Contact</a></li>
-            </ul>
-            
-            <div class="nav-icons">
-                <a href="cart.html" onclick="return false;">
-                    <img src="images/cart.png" alt="Cart" class="icon">
-                </a>
-                <a href="account.html">
-                    <img src="images/acc.png" alt="Account" class="icon">
-                </a>
+    <div class="nav-right">
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="shop.php">Shop</a></li>
+            <li><a href="faqs.html">FAQs</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+        
+        <div class="nav-icons">
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
+            <a href="cart.html" onclick="return false;">
+                <img src="images/cart.png" alt="Cart" class="icon">
+            </a>
+            <a href="account.html">
+                <img src="images/acc.png" alt="Account" class="icon">
+            </a>
         </div>
-    </nav>
+    </div>
+</nav>
+
+<!-- Mobile menu overlay -->
+<div class="mobile-menu-overlay"></div>
 
  <!-- Payment Confirmation Modal -->
 <div id="paymentModal" class="order-success-modal">

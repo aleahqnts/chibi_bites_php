@@ -111,34 +111,325 @@
             opacity: 1;
         }
     }
+
+    /* ============================================
+   MOBILE RESPONSIVE STYLES - SIGNUP PAGE
+   ============================================ */
+
+/* Tablets and smaller (768px and below) */
+@media screen and (max-width: 768px) {
+    
+    /* SIGNUP PAGE SPECIFIC */
+    .auth-page {
+        padding: 90px 20px 40px;
+        min-height: calc(100vh - 60px);
+    }
+    
+    .auth-container {
+        padding: 35px 25px;
+        max-width: 500px;
+    }
+    
+    .auth-container h1 {
+        font-size: 36px;
+        margin-bottom: 25px;
+    }
+    
+    .form-group {
+        margin-bottom: 18px;
+    }
+    
+    .form-group label {
+        font-size: 13px;
+        margin-bottom: 6px;
+    }
+    
+    .form-input,
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="password"],
+    select {
+        padding: 13px 15px;
+        font-size: 14px;
+    }
+    
+    .password-toggle input {
+        padding-right: 65px;
+    }
+    
+    .password-toggle-btn {
+        right: 12px;
+        font-size: 12px;
+        padding: 4px 8px;
+    }
+    
+    .form-error {
+        font-size: 12px;
+        margin-top: 4px;
+    }
+    
+    .submit-btn {
+        padding: 15px;
+        font-size: 15px;
+        margin-top: 20px;
+    }
+    
+    .auth-divider {
+        margin: 22px 0;
+    }
+    
+    .auth-divider span {
+        font-size: 13px;
+        padding: 0 12px;
+    }
+    
+    .auth-switch {
+        font-size: 14px;
+    }
+    
+    /* Success Modal */
+    .success-modal-content {
+        padding: 45px 30px;
+        width: 92%;
+        max-width: 420px;
+    }
+    
+    .success-icon {
+        width: 70px;
+        height: 70px;
+        margin-bottom: 18px;
+    }
+    
+    .success-icon svg {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .success-modal-content h2 {
+        font-size: 28px;
+        margin-bottom: 12px;
+    }
+    
+    .success-modal-content p {
+        font-size: 15px;
+        margin-bottom: 25px;
+    }
+    
+    .success-btn {
+        padding: 14px;
+        font-size: 15px;
+        max-width: 100%;
+    }
+}
+
+/* Mobile phones (480px and below) */
+@media screen and (max-width: 480px) {
+    
+    /* SIGNUP PAGE */
+    .auth-page {
+        padding: 80px 15px 35px;
+    }
+    
+    .auth-container {
+        padding: 30px 20px;
+        max-width: 100%;
+    }
+    
+    .auth-container h1 {
+        font-size: 32px;
+        margin-bottom: 22px;
+    }
+    
+    .form-group {
+        margin-bottom: 16px;
+    }
+    
+    .form-group label {
+        font-size: 12px;
+        margin-bottom: 5px;
+    }
+    
+    .form-input,
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="password"],
+    select {
+        padding: 12px 14px;
+        font-size: 13px;
+        border-radius: 10px;
+    }
+    
+    .password-toggle input {
+        padding-right: 60px;
+    }
+    
+    .password-toggle-btn {
+        right: 10px;
+        font-size: 11px;
+        padding: 4px 7px;
+    }
+    
+    .form-error {
+        font-size: 11px;
+    }
+    
+    .submit-btn {
+        padding: 14px;
+        font-size: 14px;
+        margin-top: 18px;
+    }
+    
+    .auth-divider {
+        margin: 20px 0;
+    }
+    
+    .auth-divider span {
+        font-size: 12px;
+        padding: 0 10px;
+    }
+    
+    .auth-switch {
+        font-size: 13px;
+    }
+    
+    .auth-switch a {
+        font-size: 13px;
+    }
+    
+    /* Success Modal */
+    .success-modal-content {
+        padding: 40px 25px;
+        width: 95%;
+        border-radius: 18px;
+    }
+    
+    .success-icon {
+        width: 65px;
+        height: 65px;
+        margin-bottom: 16px;
+    }
+    
+    .success-icon svg {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .success-modal-content h2 {
+        font-size: 26px;
+        margin-bottom: 10px;
+    }
+    
+    .success-modal-content p {
+        font-size: 14px;
+        margin-bottom: 22px;
+        line-height: 1.5;
+    }
+    
+    .success-btn {
+        padding: 13px;
+        font-size: 14px;
+    }
+}
+
+/* Extra small phones (375px and below) */
+@media screen and (max-width: 375px) {
+    .auth-page {
+        padding: 75px 12px 30px;
+    }
+    
+    .auth-container {
+        padding: 25px 18px;
+    }
+    
+    .auth-container h1 {
+        font-size: 28px;
+        margin-bottom: 20px;
+    }
+    
+    .form-group {
+        margin-bottom: 14px;
+    }
+    
+    .form-input,
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="password"],
+    select {
+        padding: 11px 12px;
+        font-size: 12px;
+    }
+    
+    .submit-btn {
+        padding: 13px;
+        font-size: 13px;
+    }
+    
+    .success-modal-content {
+        padding: 35px 20px;
+    }
+    
+    .success-icon {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .success-icon svg {
+        width: 38px;
+        height: 38px;
+    }
+    
+    .success-modal-content h2 {
+        font-size: 24px;
+    }
+    
+    .success-modal-content p {
+        font-size: 13px;
+    }
+    
+    .success-btn {
+        padding: 12px;
+        font-size: 13px;
+    }
+}
 </style>
 </head>
 
 <body>
     <nav class="navbar">
-        <div class="brand">
-            <a href="index.html"><img src="images/logo.png" alt="Logo" class="logo-img"></a>
-            <a href="index.html"><img src="images/title.png" alt="Website Title" class="title-img"></a>
-        </div>
+    <div class="brand">
+        <a href="index.html"><img src="images/logo.png" alt="Logo" class="logo-img"></a>
+        <a href="index.html"><img src="images/title.png" alt="Website Title" class="title-img"></a>
+    </div>
 
-        <div class="nav-right">
-            <ul class="nav-links">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="shop.php">Shop</a></li>
-                <li><a href="faqs.html">FAQs</a></li>
-                <li><a href="contact.html">Contact</a></li>
-            </ul>
-            
-            <div class="nav-icons">
-                <a href="cart.html">
-                    <img src="images/cart.png" alt="Cart" class="icon">
-                </a>
-                <a href="account.html">
-                    <img src="images/acc.png" alt="Account" class="icon">
-                </a>
+    <div class="nav-right">
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="shop.php">Shop</a></li>
+            <li><a href="faqs.html">FAQs</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+        
+        <div class="nav-icons">
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
+            <a href="cart.html">
+                <img src="images/cart.png" alt="Cart" class="icon">
+            </a>
+            <a href="account.html">
+                <img src="images/acc.png" alt="Account" class="icon">
+            </a>
         </div>
-    </nav>
+    </div>
+</nav>
+
+<!-- Mobile menu overlay -->
+<div class="mobile-menu-overlay"></div>
 
     <!-- Success Modal -->
 <div id="successModal" class="success-modal">

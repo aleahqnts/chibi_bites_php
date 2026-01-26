@@ -266,34 +266,426 @@
         #invalidPasswordModal .forgot-password-icon svg {
             fill: #d32f2f;
 }
+
+/* ============================================
+   MOBILE RESPONSIVE STYLES - LOGIN PAGE
+   ============================================ */
+
+/* Tablets and smaller (768px and below) */
+@media screen and (max-width: 768px) {
+    
+    /* LOGIN PAGE SPECIFIC */
+    .auth-page {
+        padding: 90px 20px 40px;
+        min-height: calc(100vh - 60px);
+    }
+    
+    .auth-container {
+        padding: 35px 25px;
+        max-width: 450px;
+    }
+    
+    .auth-container h1 {
+        font-size: 36px;
+        margin-bottom: 25px;
+    }
+    
+    .form-group {
+        margin-bottom: 18px;
+    }
+    
+    .form-group label {
+        font-size: 13px;
+        margin-bottom: 6px;
+    }
+    
+    .form-input,
+    .password-toggle input {
+        padding: 13px 15px;
+        font-size: 14px;
+    }
+    
+    .password-toggle input {
+        padding-right: 65px;
+    }
+    
+    .password-toggle-btn {
+        right: 12px;
+        font-size: 12px;
+        padding: 4px 8px;
+    }
+    
+    .form-error {
+        font-size: 12px;
+        margin-top: 4px;
+    }
+    
+    .forgot-password-link {
+        margin-top: -5px;
+        margin-bottom: 18px;
+    }
+    
+    .forgot-password-link a {
+        font-size: 13px;
+    }
+    
+    .submit-btn {
+        padding: 15px;
+        font-size: 15px;
+        margin-top: 20px;
+    }
+    
+    .auth-divider {
+        margin: 22px 0;
+    }
+    
+    .auth-divider span {
+        font-size: 13px;
+        padding: 0 12px;
+    }
+    
+    .auth-switch {
+        font-size: 14px;
+    }
+    
+    /* Forgot Password Modal */
+    .forgot-password-content {
+        padding: 35px 25px;
+        width: 92%;
+        max-width: 450px;
+    }
+    
+    .forgot-password-close {
+        top: 12px;
+        right: 12px;
+        width: 32px;
+        height: 32px;
+        font-size: 26px;
+    }
+    
+    .forgot-password-icon {
+        width: 65px;
+        height: 65px;
+        margin-bottom: 18px;
+    }
+    
+    .forgot-password-icon svg {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .forgot-password-title {
+        font-size: 32px;
+        margin-bottom: 12px;
+    }
+    
+    .forgot-password-text {
+        font-size: 13px;
+        margin-bottom: 20px;
+    }
+    
+    .step-indicator {
+        gap: 8px;
+        margin-bottom: 20px;
+    }
+    
+    .step-dot {
+        width: 9px;
+        height: 9px;
+    }
+    
+    .step-dot.active {
+        width: 26px;
+    }
+    
+    .modal-btn {
+        padding: 14px;
+        font-size: 14px;
+    }
+    
+    .password-requirements {
+        font-size: 11px;
+        margin-top: 4px;
+    }
+    
+    .success-icon svg {
+        width: 70px;
+        height: 70px;
+    }
+    
+    /* Invalid Password Modal */
+    #invalidPasswordModal .forgot-password-content {
+        max-width: 420px;
+    }
+    
+    #invalidPasswordMessage {
+        font-size: 14px !important;
+    }
+}
+
+/* Mobile phones (480px and below) */
+@media screen and (max-width: 480px) {
+    
+    /* LOGIN PAGE */
+    .auth-page {
+        padding: 80px 15px 35px;
+    }
+    
+    .auth-container {
+        padding: 30px 20px;
+        max-width: 100%;
+    }
+    
+    .auth-container h1 {
+        font-size: 32px;
+        margin-bottom: 22px;
+    }
+    
+    .form-group {
+        margin-bottom: 16px;
+    }
+    
+    .form-group label {
+        font-size: 12px;
+        margin-bottom: 5px;
+    }
+    
+    .form-input,
+    .password-toggle input {
+        padding: 12px 14px;
+        font-size: 13px;
+    }
+    
+    .password-toggle input {
+        padding-right: 60px;
+    }
+    
+    .password-toggle-btn {
+        right: 10px;
+        font-size: 11px;
+        padding: 4px 7px;
+    }
+    
+    .form-error {
+        font-size: 11px;
+    }
+    
+    .forgot-password-link {
+        margin-top: -8px;
+        margin-bottom: 16px;
+    }
+    
+    .forgot-password-link a {
+        font-size: 12px;
+    }
+    
+    .submit-btn {
+        padding: 14px;
+        font-size: 14px;
+        margin-top: 18px;
+    }
+    
+    .auth-divider {
+        margin: 20px 0;
+    }
+    
+    .auth-divider span {
+        font-size: 12px;
+        padding: 0 10px;
+    }
+    
+    .auth-switch {
+        font-size: 13px;
+    }
+    
+    .auth-switch a {
+        font-size: 13px;
+    }
+    
+    /* Forgot Password Modal */
+    .forgot-password-content {
+        padding: 30px 20px;
+        width: 95%;
+        max-width: 100%;
+    }
+    
+    .forgot-password-close {
+        top: 10px;
+        right: 10px;
+        width: 30px;
+        height: 30px;
+        font-size: 24px;
+    }
+    
+    .forgot-password-icon {
+        width: 60px;
+        height: 60px;
+        margin-bottom: 16px;
+    }
+    
+    .forgot-password-icon svg {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .forgot-password-title {
+        font-size: 28px;
+        margin-bottom: 10px;
+    }
+    
+    .forgot-password-text {
+        font-size: 12px;
+        margin-bottom: 18px;
+        line-height: 1.5;
+    }
+    
+    .step-indicator {
+        gap: 7px;
+        margin-bottom: 18px;
+    }
+    
+    .step-dot {
+        width: 8px;
+        height: 8px;
+    }
+    
+    .step-dot.active {
+        width: 24px;
+    }
+    
+    .form-group input {
+        padding: 11px 12px;
+        font-size: 13px;
+    }
+    
+    .forgot-password-content .password-toggle input {
+        padding-right: 60px;
+    }
+    
+    .forgot-password-content .password-toggle-btn {
+        right: 10px;
+        font-size: 11px;
+        padding: 4px 7px;
+    }
+    
+    .modal-btn {
+        padding: 13px;
+        font-size: 13px;
+    }
+    
+    .password-requirements {
+        font-size: 10px;
+    }
+    
+    .success-icon {
+        margin-bottom: 16px;
+    }
+    
+    .success-icon svg {
+        width: 65px;
+        height: 65px;
+    }
+    
+    /* Invalid Password Modal */
+    #invalidPasswordModal .forgot-password-content {
+        max-width: 100%;
+        padding: 30px 20px;
+    }
+    
+    #invalidPasswordModal .forgot-password-title {
+        font-size: 28px !important;
+    }
+    
+    #invalidPasswordMessage {
+        font-size: 13px !important;
+    }
+    
+    #invalidPasswordModal .modal-btn {
+        margin-top: 18px !important;
+    }
+    
+    #invalidPasswordModal a {
+        font-size: 13px !important;
+    }
+}
+
+/* Extra small phones (375px and below) */
+@media screen and (max-width: 375px) {
+    .auth-page {
+        padding: 75px 12px 30px;
+    }
+    
+    .auth-container {
+        padding: 25px 18px;
+    }
+    
+    .auth-container h1 {
+        font-size: 28px;
+    }
+    
+    .form-input,
+    .password-toggle input {
+        padding: 11px 12px;
+        font-size: 12px;
+    }
+    
+    .submit-btn {
+        padding: 13px;
+        font-size: 13px;
+    }
+    
+    .forgot-password-content {
+        padding: 28px 18px;
+    }
+    
+    .forgot-password-title {
+        font-size: 26px;
+    }
+    
+    .forgot-password-text {
+        font-size: 11px;
+    }
+    
+    #invalidPasswordModal .forgot-password-title {
+        font-size: 26px !important;
+    }
+}
     </style>
 </head>
 
 <body>
-    <nav class="navbar">
-        <div class="brand">
-            <a href="index.html"><img src="images/logo.png" alt="Logo" class="logo-img"></a>
-            <a href="index.html"><img src="images/title.png" alt="Website Title" class="title-img"></a>
-        </div>
+   <nav class="navbar">
+    <div class="brand">
+        <a href="index.html"><img src="images/logo.png" alt="Logo" class="logo-img"></a>
+        <a href="index.html"><img src="images/title.png" alt="Website Title" class="title-img"></a>
+    </div>
 
-        <div class="nav-right">
-            <ul class="nav-links">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="shop.php">Shop</a></li>
-                <li><a href="faqs.html">FAQs</a></li>
-                <li><a href="contact.html">Contact</a></li>
-            </ul>
-            
-            <div class="nav-icons">
-                <a href="cart.html">
-                    <img src="images/cart.png" alt="Cart" class="icon">
-                </a>
-                <a href="account.html">
-                    <img src="images/acc.png" alt="Account" class="icon">
-                </a>
+    <div class="nav-right">
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="shop.php">Shop</a></li>
+            <li><a href="faqs.html">FAQs</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+        
+        <div class="nav-icons">
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
+            <a href="cart.html">
+                <img src="images/cart.png" alt="Cart" class="icon">
+            </a>
+            <a href="account.html">
+                <img src="images/acc.png" alt="Account" class="icon">
+            </a>
         </div>
-    </nav>
+    </div>
+</nav>
+
+<!-- Mobile menu overlay -->
+<div class="mobile-menu-overlay"></div>
 
     <div class="auth-page">
         <div class="auth-container">
