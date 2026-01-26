@@ -2353,37 +2353,38 @@ $products_result = $conn->query($products_query);
             method: 'POST',
             body: formData
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
         .then(data => {
             if (data.success) {
-                showSuccessModal(data.message);
+                alert('✓ ' + data.message);
+                
                 // Remove the row from the table
-                const row = document.querySelector(`tr.user-row`);
-                if (row) {
-                    // Find and remove the specific user row
-                    const allRows = document.querySelectorAll('tr.user-row');
-                    allRows.forEach(r => {
-                        if (r.cells[0].textContent == userId) {
-                            r.style.transition = 'opacity 0.3s';
-                            r.style.opacity = '0';
-                            setTimeout(() => r.remove(), 300);
-                        }
-                    });
-                }
+                const allRows = document.querySelectorAll('tr.user-row');
+                allRows.forEach(row => {
+                    if (row.cells[0].textContent == userId) {
+                        row.style.transition = 'opacity 0.3s';
+                        row.style.opacity = '0';
+                        setTimeout(() => row.remove(), 300);
+                    }
+                });
             } else {
                 alert('Error: ' + data.message);
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Error deleting user');
+            alert('Error deleting user. Please try again.');
         });
     }
     
     // Toggle Admin Status
     function toggleAdminStatus(userId, currentStatus) {
         const action = currentStatus == 1 ? 'revoke admin access from' : 'grant admin access to';
-        const userName = document.querySelector(`tr.user-row`).cells[1].textContent;
         
         if (!confirm(`Are you sure you want to ${action} this user?`)) {
             return;
@@ -2398,27 +2399,39 @@ $products_result = $conn->query($products_query);
             method: 'POST',
             body: formData
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
         .then(data => {
             if (data.success) {
-                showSuccessModal(data.message);
-                
                 // Update the badge
                 const badge = document.getElementById(`admin-badge-${userId}`);
                 const button = document.getElementById(`admin-btn-${userId}`);
                 
-                if (data.new_status == 1) {
-                    // User is now admin
-                    badge.textContent = 'Admin';
-                    badge.className = 'status-badge status-confirmed';
-                    button.textContent = 'Revoke Admin';
-                    button.onclick = function() { toggleAdminStatus(userId, 1); };
+                if (badge && button) {
+                    if (data.new_status == 1) {
+                        // User is now admin
+                        badge.textContent = 'Admin';
+                        badge.className = 'status-badge status-confirmed';
+                        button.textContent = 'Revoke Admin';
+                        button.onclick = function() { toggleAdminStatus(userId, 1); };
+                    } else {
+                        // User is now regular user
+                        badge.textContent = 'User';
+                        badge.className = 'status-badge status-pending';
+                        button.textContent = 'Grant Admin';
+                        button.onclick = function() { toggleAdminStatus(userId, 0); };
+                    }
+                    
+                    // Show success message
+                    alert('✓ ' + data.message);
                 } else {
-                    // User is now regular user
-                    badge.textContent = 'User';
-                    badge.className = 'status-badge status-pending';
-                    button.textContent = 'Grant Admin';
-                    button.onclick = function() { toggleAdminStatus(userId, 0); };
+                    console.error('Could not find badge or button elements');
+                    alert('✓ ' + data.message + '\n\nPage will reload to show changes.');
+                    location.reload();
                 }
             } else {
                 alert('Error: ' + data.message);
@@ -2426,9 +2439,10 @@ $products_result = $conn->query($products_query);
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Error updating admin status');
+            alert('Error updating admin status. Please try again.');
         });
     }
+
 </script>
 </body>
 </html>
