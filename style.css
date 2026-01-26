@@ -50,8 +50,8 @@ main {
 }
 
 .nav-links a:hover {
-    background-color: var(--accent-green);
-    color: var(--white);
+    background-color: var(--primary-pink);
+    color: var(--text-brown);
     margin: 0px;
 }
 
@@ -816,21 +816,26 @@ main {
 	
 }
 
-* Product Filter Section */
+/* Product Filter Section */
 .product-filter-section {
-max-width: 1080px; /* Match mixmatch banner width */
-width: 90%; /* Match mixmatch banner width */
-margin: 15px auto 15px auto;
-padding: 0;
+    max-width: 1080px; /* Match mixmatch banner width */
+    width: 90%; /* Match mixmatch banner width */
+    margin: 15px auto 15px auto;
+    padding: 0;
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    flex-direction: column; /* Stack children vertically if needed */
 }
 
 .search-container {
-display: flex;
-gap: 5px;
-margin-top: 10px;
-margin-bottom: 0;
-width: fit-content; /* Only take up needed space */
-max-width: 400px; /* Limit search bar width */
+    display: flex;
+    gap: 5px;
+    margin-top: 10px;
+    margin-bottom: 0;
+    width: fit-content; /* Only take up needed space */
+    max-width: 400px; /* Limit search bar width */
+
 }
 
 .search-input {
@@ -845,7 +850,6 @@ outline: none;
 transition: all 0.3s;
 height: 38px; /* Match button height */
 box-sizing: border-box; /* Include padding in height */
-margin-left: 220px;
 }
 
 .search-input:focus {
