@@ -113,8 +113,8 @@ if ($action === 'add_product') {
     }
     
     // Insert product into database
-$sql = "INSERT INTO products (name, price, stock, description, image_path, is_active) 
-            VALUES ('$name', $price,  '$description', $stock, '$image_path', 1)"; 
+    $sql = "INSERT INTO products (name, price, description, image_path, category, is_active, stock) 
+                VALUES ('$name', $price, '$description', '$image_path', 'mochi', 1, $stock)";
     
     if ($conn->query($sql)) {
         echo json_encode(['success' => true, 'message' => 'Product added successfully', 'image_path' => $image_path]);
@@ -129,25 +129,25 @@ $sql = "INSERT INTO products (name, price, stock, description, image_path, is_ac
 }
     
     // UPDATE PRODUCT
-if ($action === 'update_product') {
-    $id = intval($_POST['id']);
-    $name = mysqli_real_escape_string($conn, $_POST['name']);
-    $price = floatval($_POST['price']);
-    $description = mysqli_real_escape_string($conn, $_POST['description']);
-    $stock = intval($_POST['stock']); // ADD THIS LINE
-    $image_path = mysqli_real_escape_string($conn, $_POST['image_path']);
-    
-    $sql = "UPDATE products 
-            SET name = '$name', price = $price, description = '$description', stock = $stock, image_path = '$image_path'
-            WHERE id = $id";
-    
-    if ($conn->query($sql)) {
-        echo json_encode(['success' => true, 'message' => 'Product updated successfully']);
-    } else {
-        echo json_encode(['success' => false, 'message' => 'Error: ' . $conn->error]);
+    if ($action === 'update_product') {
+        $id = intval($_POST['id']);
+        $name = mysqli_real_escape_string($conn, $_POST['name']);
+        $price = floatval($_POST['price']);
+        $description = mysqli_real_escape_string($conn, $_POST['description']);
+        $stock = intval($_POST['stock']);
+        $image_path = mysqli_real_escape_string($conn, $_POST['image_path']);
+        
+        $sql = "UPDATE products 
+                SET name = '$name', price = $price, description = '$description', image_path = '$image_path', stock = $stock
+                WHERE id = $id";
+        
+        if ($conn->query($sql)) {
+            echo json_encode(['success' => true, 'message' => 'Product updated successfully']);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Error: ' . $conn->error]);
+        }
+        exit;
     }
-    exit;
-}
 
     // DELETE PRODUCT
 if ($action === 'delete_product') {

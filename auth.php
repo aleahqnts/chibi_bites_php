@@ -40,6 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             echo json_encode(['success' => false, 'message' => 'Error creating account: ' . $conn->error]);
         }
+        exit;
     }
     
     // LOGIN
@@ -79,114 +80,115 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             echo json_encode(['success' => false, 'message' => 'Email not found']);
         }
+        exit;
     }
     
     // LOGOUT
     if ($action === 'logout') {
         session_destroy();
         echo json_encode(['success' => true, 'message' => 'Logged out successfully']);
+        exit;
     }
     
     // CHECK LOGIN STATUS & GET STATS
     if ($action === 'check') {
-    if (isset($_SESSION['user_id'])) {
-        $user_id = $_SESSION['user_id'];
-        
-        // CALL the Stored Procedure (if you have it)
-        // OR use regular queries:
-        
-        $user_query = "SELECT * FROM users WHERE id = $user_id";
-        $user_result = $conn->query($user_query);
-        
-        if ($user_result && $user_result->num_rows > 0) {
-            $user = $user_result->fetch_assoc();
+        if (isset($_SESSION['user_id'])) {
+            $user_id = $_SESSION['user_id'];
             
-            // Get stats
-            $stats_query = "SELECT COUNT(*) as order_count, COALESCE(SUM(total_amount), 0) as total_spent FROM orders WHERE user_id = $user_id";
-            $stats_result = $conn->query($stats_query);
-            $stats = $stats_result ? $stats_result->fetch_assoc() : ['order_count' => 0, 'total_spent' => 0];
+            // Get user details
+            $user_query = "SELECT * FROM users WHERE id = $user_id";
+            $user_result = $conn->query($user_query);
             
-            // Get history
-            $history_query = "SELECT * FROM orders WHERE user_id = $user_id ORDER BY created_at DESC";
-            $history_result = $conn->query($history_query);
-            $history = [];
-            if ($history_result) {
-                while($row = $history_result->fetch_assoc()) {
-                    $history[] = $row;
+            if ($user_result && $user_result->num_rows > 0) {
+                $user = $user_result->fetch_assoc();
+                
+                // Get stats
+                $stats_query = "SELECT COUNT(*) as order_count, COALESCE(SUM(total_amount), 0) as total_spent FROM orders WHERE user_id = $user_id";
+                $stats_result = $conn->query($stats_query);
+                $stats = $stats_result ? $stats_result->fetch_assoc() : ['order_count' => 0, 'total_spent' => 0];
+                
+                // Get history
+                $history_query = "SELECT * FROM orders WHERE user_id = $user_id ORDER BY created_at DESC";
+                $history_result = $conn->query($history_query);
+                $history = [];
+                if ($history_result) {
+                    while($row = $history_result->fetch_assoc()) {
+                        $history[] = $row;
+                    }
                 }
+                
+                echo json_encode([
+                    'success' => true,
+                    'logged_in' => true,
+                    'user' => [
+                        'fullname' => $user['fullname'],
+                        'name' => $user['fullname'],
+                        'email' => $user['email'],
+                        'phone' => $user['phone'],
+                        'street' => $user['street'],
+                        'city' => $user['city'],
+                        'address' => $user['street'] . ', ' . $user['city'],
+                        'order_count' => $stats['order_count'],
+                        'total_spent' => $stats['total_spent'],
+                        'history' => $history
+                    ]
+                ]);
             }
-            
-            echo json_encode([
-                'success' => true,
-                'logged_in' => true,
-                'user' => [
-                    'fullname' => $user['fullname'],
-                    'name' => $user['fullname'],
-                    'email' => $user['email'],
-                    'phone' => $user['phone'],
-                    'street' => $user['street'],
-                    'city' => $user['city'],
-                    'address' => $user['street'] . ', ' . $user['city'],
-                    'order_count' => $stats['order_count'],
-                    'total_spent' => $stats['total_spent'],
-                    'history' => $history
-                ]
-            ]);
+        } else {
+            echo json_encode(['success' => true, 'logged_in' => false]);
         }
-    } else {
-        echo json_encode(['success' => true, 'logged_in' => false]);
-    }
-    exit;
-}
-
-    // GET PRODUCTS
-        if ($action === 'get_products') {
-            $sql = "SELECT * FROM products WHERE is_active = 1";
-            $result = $conn->query($sql);
-            $products = [];
-            
-            while($row = $result->fetch_assoc()) {
-                $products[] = $row;
-            }
-            echo json_encode(['success' => true, 'products' => $products]);
-            exit;
-        }
-}
-
-// UPDATE PROFILE
-if ($action === 'update_profile') {
-    if (!isset($_SESSION['user_id'])) {
-        echo json_encode(['success' => false, 'message' => 'Not logged in']);
         exit;
     }
-    
-    $user_id = $_SESSION['user_id'];
-    $fullname = mysqli_real_escape_string($conn, $_POST['fullname']);
-    $phone = mysqli_real_escape_string($conn, $_POST['phone']);
-    $street = mysqli_real_escape_string($conn, $_POST['street']);
-    $city = mysqli_real_escape_string($conn, $_POST['city']);
-    $zipcode = mysqli_real_escape_string($conn, $_POST['zipcode']);
-    
-    // Call stored procedure
-    $stmt = $conn->prepare("CALL UpdateUserProfile(?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("isssss", $user_id, $fullname, $phone, $street, $city, $zipcode);
-    
-    if ($stmt->execute()) {
-        // Update session variables
-        $_SESSION['user_name'] = $fullname;
-        $_SESSION['user_phone'] = $phone;
-        $_SESSION['user_street'] = $street;
-        $_SESSION['user_city'] = $city;
-        $_SESSION['user_zipcode'] = $zipcode;
+
+    // GET PRODUCTS
+    if ($action === 'get_products') {
+        $sql = "SELECT * FROM products WHERE is_active = 1";
+        $result = $conn->query($sql);
+        $products = [];
         
-        echo json_encode(['success' => true, 'message' => 'Profile updated successfully']);
-    } else {
-        echo json_encode(['success' => false, 'message' => 'Error updating profile: ' . $stmt->error]);
+        while($row = $result->fetch_assoc()) {
+            $products[] = $row;
+        }
+        echo json_encode(['success' => true, 'products' => $products]);
+        exit;
     }
-    
-    $stmt->close();
-    exit;
+
+    // UPDATE PROFILE (CONVERTED FROM STORED PROCEDURE)
+    if ($action === 'update_profile') {
+        if (!isset($_SESSION['user_id'])) {
+            echo json_encode(['success' => false, 'message' => 'Not logged in']);
+            exit;
+        }
+        
+        $user_id = $_SESSION['user_id'];
+        $fullname = mysqli_real_escape_string($conn, $_POST['fullname']);
+        $phone = mysqli_real_escape_string($conn, $_POST['phone']);
+        $street = mysqli_real_escape_string($conn, $_POST['street']);
+        $city = mysqli_real_escape_string($conn, $_POST['city']);
+        $zipcode = mysqli_real_escape_string($conn, $_POST['zipcode']);
+        
+        // Regular UPDATE query instead of stored procedure
+        $sql = "UPDATE users 
+                SET fullname = '$fullname', 
+                    phone = '$phone', 
+                    street = '$street', 
+                    city = '$city', 
+                    zipcode = '$zipcode' 
+                WHERE id = $user_id";
+        
+        if ($conn->query($sql) === TRUE) {
+            // Update session variables
+            $_SESSION['user_name'] = $fullname;
+            $_SESSION['user_phone'] = $phone;
+            $_SESSION['user_street'] = $street;
+            $_SESSION['user_city'] = $city;
+            $_SESSION['user_zipcode'] = $zipcode;
+            
+            echo json_encode(['success' => true, 'message' => 'Profile updated successfully']);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Error updating profile: ' . $conn->error]);
+        }
+        exit;
+    }
 }
-
 ?>
-

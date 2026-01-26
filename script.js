@@ -1,3 +1,36 @@
+// Hamburger Menu Toggle
+const hamburger = document.getElementById('hamburger');
+const navLinks = document.getElementById('navLinks');
+const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+
+if (hamburger) {
+    hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        navLinks.classList.toggle('active');
+        mobileMenuOverlay.classList.toggle('active');
+    });
+}
+
+// Close menu when clicking overlay
+if (mobileMenuOverlay) {
+    mobileMenuOverlay.addEventListener('click', () => {
+        hamburger.classList.remove('active');
+        navLinks.classList.remove('active');
+        mobileMenuOverlay.classList.remove('active');
+    });
+}
+
+// Close menu when clicking a link
+const navLinkItems = document.querySelectorAll('.nav-links a');
+navLinkItems.forEach(link => {
+    link.addEventListener('click', () => {
+        hamburger.classList.remove('active');
+        navLinks.classList.remove('active');
+        mobileMenuOverlay.classList.remove('active');
+    });
+});
+
+
 function initHeroSlider() {
     const slides = document.querySelectorAll('.section-1 .slider img');
     const navDots = document.querySelectorAll('.section-1 .slider-nav a');

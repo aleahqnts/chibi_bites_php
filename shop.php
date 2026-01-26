@@ -15,7 +15,7 @@ if ($result && $result->num_rows > 0) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Chibi Bites - Shop</title>
+    <title>Chibi Bites - Shop</title>   
     <link rel="icon" href="images/logo.png" type="image/x-icon" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

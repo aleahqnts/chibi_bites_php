@@ -1370,6 +1370,7 @@ $products_result = $conn->query($products_query);
                 <button class="filter-btn" onclick="filterByStatus('out_for_delivery')">Out for Delivery</button>
                 <button class="filter-btn" onclick="filterByStatus('delivered')">Delivered</button>
                 <button class="filter-btn" onclick="filterByStatus('cancelled')">Cancelled</button>
+                <button class="filter-btn" onclick="filterByStatus('refunded')">Refunded</button>
             </div>
 
             <table id="ordersTable">
