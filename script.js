@@ -1339,3 +1339,54 @@ function closePasswordMismatchModal() {
     document.getElementById('changePasswordModal').classList.add('active');
     document.body.style.overflow = 'hidden';
 }
+
+// Product Search Function (no filters)
+function filterProducts() {
+    const searchTerm = document.getElementById('productSearch').value.toLowerCase();
+    const productCards = document.querySelectorAll('.product-column');
+    let visibleCount = 0;
+    
+    productCards.forEach(card => {
+        const productName = card.querySelector('h1').textContent.toLowerCase();
+        
+        if (productName.includes(searchTerm)) {
+            card.style.display = 'block';
+            visibleCount++;
+        } else {
+            card.style.display = 'none';
+        }
+    });
+    
+    // Show "no results" message
+    showNoResults(visibleCount);
+}
+
+function showNoResults(count) {
+    let noResultsDiv = document.getElementById('noResultsMessage');
+    
+    if (count === 0) {
+        if (!noResultsDiv) {
+            noResultsDiv = document.createElement('div');
+            noResultsDiv.id = 'noResultsMessage';
+            noResultsDiv.className = 'no-results';
+            noResultsDiv.innerHTML = `
+                <svg viewBox="0 0 24 24">
+                    <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                </svg>
+                <p>No products found matching your search.</p>
+            `;
+            document.querySelector('.shop-container').appendChild(noResultsDiv);
+        }
+        noResultsDiv.style.display = 'block';
+    } else if (noResultsDiv) {
+        noResultsDiv.style.display = 'none';
+    }
+}
+
+// Real-time search as user types
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('productSearch');
+    if (searchInput) {
+        searchInput.addEventListener('input', filterProducts);
+    }
+});
