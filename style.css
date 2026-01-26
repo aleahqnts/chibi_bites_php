@@ -1580,7 +1580,8 @@ button:hover {
     align-items: center;
     justify-content: center;
     z-index: 3000;
-    backdrop-filter: blur(4px);
+    background-color: rgba(0, 0, 0, 0.5);
+    
 }
 
 .history-modal-overlay.active {
