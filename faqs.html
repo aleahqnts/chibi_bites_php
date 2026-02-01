@@ -11,12 +11,13 @@
     
  <style>
     :root {
-        --text-brown: #5E4B43;
-        --header-bg: #f5f5dc;
-        --body-bg: #ffffff;
-        --footer-green: #9AA559;
-        --white: #ffffff;
-        --pink-accent: #F8A8C6;
+    --primary-brown: #6b4b50;
+    --primary-pink: #FEBBCC;
+    --light-pink: #FFE7F0;
+    --accent-green: #9aa559;
+    --cream: #f5f5dc;
+    --white: #ffffff;
+    --text-brown: #7C474A;
     }
 
     * {
@@ -27,25 +28,47 @@
 
     body {
         font-family: 'Montserrat', sans-serif;
-        background-color: var(--body-bg);
+        background-color: var(--white);
         color: var(--text-brown);
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
     }
 
     /* MAIN CONTENT */
     main {
-        padding: 50px 5%;
-        min-height: 60vh;
+        flex: 1;
+        padding: 120px 5% 50px 5%;
         max-width: 900px;
         margin: 0 auto;
+        width: 100%;
     }
 
     h1 {
         text-align: center;
         font-family: 'Coiny', cursive;
-        font-size: 42px;
+        font-size: 48px;
         color: var(--text-brown);
-        margin-bottom: 10px;
-        margin-top: 80px;
+        margin-bottom: 15px;
+    }
+
+    .mixmatch-faqs {
+        background: var(--white);
+        width: 80%;
+        max-width: 600px;
+        margin: 0 auto 40px auto;
+        padding: 15px 20px;
+        border-radius: 50px;
+        box-shadow: 0 4px 15px rgba(248, 168, 198, 0.3);
+    }
+
+    .mixmatch-faqs p {
+        text-align: center;
+        color: var(--text-brown);
+        font-weight: 600;
+        font-size: 16px;
+        margin: 0;
+        letter-spacing: 0.5px;
     }
 
     .fade-in {
@@ -65,7 +88,6 @@
         }
     }
 
-
     .faq-container {
         display: flex;
         flex-direction: column;
@@ -74,56 +96,74 @@
 
     .faq-item {
         background-color: var(--white);
-        border: 1px solid var(--text-brown);
-        border-radius: 10px;
-        transition: transform 0.3s;
+        border: 2px solid var(--text-brown);
+        border-radius: 12px;
+        transition: all 0.3s ease;
         color: var(--text-brown);
+        overflow: hidden;
     }
 
     .faq-item:hover {
-        transform: scale(1.05);
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(92, 64, 51, 0.15);
+        border-color: #F8A8C6;
     }
 
     .faq-question {
-        padding: 20px;
+        padding: 22px 25px;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        font-size: 1rem;
-        font-weight: 500;
+        font-size: 1.05rem;
+        font-weight: 600;
         cursor: pointer;
         user-select: none;
-        transition: transform 0.3s;
+        transition: all 0.3s ease;
+    }
+
+    .faq-item:hover .faq-question {
+        color: #F8A8C6;
     }
 
     .faq-answer {
         max-height: 0;
         overflow: hidden;
-        padding: 0 20px;
-        transition: max-height 0.3s ease, padding 0.3s ease;
+        padding: 0 25px;
+        transition: max-height 0.4s ease, padding 0.4s ease;
         font-size: 0.95rem;
-        line-height: 1.6;
-        color: gray;
+        line-height: 1.7;
+        color: #666;
+    }
+
+    .faq-item.active {
+        border-color: #F8A8C6;
+        box-shadow: 0 6px 25px rgba(248, 168, 198, 0.2);
+    }
+
+    .faq-item.active .faq-question {
+        color: #F8A8C6;
     }
 
     .faq-item.active .faq-answer {
-        max-height: 200px;
-        padding-bottom: 20px;
+        max-height: 300px;
+        padding: 0 25px 22px 25px;
     }
 
     .arrow {
         border: solid var(--pink-accent);
         border-width: 0 3px 3px 0;
         display: inline-block;
-        padding: 5px;
+        padding: 6px;
         transform: rotate(45deg);
         transition: transform 0.3s ease;
-        margin-bottom: 4px;
+        margin-bottom: 5px;
+        flex-shrink: 0;
+        margin-left: 15px;
     }
 
     .faq-item.active .arrow {
         transform: rotate(-135deg);
-        margin-bottom: -4px;
+        margin-bottom: -5px;
     }
 
     /* ============================================
@@ -132,23 +172,19 @@
 
     /* Tablets and smaller (768px and below) */
     @media screen and (max-width: 768px) {
-        
-        /* FAQS PAGE SPECIFIC */
         main {
-            padding: 30px 5%;
-            min-height: 50vh;
+            padding: 100px 5% 40px 5%;
         }
         
         h1 {
-            font-size: 32px;
-            margin-top: 70px;
-            margin-bottom: 8px;
+            font-size: 36px;
+            margin-bottom: 12px;
         }
-        
+
         .mixmatch-faqs {
             width: 90%;
-            margin: 15px auto 25px auto;
-            padding: 12px 15px;
+            margin: 0 auto 30px auto;
+            padding: 12px 18px;
         }
         
         .mixmatch-faqs p {
@@ -160,53 +196,53 @@
         }
         
         .faq-item {
-            border-radius: 8px;
+            border-radius: 10px;
+            border-width: 1.5px;
         }
         
         .faq-item:hover {
-            transform: scale(1.02);
+            transform: translateY(-2px);
         }
         
         .faq-question {
-            padding: 15px;
+            padding: 18px 20px;
             font-size: 0.95rem;
             line-height: 1.4;
         }
         
         .faq-answer {
             font-size: 0.9rem;
-            padding: 0 15px;
-            line-height: 1.5;
+            padding: 0 20px;
+            line-height: 1.6;
         }
         
         .faq-item.active .faq-answer {
-            max-height: 300px;
-            padding-bottom: 15px;
+            max-height: 350px;
+            padding: 0 20px 18px 20px;
         }
         
         .arrow {
             border-width: 0 2.5px 2.5px 0;
-            padding: 4px;
+            padding: 5px;
+            margin-left: 10px;
         }
     }
 
     /* Mobile phones (480px and below) */
     @media screen and (max-width: 480px) {
-        
-        /* FAQS PAGE */
         main {
-            padding: 25px 4%;
+            padding: 90px 4% 35px 4%;
         }
         
         h1 {
-            font-size: 28px;
-            margin-top: 65px;
+            font-size: 30px;
+            margin-bottom: 10px;
         }
-        
+
         .mixmatch-faqs {
             width: 95%;
-            padding: 10px 12px;
-            margin: 12px auto 20px auto;
+            padding: 10px 15px;
+            margin: 0 auto 25px auto;
         }
         
         .mixmatch-faqs p {
@@ -217,24 +253,46 @@
             gap: 12px;
         }
         
+        .faq-item {
+            border-radius: 8px;
+        }
+        
         .faq-question {
-            padding: 12px;
+            padding: 15px 18px;
             font-size: 0.9rem;
         }
         
         .faq-answer {
             font-size: 0.85rem;
-            padding: 0 12px;
+            padding: 0 18px;
+            line-height: 1.5;
         }
         
         .faq-item.active .faq-answer {
-            max-height: 350px;
-            padding-bottom: 12px;
+            max-height: 400px;
+            padding: 0 18px 15px 18px;
         }
         
         .arrow {
             border-width: 0 2px 2px 0;
-            padding: 3.5px;
+            padding: 4px;
+            margin-left: 8px;
+        }
+    }
+
+    /* Extra small phones (375px and below) */
+    @media screen and (max-width: 375px) {
+        h1 {
+            font-size: 26px;
+        }
+
+        .faq-question {
+            font-size: 0.85rem;
+            padding: 12px 15px;
+        }
+
+        .faq-answer {
+            font-size: 0.8rem;
         }
     }
 </style>
@@ -297,7 +355,7 @@
  
 
     <main>
-        <h1 class = "fade-in">FAQs</h1>
+        <h1 class="fade-in">FAQs</h1>
         <div class="mixmatch-faqs fade-in"><p>Frequently Asked Questions</p></div>
 
         <div class="faq-container fade-in">
@@ -367,7 +425,7 @@
                     <span class="arrow"></span>
                 </div>
                 <div class="faq-answer">
-                    Please feel free to message us, we’re happy to assist.
+                    Please feel free to message us, we're happy to assist.
                 </div>
             </div>
         </div>
@@ -451,7 +509,8 @@
         });
     </script>
 
-    <script src="script.js"></script>
+    
     <script src="checkout.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
